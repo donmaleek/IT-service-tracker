@@ -1,0 +1,326 @@
+<!--
+Service requests management page for IT staff and administrators.
+Provides interface for viewing, filtering, and updating service requests.
+-->
+{% extends "base.html" %}
+
+{% block title %}View Requests - IT Service Desk{% endblock %}
+
+{% block content %}
+<div class="requests-header">
+    <div class="header-content">
+        <h1>Service Requests Management</h1>
+        <p class="page-description">
+            View and manage all IT service requests. Filter by status, category, or department.
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
+            + New Request
+        </a>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div class="filters-section">
+    <h3>Filter Requests</h3>
+    <form method="GET" class="filter-form">
+        <div class="filter-grid">
+            <!-- Status Filter -->
+            <div class="filter-group">
+                <label for="status-filter">Status</label>
+                <select id="status-filter" name="status" class="filter-select">
+                    <option value="">All Statuses</option>
+                    {% for status in statuses %}
+                        <option value="{{ status }}" 
+                                {% if current_filters.status == status %}selected{% endif %}>
+                            {{ status }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="filter-group">
+                <label for="category-filter">Category</label>
+                <select id="category-filter" name="category" class="filter-select">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category }}"
+                                {% if current_filters.category == category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Department Filter -->
+            <div class="filter-group">
+                <label for="department-filter">Department</label>
+                <select id="department-filter" name="department" class="filter-select">
+                    <option value="">All Departments</option>
+                    {% for department in departments %}
+                        <option value="{{ department }}"
+                                {% if current_filters.department == department %}selected{% endif %}>
+                            {{ department }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Filter Actions -->
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+                <a href="{{ url_for('view_requests') }}" class="btn btn-secondary">Clear Filters</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Requests Table -->
+<div class="requests-table-section">
+    {% if requests %}
+        <div class="table-responsive">
+            <table class="requests-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Requester</th>
+                        <th>Department</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                    <tr class="request-row" data-request-id="{{ request.id }}">
+                        <!-- Request ID -->
+                        <td class="request-id">#{{ request.id }}</td>
+                        
+                        <!-- Requester Name -->
+                        <td class="requester-name">{{ request.requester_name }}</td>
+                        
+                        <!-- Department -->
+                        <td class="department">
+                            <span class="department-badge">{{ request.department }}</span>
+                        </td>
+                        
+                        <!-- Category -->
+                        <td class="category">
+                            <span class="category-badge">{{ request.category }}</span>
+                        </td>
+                        
+                        <!-- Description -->
+                        <td class="description">
+                            <div class="description-text" title="{{ request.description }}">
+                                {{ request.description[:100] }}{% if request.description|length > 100 %}...{% endif %}
+                            </div>
+                        </td>
+                        
+                        <!-- Status -->
+                        <td class="status">
+                            <span class="status-badge status-{{ request.status|lower|replace(' ', '-') }}">
+                                {{ request.status }}
+                            </span>
+                        </td>
+                        
+                        <!-- Created Date -->
+                        <td class="created-date">
+                            <div class="date">{{ request.created_at.strftime('%Y-%m-%d') }}</div>
+                            <div class="time">{{ request.created_at.strftime('%H:%M') }}</div>
+                        </td>
+                        
+                        <!-- Actions -->
+                        <td class="actions">
+                            <div class="action-buttons">
+                                <!-- Status Update Form -->
+                                <form method="POST" 
+                                      action="{{ url_for('update_status', request_id=request.id) }}" 
+                                      class="status-form">
+                                    <select name="status" class="status-select" 
+                                            onchange="this.form.submit()">
+                                        <option value="Pending" 
+                                                {% if request.status == 'Pending' %}selected{% endif %}>
+                                            Pending
+                                        </option>
+                                        <option value="In Progress" 
+                                                {% if request.status == 'In Progress' %}selected{% endif %}>
+                                            In Progress
+                                        </option>
+                                        <option value="Resolved" 
+                                                {% if request.status == 'Resolved' %}selected{% endif %}>
+                                            Resolved
+                                        </option>
+                                    </select>
+                                </form>
+                                
+                                <!-- View Details Button -->
+                                <button class="btn-icon view-details" 
+                                        title="View Details"
+                                        onclick="showRequestDetails({{ request.id }})">
+                                    👁️
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Requests Summary -->
+        <div class="requests-summary">
+            <p>Showing <strong>{{ requests|length }}</strong> 
+               request(s) with applied filters.</p>
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3>No Requests Found</h3>
+            <p>
+                {% if current_filters.status or current_filters.category or current_filters.department %}
+                    No requests match your current filters. 
+                    <a href="{{ url_for('view_requests') }}">Clear filters</a> to see all requests.
+                {% else %}
+                    No service requests have been submitted yet.
+                    <a href="{{ url_for('submit_request') }}">Submit the first request</a>.
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Request Details Modal -->
+<div id="requestDetailsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Request Details #<span id="modalRequestId"></span></h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="request-details">
+                <!-- Details will be loaded dynamically via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!--
+JavaScript for enhanced functionality on view requests page.
+Includes modal handling and dynamic content loading.
+-->
+<script>
+/**
+ * Displays detailed view of a specific service request in a modal.
+ * Fetches request details from API and populates modal content.
+ * 
+ * @param {number} requestId - The ID of the request to display
+ */
+function showRequestDetails(requestId) {
+    fetch(`/api/requests/${requestId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const request = data.request;
+                populateModal(request);
+                showModal();
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching request details:', error);
+            alert('Error loading request details');
+        });
+}
+
+/**
+ * Populates the modal with request details.
+ * 
+ * @param {Object} request - The request object containing all details
+ */
+function populateModal(request) {
+    document.getElementById('modalRequestId').textContent = request.id;
+    
+    const modalBody = document.querySelector('.request-details');
+    modalBody.innerHTML = `
+        <div class="detail-grid">
+            <div class="detail-group">
+                <label>Requester Name:</label>
+                <span>${escapeHtml(request.requester_name)}</span>
+            </div>
+            <div class="detail-group">
+                <label>Department:</label>
+                <span>${escapeHtml(request.department)}</span>
+            </div>
+            <div class="detail-group">
+                <label>Category:</label>
+                <span>${escapeHtml(request.category)}</span>
+            </div>
+            <div class="detail-group">
+                <label>Status:</label>
+                <span class="status-badge status-${request.status.toLowerCase().replace(' ', '-')}">
+                    ${escapeHtml(request.status)}
+                </span>
+            </div>
+            <div class="detail-group">
+                <label>Created:</label>
+                <span>${new Date(request.created_at).toLocaleString()}</span>
+            </div>
+            <div class="detail-group">
+                <label>Last Updated:</label>
+                <span>${new Date(request.updated_at).toLocaleString()}</span>
+            </div>
+            <div class="detail-group full-width">
+                <label>Description:</label>
+                <div class="description-full">${escapeHtml(request.description)}</div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Utility function to escape HTML for safe rendering.
+ * Prevents XSS attacks when rendering user-generated content.
+ * 
+ * @param {string} text - Text to be escaped
+ * @returns {string} Escaped HTML string
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/**
+ * Shows the request details modal.
+ */
+function showModal() {
+    document.getElementById('requestDetailsModal').style.display = 'block';
+}
+
+/**
+ * Hides the request details modal.
+ */
+function hideModal() {
+    document.getElementById('requestDetailsModal').style.display = 'none';
+}
+
+// Event listeners for modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Close modal when clicking X
+    document.querySelector('.close-modal').addEventListener('click', hideModal);
+    
+    // Close modal when clicking outside content
+    document.getElementById('requestDetailsModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            hideModal();
+        }
+    });
+});
+</script>
+{% endblock %}

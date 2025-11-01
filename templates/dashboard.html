@@ -1,0 +1,331 @@
+<!--
+Administrative dashboard for IT Service Request Tracking System.
+Provides comprehensive statistics, charts, and system metrics.
+-->
+{% extends "base.html" %}
+
+{% block title %}Dashboard - IT Service Desk{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>System Dashboard</h1>
+    <p class="dashboard-description">
+        Comprehensive overview of IT service requests and system performance metrics.
+    </p>
+</div>
+
+<!-- Key Metrics Section -->
+<div class="metrics-section">
+    <div class="metrics-grid">
+        <!-- Total Requests Metric -->
+        <div class="metric-card">
+            <div class="metric-icon">📋</div>
+            <div class="metric-content">
+                <div class="metric-value">{{ total_requests }}</div>
+                <div class="metric-label">Total Requests</div>
+                <div class="metric-trend">All time service requests</div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Metric -->
+        <div class="metric-card metric-warning">
+            <div class="metric-icon">⏳</div>
+            <div class="metric-content">
+                <div class="metric-value">{{ pending_requests }}</div>
+                <div class="metric-label">Pending Requests</div>
+                <div class="metric-trend">Awaiting resolution</div>
+            </div>
+        </div>
+
+        <!-- Resolved Requests Metric -->
+        <div class="metric-card metric-success">
+            <div class="metric-icon">✅</div>
+            <div class="metric-content">
+                <div class="metric-value">{{ resolved_requests }}</div>
+                <div class="metric-label">Resolved Requests</div>
+                <div class="metric-trend">
+                    {% if total_requests > 0 %}
+                        {{ "%.1f"|format((resolved_requests / total_requests) * 100) }}% resolution rate
+                    {% else %}
+                        0% resolution rate
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Average Resolution Time Metric -->
+        <div class="metric-card">
+            <div class="metric-icon">⚡</div>
+            <div class="metric-content">
+                <div class="metric-value">--</div>
+                <div class="metric-label">Avg. Resolution</div>
+                <div class="metric-trend">Calculating...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts and Analytics Section -->
+<div class="analytics-section">
+    <div class="analytics-grid">
+        <!-- Requests by Category Chart -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Requests by Category</h3>
+                <p>Distribution of requests across different issue types</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container">
+                    <canvas id="categoryChart" width="400" height="300"></canvas>
+                </div>
+                <div class="chart-legend">
+                    {% for category, count in category_stats %}
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: {{ get_category_color(loop.index0) }}"></span>
+                        <span class="legend-label">{{ category }}</span>
+                        <span class="legend-value">({{ count }})</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests by Department Chart -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Requests by Department</h3>
+                <p>Service requests distribution across departments</p>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container">
+                    <canvas id="departmentChart" width="400" height="300"></canvas>
+                </div>
+                <div class="chart-legend">
+                    {% for department, count in department_stats %}
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: {{ get_department_color(loop.index0) }}"></span>
+                        <span class="legend-label">{{ department }}</span>
+                        <span class="legend-value">({{ count }})</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity Section -->
+<div class="recent-activity-section">
+    <div class="activity-header">
+        <h3>Recent Activity</h3>
+        <a href="{{ url_for('view_requests') }}" class="view-all-link">View All Requests →</a>
+    </div>
+    
+    {% if recent_requests %}
+        <div class="activity-list">
+            {% for request in recent_requests %}
+            <div class="activity-item">
+                <div class="activity-icon">
+                    {% if request.status == 'Resolved' %}✅
+                    {% elif request.status == 'In Progress' %}🔄
+                    {% else %}📥{% endif %}
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">
+                        <strong>{{ request.requester_name }}</strong> from 
+                        <strong>{{ request.department }}</strong>
+                    </div>
+                    <div class="activity-description">
+                        {{ request.category }} - 
+                        {{ request.description[:80] }}{% if request.description|length > 80 %}...{% endif %}
+                    </div>
+                    <div class="activity-meta">
+                        <span class="activity-time">
+                            {{ request.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </span>
+                        <span class="activity-status status-badge status-{{ request.status|lower|replace(' ', '-') }}">
+                            {{ request.status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="activity-actions">
+                    <a href="{{ url_for('view_requests') }}?highlight={{ request.id }}" 
+                       class="btn btn-sm btn-outline">View</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <h4>No Recent Activity</h4>
+            <p>No service requests have been submitted recently.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Quick Actions Section -->
+<div class="quick-actions-section">
+    <h3>Quick Actions</h3>
+    <div class="actions-grid">
+        <a href="{{ url_for('submit_request') }}" class="action-card">
+            <div class="action-icon">➕</div>
+            <div class="action-content">
+                <h4>Submit New Request</h4>
+                <p>Create a new IT service request</p>
+            </div>
+        </a>
+        
+        <a href="{{ url_for('view_requests') }}" class="action-card">
+            <div class="action-icon">📋</div>
+            <div class="action-content">
+                <h4>Manage Requests</h4>
+                <p>View and update all service requests</p>
+            </div>
+        </a>
+        
+        <a href="{{ url_for('view_requests') }}?status=Pending" class="action-card">
+            <div class="action-icon">⏳</div>
+            <div class="action-content">
+                <h4>Pending Requests</h4>
+                <p>Review awaiting action items</p>
+            </div>
+        </a>
+        
+        <div class="action-card" onclick="exportData()">
+            <div class="action-icon">📤</div>
+            <div class="action-content">
+                <h4>Export Data</h4>
+                <p>Download requests report</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!--
+JavaScript for dashboard charts and interactive elements.
+Uses Chart.js for data visualization and dynamic updates.
+-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+/**
+ * Initializes and renders all dashboard charts.
+ * Creates pie charts for category and department distributions.
+ */
+function initializeCharts() {
+    // Category Distribution Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    const categoryChart = new Chart(categoryCtx, {
+        type: 'pie',
+        data: {
+            labels: [
+                {% for category, count in category_stats %}
+                    '{{ category }}'{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for category, count in category_stats %}
+                        {{ count }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    {% for i in range(category_stats|length) %}
+                        '{{ get_category_color(i) }}'{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Department Distribution Chart
+    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+    const departmentChart = new Chart(departmentCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for department, count in department_stats %}
+                    '{{ department }}'{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for department, count in department_stats %}
+                        {{ count }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    {% for i in range(department_stats|length) %}
+                        '{{ get_department_color(i) }}'{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Exports dashboard data in JSON format.
+ * Provides download functionality for system reports.
+ */
+function exportData() {
+    fetch('/api/requests')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const blob = new Blob([JSON.stringify(data, null, 2)], 
+                                    { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `service-requests-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        })
+        .catch(error => {
+            console.error('Error exporting data:', error);
+            alert('Error exporting data');
+        });
+}
+
+// Initialize charts when page loads
+document.addEventListener('DOMContentLoaded', initializeCharts);
+</script>
+{% endblock %}
