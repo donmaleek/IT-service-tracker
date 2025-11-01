@@ -146,6 +146,14 @@ IT-service-tracker/
 
     ✅ Manage system settings
 
+🧪 Testing
+# Install test dependencies
+pip install pytest pytest-flask
+
+# Run tests
+pytest
+
+
 🔧 API Endpoints
 
 Public Endpoints
