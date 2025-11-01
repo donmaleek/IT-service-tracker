@@ -1,0 +1,61 @@
+<!--
+Service request submission form template.
+Provides interface for staff to submit IT service requests.
+-->
+{% extends "base.html" %}
+
+{% block title %}Submit Service Request - IT Service Desk{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Submit IT Service Request</h2>
+    
+    {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST" class="service-form">
+        <div class="form-group">
+            <label for="requester_name">Your Name *</label>
+            <input type="text" id="requester_name" name="requester_name" required 
+                   value="{{ request.form.requester_name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="department">Department *</label>
+            <select id="department" name="department" required>
+                <option value="">Select Department</option>
+                {% for department in departments %}
+                    <option value="{{ department }}" 
+                            {% if request.form.department == department %}selected{% endif %}>
+                        {{ department }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Issue Category *</label>
+            <select id="category" name="category" required>
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category }}"
+                            {% if request.form.category == category %}selected{% endif %}>
+                        {{ category }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Issue Description *</label>
+            <textarea id="description" name="description" required 
+                      placeholder="Please describe your issue in detail...">{{ request.form.description }}</textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Request</button>
+    </form>
+</div>
+{% endblock %}
