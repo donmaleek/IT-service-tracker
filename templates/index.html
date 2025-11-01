@@ -1,0 +1,193 @@
+<!--
+Homepage for IT Service Request Tracking System.
+Provides overview and navigation to main system features.
+-->
+{% extends "base.html" %}
+
+{% block title %}Home - IT Service Request System{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>IT Service Request System</h1>
+        <p class="hero-description">
+            Streamline your internal IT support requests with our automated tracking system. 
+            Submit, track, and manage service requests efficiently.
+        </p>
+        <div class="hero-actions">
+            <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
+                Submit New Request
+            </a>
+            <a href="{{ url_for('view_requests') }}" class="btn btn-secondary">
+                View All Requests
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="container">
+        <h2>System Features</h2>
+        <div class="features-grid">
+            <!-- Feature 1: Request Submission -->
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Easy Request Submission</h3>
+                <p>
+                    Submit IT service requests through a simple web form. 
+                    Include all necessary details for quick resolution.
+                </p>
+                <ul class="feature-list">
+                    <li>Simple form with required fields</li>
+                    <li>Department and category selection</li>
+                    <li>Detailed description area</li>
+                </ul>
+            </div>
+
+            <!-- Feature 2: Request Tracking -->
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Request Tracking</h3>
+                <p>
+                    Track the status of your requests in real-time. 
+                    View all submitted requests with filtering options.
+                </p>
+                <ul class="feature-list">
+                    <li>Real-time status updates</li>
+                    <li>Filter by status, category, department</li>
+                    <li>Search and sort functionality</li>
+                </ul>
+            </div>
+
+            <!-- Feature 3: Automation -->
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Automated Processing</h3>
+                <p>
+                    Automated status management and email notifications 
+                    ensure efficient request handling.
+                </p>
+                <ul class="feature-list">
+                    <li>Automatic status assignment</li>
+                    <li>Email notifications</li>
+                    <li>Timestamp automation</li>
+                </ul>
+            </div>
+
+            <!-- Feature 4: Dashboard -->
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Administrative Dashboard</h3>
+                <p>
+                    Comprehensive dashboard with statistics and metrics 
+                    for IT staff and administrators.
+                </p>
+                <ul class="feature-list">
+                    <li>Request statistics</li>
+                    <li>Category and department analytics</li>
+                    <li>Recent activity tracking</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="quick-stats-section">
+    <div class="container">
+        <h2>System Overview</h2>
+        <div class="stats-grid">
+            <!-- Total Requests Stat -->
+            <div class="stat-card">
+                <div class="stat-number" id="total-requests">--</div>
+                <div class="stat-label">Total Requests</div>
+                <div class="stat-description">All service requests submitted</div>
+            </div>
+
+            <!-- Pending Requests Stat -->
+            <div class="stat-card">
+                <div class="stat-number" id="pending-requests">--</div>
+                <div class="stat-label">Pending Requests</div>
+                <div class="stat-description">Awaiting IT staff action</div>
+            </div>
+
+            <!-- Resolved Requests Stat -->
+            <div class="stat-card">
+                <div class="stat-number" id="resolved-requests">--</div>
+                <div class="stat-label">Resolved Requests</div>
+                <div class="stat-description">Successfully completed</div>
+            </div>
+
+            <!-- Departments Stat -->
+            <div class="stat-card">
+                <div class="stat-number" id="active-departments">--</div>
+                <div class="stat-label">Active Departments</div>
+                <div class="stat-description">Using the system</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section">
+    <div class="container">
+        <h2>Ready to Get Started?</h2>
+        <p>
+            Join other departments in streamlining IT support requests. 
+            Submit your first request or explore existing requests.
+        </p>
+        <div class="cta-actions">
+            <a href="{{ url_for('submit_request') }}" class="btn btn-large btn-primary">
+                Submit Your First Request
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-large btn-secondary">
+                View System Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!--
+JavaScript for dynamic statistics loading on homepage.
+Fetches real-time data from API endpoints.
+-->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    /**
+     * Fetches and displays system statistics on the homepage.
+     * Makes API call to get request counts and updates DOM elements.
+     */
+    async function loadStatistics() {
+        try {
+            const response = await fetch('/api/requests');
+            const data = await response.json();
+            
+            if (data.success) {
+                // Calculate statistics from API data
+                const requests = data.requests;
+                const total = requests.length;
+                const pending = requests.filter(req => req.status === 'Pending').length;
+                const resolved = requests.filter(req => req.status === 'Resolved').length;
+                const departments = new Set(requests.map(req => req.department)).size;
+                
+                // Update DOM elements with statistics
+                document.getElementById('total-requests').textContent = total;
+                document.getElementById('pending-requests').textContent = pending;
+                document.getElementById('resolved-requests').textContent = resolved;
+                document.getElementById('active-departments').textContent = departments;
+            }
+        } catch (error) {
+            console.error('Error loading statistics:', error);
+            // Set default values if API fails
+            document.getElementById('total-requests').textContent = '0';
+            document.getElementById('pending-requests').textContent = '0';
+            document.getElementById('resolved-requests').textContent = '0';
+            document.getElementById('active-departments').textContent = '0';
+        }
+    }
+    
+    // Load statistics when page loads
+    loadStatistics();
+});
+</script>
+{% endblock %}
