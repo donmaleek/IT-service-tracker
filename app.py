@@ -239,6 +239,36 @@ def view_requests():
                              'department': department_filter
                          })
 
+"""
+Template helper functions for generating dynamic colors in charts.
+These functions are used in the dashboard template for data visualization.
+"""
+@app.context_processor
+def utility_processor():
+    """
+    Make utility functions available to all templates.
+    Provides color generation for charts and other template helpers.
+    
+    Returns:
+        dict: Dictionary of utility functions for templates
+    """
+    def get_category_color(index):
+        """Generate consistent colors for category chart based on index."""
+        colors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', 
+                 '#EC4899', '#06B6D4', '#84CC16', '#F97316', '#6366F1']
+        return colors[index % len(colors)]
+    
+    def get_department_color(index):
+        """Generate consistent colors for department chart based on index."""
+        colors = ['#10B981', '#F59E0B', '#3B82F6', '#EF4444', '#8B5CF6',
+                 '#EC4899', '#06B6D4', '#84CC16', '#F97316', '#6366F1']
+        return colors[index % len(colors)]
+    
+    return {
+        'get_category_color': get_category_color,
+        'get_department_color': get_department_color
+    }
+
 @app.route('/api/requests', methods=['GET'])
 def api_get_requests():
     """
@@ -257,7 +287,7 @@ def api_get_requests():
         query = query.filter(ServiceRequest.category == request.args.get('category'))
     if request.args.get('department'):
         query = query.filter(ServiceRequest.department == request.args.get('department'))
-    
+    view_requests.html
     requests = query.order_by(ServiceRequest.created_at.desc()).all()
     
     return jsonify({
