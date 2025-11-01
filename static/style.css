@@ -15,9 +15,9 @@
     --text-primary: #1f2937;
     --text-secondary: #6b7280;
     --text-light: #9ca3af;
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-tertiary: #f1f5f9;
+    --bg-primary: #ffffff94;
+    --bg-secondary: #c2ceda25;
+    --bg-tertiary: #f1f5f9b9;
     
     /* Status Colors */
     --status-pending: #f59e0b;

@@ -1,248 +1,1001 @@
 <!--
-Service requests management page for IT staff and administrators.
-Provides interface for viewing, filtering, and updating service requests.
+Modern Service Requests Management Page for IT Staff and Administrators.
+Provides elegant interface for viewing, filtering, and updating service requests.
 -->
 {% extends "base.html" %}
 
-{% block title %}View Requests - IT Service Desk{% endblock %}
+{% block title %}Service Requests - Demulla Service Desk{% endblock %}
 
 {% block content %}
-<div class="requests-header">
-    <div class="header-content">
-        <h1>Service Requests Management</h1>
-        <p class="page-description">
-            View and manage all IT service requests. Filter by status, category, or department.
-        </p>
-    </div>
-    <div class="header-actions">
-        <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
-            + New Request
-        </a>
-    </div>
-</div>
-
-<!-- Filter Section -->
-<div class="filters-section">
-    <h3>Filter Requests</h3>
-    <form method="GET" class="filter-form">
-        <div class="filter-grid">
-            <!-- Status Filter -->
-            <div class="filter-group">
-                <label for="status-filter">Status</label>
-                <select id="status-filter" name="status" class="filter-select">
-                    <option value="">All Statuses</option>
-                    {% for status in statuses %}
-                        <option value="{{ status }}" 
-                                {% if current_filters.status == status %}selected{% endif %}>
-                            {{ status }}
-                        </option>
-                    {% endfor %}
-                </select>
+<div class="requests-container">
+    <!-- Page Header -->
+    <div class="page-header glass">
+        <div class="header-content">
+            <div class="header-title">
+                <h1><i class="fas fa-tasks"></i> Service Requests</h1>
+                <p class="page-description">
+                    Manage and track all IT service requests with real-time updates and advanced filtering
+                </p>
             </div>
+            <div class="header-stats">
+                <div class="stat-badge">
+                    <span class="stat-number">{{ requests|length }}</span>
+                    <span class="stat-label">Total Requests</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i>
+                New Request
+            </a>
+            <button class="btn btn-secondary" onclick="toggleFilters()">
+                <i class="fas fa-filter"></i>
+                Filters
+            </button>
+        </div>
+    </div>
 
-            <!-- Category Filter -->
-            <div class="filter-group">
-                <label for="category-filter">Category</label>
-                <select id="category-filter" name="category" class="filter-select">
-                    <option value="">All Categories</option>
-                    {% for category in categories %}
-                        <option value="{{ category }}"
+    <!-- Advanced Filter Section -->
+    <div class="filters-section glass" id="filtersSection">
+        <div class="filters-header">
+            <h3><i class="fas fa-sliders-h"></i> Advanced Filters</h3>
+            <button class="btn btn-sm btn-outline" onclick="clearAllFilters()">
+                <i class="fas fa-undo"></i>
+                Clear All
+            </button>
+        </div>
+        <form method="GET" class="filter-form">
+            <div class="filter-grid">
+                <!-- Status Filter -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-flag"></i>
+                        Status
+                    </label>
+                    <div class="filter-options">
+                        {% for status in statuses %}
+                        <label class="filter-chip {% if current_filters.status == status %}active{% endif %}">
+                            <input type="radio" name="status" value="{{ status }}" 
+                                   {% if current_filters.status == status %}checked{% endif %} 
+                                   onchange="this.form.submit()">
+                            <span class="status-indicator status-{{ status|lower|replace(' ', '-') }}"></span>
+                            {{ status }}
+                        </label>
+                        {% endfor %}
+                        <label class="filter-chip {% if not current_filters.status %}active{% endif %}">
+                            <input type="radio" name="status" value="" 
+                                   {% if not current_filters.status %}checked{% endif %} 
+                                   onchange="this.form.submit()">
+                            All Statuses
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-tag"></i>
+                        Category
+                    </label>
+                    <select name="category" class="filter-select" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category }}" 
                                 {% if current_filters.category == category %}selected{% endif %}>
                             {{ category }}
                         </option>
-                    {% endfor %}
-                </select>
-            </div>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <!-- Department Filter -->
-            <div class="filter-group">
-                <label for="department-filter">Department</label>
-                <select id="department-filter" name="department" class="filter-select">
-                    <option value="">All Departments</option>
-                    {% for department in departments %}
-                        <option value="{{ department }}"
+                <!-- Department Filter -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-building"></i>
+                        Department
+                    </label>
+                    <select name="department" class="filter-select" onchange="this.form.submit()">
+                        <option value="">All Departments</option>
+                        {% for department in departments %}
+                        <option value="{{ department }}" 
                                 {% if current_filters.department == department %}selected{% endif %}>
                             {{ department }}
                         </option>
-                    {% endfor %}
-                </select>
-            </div>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <!-- Filter Actions -->
-            <div class="filter-actions">
-                <button type="submit" class="btn btn-primary">Apply Filters</button>
-                <a href="{{ url_for('view_requests') }}" class="btn btn-secondary">Clear Filters</a>
+                <!-- Quick Actions -->
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <i class="fas fa-bolt"></i>
+                        Quick Actions
+                    </label>
+                    <div class="action-buttons">
+                        <a href="{{ url_for('view_requests') }}?status=Pending" 
+                           class="btn btn-sm btn-warning">
+                            <i class="fas fa-clock"></i>
+                            Pending
+                        </a>
+                        <a href="{{ url_for('view_requests') }}?status=In Progress" 
+                           class="btn btn-sm btn-info">
+                            <i class="fas fa-sync-alt"></i>
+                            In Progress
+                        </a>
+                        <a href="{{ url_for('view_requests') }}" 
+                           class="btn btn-sm btn-secondary">
+                            <i class="fas fa-eye"></i>
+                            View All
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 
-<!-- Requests Table -->
-<div class="requests-table-section">
-    {% if requests %}
-        <div class="table-responsive">
-            <table class="requests-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Requester</th>
-                        <th>Department</th>
-                        <th>Category</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for request in requests %}
-                    <tr class="request-row" data-request-id="{{ request.id }}">
-                        <!-- Request ID -->
-                        <td class="request-id">#{{ request.id }}</td>
-                        
-                        <!-- Requester Name -->
-                        <td class="requester-name">{{ request.requester_name }}</td>
-                        
-                        <!-- Department -->
-                        <td class="department">
-                            <span class="department-badge">{{ request.department }}</span>
-                        </td>
-                        
-                        <!-- Category -->
-                        <td class="category">
-                            <span class="category-badge">{{ request.category }}</span>
-                        </td>
-                        
-                        <!-- Description -->
-                        <td class="description">
-                            <div class="description-text" title="{{ request.description }}">
-                                {{ request.description[:100] }}{% if request.description|length > 100 %}...{% endif %}
-                            </div>
-                        </td>
-                        
-                        <!-- Status -->
-                        <td class="status">
+    <!-- Requests Grid/Table -->
+    <div class="requests-content">
+        {% if requests %}
+            <!-- Mobile Card View -->
+            <div class="requests-grid-mobile">
+                {% for request in requests %}
+                <div class="request-card glass" data-request-id="{{ request.id }}">
+                    <div class="card-header">
+                        <div class="request-meta">
+                            <span class="request-id">#{{ request.id }}</span>
+                            <span class="request-date">
+                                {{ request.created_at.strftime('%b %d, %Y') }}
+                            </span>
+                        </div>
+                        <div class="request-status">
                             <span class="status-badge status-{{ request.status|lower|replace(' ', '-') }}">
+                                <i class="fas fa-circle"></i>
                                 {{ request.status }}
                             </span>
-                        </td>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h4 class="requester-name">{{ request.requester_name }}</h4>
+                        <p class="request-description">
+                            {{ request.description[:120] }}{% if request.description|length > 120 %}...{% endif %}
+                        </p>
                         
-                        <!-- Created Date -->
-                        <td class="created-date">
-                            <div class="date">{{ request.created_at.strftime('%Y-%m-%d') }}</div>
-                            <div class="time">{{ request.created_at.strftime('%H:%M') }}</div>
-                        </td>
-                        
-                        <!-- Actions -->
-                        <td class="actions">
-                            <div class="action-buttons">
-                                <!-- Status Update Form -->
-                                <form method="POST" 
-                                      action="{{ url_for('update_status', request_id=request.id) }}" 
-                                      class="status-form">
-                                    <select name="status" class="status-select" 
-                                            onchange="this.form.submit()">
-                                        <option value="Pending" 
-                                                {% if request.status == 'Pending' %}selected{% endif %}>
-                                            Pending
-                                        </option>
-                                        <option value="In Progress" 
-                                                {% if request.status == 'In Progress' %}selected{% endif %}>
-                                            In Progress
-                                        </option>
-                                        <option value="Resolved" 
-                                                {% if request.status == 'Resolved' %}selected{% endif %}>
-                                            Resolved
-                                        </option>
-                                    </select>
-                                </form>
-                                
-                                <!-- View Details Button -->
-                                <button class="btn-icon view-details" 
-                                        title="View Details"
-                                        onclick="showRequestDetails({{ request.id }})">
-                                    👁️
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Requests Summary -->
-        <div class="requests-summary">
-            <p>Showing <strong>{{ requests|length }}</strong> 
-               request(s) with applied filters.</p>
-        </div>
-    {% else %}
-        <!-- Empty State -->
-        <div class="empty-state">
-            <div class="empty-icon">📭</div>
-            <h3>No Requests Found</h3>
-            <p>
-                {% if current_filters.status or current_filters.category or current_filters.department %}
-                    No requests match your current filters. 
-                    <a href="{{ url_for('view_requests') }}">Clear filters</a> to see all requests.
-                {% else %}
-                    No service requests have been submitted yet.
-                    <a href="{{ url_for('submit_request') }}">Submit the first request</a>.
-                {% endif %}
-            </p>
-        </div>
-    {% endif %}
+                        <div class="request-tags">
+                            <span class="tag department">
+                                <i class="fas fa-building"></i>
+                                {{ request.department }}
+                            </span>
+                            <span class="tag category">
+                                <i class="fas fa-tag"></i>
+                                {{ request.category }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <form method="POST" 
+                              action="{{ url_for('update_status', request_id=request.id )}}" 
+                              class="status-form">
+                            <select name="status" class="status-select" onchange="this.form.submit()">
+                                <option value="Pending" {% if request.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="In Progress" {% if request.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                <option value="Resolved" {% if request.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                            </select>
+                        </form>
+                        <button class="btn btn-sm btn-outline" 
+                                onclick="showRequestDetails({{ request.id }})">
+                            <i class="fas fa-eye"></i>
+                            View
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Desktop Table View -->
+            <div class="requests-table-container">
+                <div class="table-responsive">
+                    <table class="requests-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Requester</th>
+                                <th>Department</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in requests %}
+                            <tr class="request-row" data-request-id="{{ request.id }}">
+                                <td class="request-id">
+                                    <span class="id-badge">#{{ request.id }}</span>
+                                </td>
+                                <td class="requester-info">
+                                    <div class="requester-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="requester-details">
+                                        <div class="requester-name">{{ request.requester_name }}</div>
+                                        <div class="requester-time">
+                                            {{ request.created_at.strftime('%H:%M') }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="department">
+                                    <span class="department-tag">
+                                        <i class="fas fa-building"></i>
+                                        {{ request.department }}
+                                    </span>
+                                </td>
+                                <td class="category">
+                                    <span class="category-tag">
+                                        <i class="fas fa-tag"></i>
+                                        {{ request.category }}
+                                    </span>
+                                </td>
+                                <td class="description">
+                                    <div class="description-text">
+                                        {{ request.description[:80] }}{% if request.description|length > 80 %}...{% endif %}
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <span class="status-indicator status-{{ request.status|lower|replace(' ', '-') }}">
+                                        <i class="fas fa-circle"></i>
+                                        {{ request.status }}
+                                    </span>
+                                </td>
+                                <td class="created-date">
+                                    <div class="date">{{ request.created_at.strftime('%Y-%m-%d') }}</div>
+                                    <div class="time">{{ request.created_at.strftime('%H:%M') }}</div>
+                                </td>
+                                <td class="actions">
+                                    <div class="action-buttons">
+                                        <form method="POST" 
+                                              action="{{ url_for('update_status', request_id=request.id) }}" 
+                                              class="status-form">
+                                            <select name="status" class="status-select" onchange="this.form.submit()">
+                                                <option value="Pending" {% if request.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                                <option value="In Progress" {% if request.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                                <option value="Resolved" {% if request.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                                            </select>
+                                        </form>
+                                        <button class="btn btn-icon btn-outline" 
+                                                onclick="showRequestDetails({{ request.id }})"
+                                                title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="requests-summary glass">
+                <div class="summary-content">
+                    <div class="summary-text">
+                        Showing <strong>{{ requests|length }}</strong> request(s)
+                        {% if current_filters.status or current_filters.category or current_filters.department %}
+                        with applied filters
+                        {% endif %}
+                    </div>
+                    <div class="summary-actions">
+                        <button class="btn btn-sm btn-outline" onclick="exportRequests()">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state glass">
+                <div class="empty-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3>No Requests Found</h3>
+                <p>
+                    {% if current_filters.status or current_filters.category or current_filters.department %}
+                        No requests match your current filters. 
+                        <a href="{{ url_for('view_requests') }}" class="text-link">Clear filters</a> to see all requests.
+                    {% else %}
+                        No service requests have been submitted yet.
+                        <a href="{{ url_for('submit_request') }}" class="text-link">Submit the first request</a>.
+                    {% endif %}
+                </p>
+                <div class="empty-actions">
+                    <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i>
+                        Create First Request
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 </div>
 
 <!-- Request Details Modal -->
 <div id="requestDetailsModal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content glass">
         <div class="modal-header">
-            <h2>Request Details #<span id="modalRequestId"></span></h2>
-            <span class="close-modal">&times;</span>
+            <h2>
+                <i class="fas fa-ticket-alt"></i>
+                Request Details #<span id="modalRequestId"></span>
+            </h2>
+            <button class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="modal-body">
             <div class="request-details">
-                <!-- Details will be loaded dynamically via JavaScript -->
+                <!-- Dynamic content will be loaded here -->
             </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="hideModal()">
+                <i class="fas fa-times"></i>
+                Close
+            </button>
         </div>
     </div>
 </div>
+
+<style>
+/* Main Container */
+.requests-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Page Header */
+.page-header {
+    padding: 2rem;
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.header-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-description {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 600px;
+}
+
+.header-stats {
+    display: flex;
+    gap: 1rem;
+}
+
+.stat-badge {
+    background: var(--primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Filters Section */
+.filters-section {
+    padding: 2rem;
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.filters-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.filter-chip.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.filter-chip input {
+    display: none;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-indicator.status-pending { background: var(--warning); }
+.status-indicator.status-in-progress { background: var(--primary); }
+.status-indicator.status-resolved { background: var(--success); }
+
+.filter-select {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Mobile Card View */
+.requests-grid-mobile {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.request-card {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.request-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.request-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.request-id {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.request-date {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-badge.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.status-badge.status-in-progress { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+.status-badge.status-resolved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+.card-body {
+    margin-bottom: 1.5rem;
+}
+
+.requester-name {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.request-description {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.request-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.status-form {
+    flex: 1;
+}
+
+.status-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: 0.8rem;
+}
+
+/* Desktop Table View */
+.requests-table-container {
+    display: block;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.requests-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+}
+
+.requests-table th {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+}
+
+.requests-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.request-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.id-badge {
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.requester-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.requester-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.requester-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.requester-name {
+    font-weight: 600;
+}
+
+.requester-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.department-tag, .category-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.description-text {
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: fit-content;
+}
+
+.status-indicator.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.status-indicator.status-in-progress { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+.status-indicator.status-resolved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+.created-date {
+    display: flex;
+    flex-direction: column;
+}
+
+.date {
+    font-weight: 600;
+}
+
+.time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.actions .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-icon {
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Summary */
+.requests-summary {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-text {
+    color: var(--text-secondary);
+}
+
+/* Empty State */
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: var(--radius);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-link {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.text-link:hover {
+    text-decoration: underline;
+}
+
+.empty-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h2 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+}
+
+.close-modal:hover {
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .header-stats {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    .requests-grid-mobile {
+        display: grid;
+    }
+    
+    .requests-table-container {
+        display: none;
+    }
+    
+    .page-header {
+        padding: 1.5rem;
+    }
+    
+    .filters-section {
+        padding: 1.5rem;
+    }
+    
+    .summary-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .requests-container {
+        padding: 0 0.5rem;
+    }
+    
+    .requests-grid-mobile {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .header-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .filter-options {
+        flex-direction: column;
+    }
+    
+    .filter-chip {
+        justify-content: center;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+</style>
 {% endblock %}
 
 {% block scripts %}
-<!--
-JavaScript for enhanced functionality on view requests page.
-Includes modal handling and dynamic content loading.
--->
+<!-- Modern JavaScript for Enhanced Requests Management -->
 <script>
-/**
- * Displays detailed view of a specific service request in a modal.
- * Fetches request details from API and populates modal content.
- * 
- * @param {number} requestId - The ID of the request to display
- */
+// Filter functionality
+function toggleFilters() {
+    const filtersSection = document.getElementById('filtersSection');
+    filtersSection.style.display = filtersSection.style.display === 'none' ? 'block' : 'none';
+}
+
+function clearAllFilters() {
+    window.location.href = "{{ url_for('view_requests') }}";
+}
+
+// Modal functionality
 function showRequestDetails(requestId) {
     fetch(`/api/requests/${requestId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const request = data.request;
-                populateModal(request);
+                populateModal(data.request);
                 showModal();
             }
         })
         .catch(error => {
             console.error('Error fetching request details:', error);
-            alert('Error loading request details');
+            showNotification('Error loading request details', 'error');
         });
 }
 
-/**
- * Populates the modal with request details.
- * 
- * @param {Object} request - The request object containing all details
- */
 function populateModal(request) {
     document.getElementById('modalRequestId').textContent = request.id;
     
@@ -250,77 +1003,178 @@ function populateModal(request) {
     modalBody.innerHTML = `
         <div class="detail-grid">
             <div class="detail-group">
-                <label>Requester Name:</label>
+                <label><i class="fas fa-user"></i> Requester Name:</label>
                 <span>${escapeHtml(request.requester_name)}</span>
             </div>
             <div class="detail-group">
-                <label>Department:</label>
+                <label><i class="fas fa-building"></i> Department:</label>
                 <span>${escapeHtml(request.department)}</span>
             </div>
             <div class="detail-group">
-                <label>Category:</label>
+                <label><i class="fas fa-tag"></i> Category:</label>
                 <span>${escapeHtml(request.category)}</span>
             </div>
             <div class="detail-group">
-                <label>Status:</label>
-                <span class="status-badge status-${request.status.toLowerCase().replace(' ', '-')}">
+                <label><i class="fas fa-flag"></i> Status:</label>
+                <span class="status-indicator status-${request.status.toLowerCase().replace(' ', '-')}">
+                    <i class="fas fa-circle"></i>
                     ${escapeHtml(request.status)}
                 </span>
             </div>
             <div class="detail-group">
-                <label>Created:</label>
+                <label><i class="fas fa-calendar-plus"></i> Created:</label>
                 <span>${new Date(request.created_at).toLocaleString()}</span>
             </div>
             <div class="detail-group">
-                <label>Last Updated:</label>
-                <span>${new Date(request.updated_at).toLocaleString()}</span>
+                <label><i class="fas fa-calendar-check"></i> Last Updated:</label>
+                <span>${request.updated_at ? new Date(request.updated_at).toLocaleString() : 'N/A'}</span>
             </div>
             <div class="detail-group full-width">
-                <label>Description:</label>
+                <label><i class="fas fa-align-left"></i> Description:</label>
                 <div class="description-full">${escapeHtml(request.description)}</div>
             </div>
         </div>
     `;
 }
 
-/**
- * Utility function to escape HTML for safe rendering.
- * Prevents XSS attacks when rendering user-generated content.
- * 
- * @param {string} text - Text to be escaped
- * @returns {string} Escaped HTML string
- */
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-/**
- * Shows the request details modal.
- */
 function showModal() {
     document.getElementById('requestDetailsModal').style.display = 'block';
 }
 
-/**
- * Hides the request details modal.
- */
 function hideModal() {
     document.getElementById('requestDetailsModal').style.display = 'none';
 }
 
-// Event listeners for modal functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Close modal when clicking X
-    document.querySelector('.close-modal').addEventListener('click', hideModal);
+// Export functionality
+function exportRequests() {
+    fetch('/api/requests')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const blob = new Blob([JSON.stringify(data, null, 2)], 
+                                    { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `demulla-requests-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification('Requests exported successfully!', 'success');
+            }
+        })
+        .catch(error => {
+            console.error('Export error:', error);
+            showNotification('Error exporting requests', 'error');
+        });
+}
+
+// Notification system
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `flash-message ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
+        ${message}
+    `;
     
-    // Close modal when clicking outside content
+    // Add to page
+    const flashContainer = document.querySelector('.flash-messages') || createFlashContainer();
+    flashContainer.appendChild(notification);
+    
+    // Auto remove
+    setTimeout(() => {
+        notification.style.transition = 'all 0.3s ease';
+        notification.style.transform = 'translateX(100%)';
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
+}
+
+function createFlashContainer() {
+    const container = document.createElement('div');
+    container.className = 'flash-messages';
+    document.querySelector('.main-content').prepend(container);
+    return container;
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal events
+    document.querySelector('.close-modal').addEventListener('click', hideModal);
     document.getElementById('requestDetailsModal').addEventListener('click', function(event) {
         if (event.target === this) {
             hideModal();
         }
     });
+    
+    // Add animations to cards
+    const cards = document.querySelectorAll('.request-card, .request-row');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('fade-in-up');
+    });
 });
+
+// Add CSS animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .fade-in-up {
+        animation: fade-in-up 0.6s ease forwards;
+    }
+    
+    .detail-grid {
+        display: grid;
+        gap: 1.5rem;
+    }
+    
+    .detail-group {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 1rem;
+        align-items: start;
+    }
+    
+    .detail-group.full-width {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-group label {
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .description-full {
+        background: var(--surface);
+        padding: 1rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        line-height: 1.6;
+        white-space: pre-wrap;
+    }
+`;
+document.head.appendChild(style);
 </script>
 {% endblock %}

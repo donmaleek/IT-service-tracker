@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - Demulla Service Desk{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass">
+        <div class="auth-header">
+            <div class="auth-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h1>Administrator Login</h1>
+            <p>Access the IT Service Desk management system</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="auth-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <i class="fas fa-{% if category == 'success' %}check{% else %}exclamation{% endif %}-circle"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user"></i>
+                    Username
+                </label>
+                <input type="text" 
+                       id="username" 
+                       name="username" 
+                       class="form-input"
+                       required 
+                       placeholder="Enter your username">
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">
+                    <i class="fas fa-key"></i>
+                    Password
+                </label>
+                <input type="password" 
+                       id="password" 
+                       name="password" 
+                       class="form-input"
+                       required 
+                       placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <div class="security-notice">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure administrator access only</span>
+            </div>
+            <div class="demo-credentials">
+                <details>
+                    <summary>Default Credentials</summary>
+                    <div class="credentials">
+                        <p><strong>Username:</strong> admin</p>
+                        <p><strong>Password:</strong> admin123</p>
+                        <small>Change these credentials in production!</small>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.auth-card {
+    padding: 2rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+.auth-header {
+    margin-bottom: 2rem;
+}
+
+.auth-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.auth-header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.auth-messages {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--success);
+    color: var(--success);
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--error);
+    color: var(--error);
+}
+
+.auth-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+}
+
+.auth-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.security-notice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.demo-credentials {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+}
+
+.demo-credentials details {
+    cursor: pointer;
+}
+
+.demo-credentials summary {
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 82, 204, 0.05);
+}
+
+.credentials {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    text-align: left;
+}
+
+.credentials p {
+    margin: 0.25rem 0;
+}
+
+.credentials small {
+    color: var(--error);
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        margin: 1rem auto;
+    }
+    
+    .auth-card {
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}

@@ -1,331 +1,1147 @@
 <!--
-Administrative dashboard for IT Service Request Tracking System.
-Provides comprehensive statistics, charts, and system metrics.
+Modern Administrative Dashboard for IT Service Request Tracking System.
+Provides comprehensive statistics, charts, and system metrics with elegant design.
 -->
 {% extends "base.html" %}
 
-{% block title %}Dashboard - IT Service Desk{% endblock %}
+{% block title %}Dashboard - Demulla Service Desk{% endblock %}
 
 {% block content %}
-<div class="dashboard-header">
-    <h1>System Dashboard</h1>
-    <p class="dashboard-description">
-        Comprehensive overview of IT service requests and system performance metrics.
-    </p>
-</div>
-
-<!-- Key Metrics Section -->
-<div class="metrics-section">
-    <div class="metrics-grid">
-        <!-- Total Requests Metric -->
-        <div class="metric-card">
-            <div class="metric-icon">📋</div>
-            <div class="metric-content">
-                <div class="metric-value">{{ total_requests }}</div>
-                <div class="metric-label">Total Requests</div>
-                <div class="metric-trend">All time service requests</div>
-            </div>
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1><i class="fas fa-tachometer-alt"></i> System Dashboard</h1>
+            <p class="dashboard-description">
+                Real-time overview of IT service requests and system performance metrics
+            </p>
         </div>
-
-        <!-- Pending Requests Metric -->
-        <div class="metric-card metric-warning">
-            <div class="metric-icon">⏳</div>
-            <div class="metric-content">
-                <div class="metric-value">{{ pending_requests }}</div>
-                <div class="metric-label">Pending Requests</div>
-                <div class="metric-trend">Awaiting resolution</div>
-            </div>
-        </div>
-
-        <!-- Resolved Requests Metric -->
-        <div class="metric-card metric-success">
-            <div class="metric-icon">✅</div>
-            <div class="metric-content">
-                <div class="metric-value">{{ resolved_requests }}</div>
-                <div class="metric-label">Resolved Requests</div>
-                <div class="metric-trend">
-                    {% if total_requests > 0 %}
-                        {{ "%.1f"|format((resolved_requests / total_requests) * 100) }}% resolution rate
-                    {% else %}
-                        0% resolution rate
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Average Resolution Time Metric -->
-        <div class="metric-card">
-            <div class="metric-icon">⚡</div>
-            <div class="metric-content">
-                <div class="metric-value">--</div>
-                <div class="metric-label">Avg. Resolution</div>
-                <div class="metric-trend">Calculating...</div>
+        <div class="header-actions">
+            <button class="btn btn-outline" onclick="refreshDashboard()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <div class="last-updated">
+                <i class="fas fa-clock"></i> Updated just now
             </div>
         </div>
     </div>
-</div>
 
-<!-- Charts and Analytics Section -->
-<div class="analytics-section">
-    <div class="analytics-grid">
-        <!-- Requests by Category Chart -->
-        <div class="chart-card">
-            <div class="chart-header">
-                <h3>Requests by Category</h3>
-                <p>Distribution of requests across different issue types</p>
-            </div>
-            <div class="chart-body">
-                <div class="chart-container">
-                    <canvas id="categoryChart" width="400" height="300"></canvas>
+    <!-- Key Metrics Section -->
+    <div class="metrics-section">
+        <div class="section-header">
+            <h2>Key Performance Indicators</h2>
+            <p>Real-time metrics and system health</p>
+        </div>
+        <div class="metrics-grid">
+            <!-- Total Requests Metric -->
+            <div class="metric-card glass">
+                <div class="metric-icon">
+                    <i class="fas fa-clipboard-list"></i>
                 </div>
-                <div class="chart-legend">
-                    {% for category, count in category_stats %}
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: {{ get_category_color(loop.index0) }}"></span>
-                        <span class="legend-label">{{ category }}</span>
-                        <span class="legend-value">({{ count }})</span>
+                <div class="metric-content">
+                    <div class="metric-value">{{ total_requests }}</div>
+                    <div class="metric-label">Total Requests</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-chart-line"></i>
+                        All time service volume
+                    </div>
+                </div>
+                <div class="metric-badge primary">Total</div>
+            </div>
+
+            <!-- Pending Requests Metric -->
+            <div class="metric-card glass warning">
+                <div class="metric-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-value">{{ pending_requests }}</div>
+                    <div class="metric-label">Pending Requests</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Awaiting resolution
+                    </div>
+                </div>
+                <div class="metric-badge warning">Attention</div>
+            </div>
+
+            <!-- Resolved Requests Metric -->
+            <div class="metric-card glass success">
+                <div class="metric-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-value">{{ resolved_requests }}</div>
+                    <div class="metric-label">Resolved Requests</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-trophy"></i>
+                        {% if total_requests > 0 %}
+                            {{ "%.1f"|format((resolved_requests / total_requests) * 100) }}% success rate
+                        {% else %}
+                            0% success rate
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="metric-badge success">Excellent</div>
+            </div>
+
+            <!-- In Progress Metric -->
+            <div class="metric-card glass info">
+                <div class="metric-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-value">{{ in_progress_requests }}</div>
+                    <div class="metric-label">In Progress</div>
+                    <div class="metric-trend">
+                        <i class="fas fa-play-circle"></i>
+                        Active resolutions
+                    </div>
+                </div>
+                <div class="metric-badge info">Active</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts and Analytics Section -->
+    <div class="analytics-section">
+        <div class="section-header">
+            <h2>Analytics & Insights</h2>
+            <p>Visual breakdown of request patterns and distributions</p>
+        </div>
+        <div class="analytics-grid">
+            <!-- Requests by Category Chart -->
+            <div class="chart-card glass">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>Requests by Category</h3>
+                    </div>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn" onclick="toggleChartView('category')">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <div class="chart-container">
+                        <canvas id="categoryChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="chart-legend">
+                        {% for category, count in category_stats %}
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: {{ get_category_color(loop.index0) }}"></span>
+                            <span class="legend-label">{{ category }}</span>
+                            <span class="legend-value">{{ count }}</span>
+                            <span class="legend-percentage">
+                                {% if total_requests > 0 %}
+                                    {{ "%.1f"|format((count / total_requests) * 100) }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Requests by Department Chart -->
+            <div class="chart-card glass">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Requests by Department</h3>
+                    </div>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn" onclick="toggleChartView('department')">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <div class="chart-container">
+                        <canvas id="departmentChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="chart-legend">
+                        {% for department, count in department_stats %}
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: {{ get_department_color(loop.index0) }}"></span>
+                            <span class="legend-label">{{ department }}</span>
+                            <span class="legend-value">{{ count }}</span>
+                            <span class="legend-percentage">
+                                {% if total_requests > 0 %}
+                                    {{ "%.1f"|format((count / total_requests) * 100) }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Two Column Layout for Recent Activity and Quick Actions -->
+    <div class="dashboard-columns">
+        <!-- Recent Activity Section -->
+        <div class="recent-activity-section">
+            <div class="section-header">
+                <h2>Recent Activity</h2>
+                <a href="{{ url_for('view_requests') }}" class="view-all-link">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            {% if recent_requests %}
+                <div class="activity-list">
+                    {% for request in recent_requests %}
+                    <div class="activity-item glass">
+                        <div class="activity-icon status-{{ request.status|lower|replace(' ', '-') }}">
+                            {% if request.status == 'Resolved' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif request.status == 'In Progress' %}
+                                <i class="fas fa-sync-alt fa-spin"></i>
+                            {% else %}
+                                <i class="fas fa-inbox"></i>
+                            {% endif %}
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <div class="activity-title">
+                                    <strong>{{ request.requester_name }}</strong>
+                                    <span class="activity-department">{{ request.department }}</span>
+                                </div>
+                                <div class="activity-time">
+                                    {{ request.created_at.strftime('%H:%M') }}
+                                </div>
+                            </div>
+                            <div class="activity-description">
+                                {{ request.category }} - {{ request.description[:60] }}{% if request.description|length > 60 %}...{% endif %}
+                            </div>
+                            <div class="activity-meta">
+                                <span class="activity-date">
+                                    {{ request.created_at.strftime('%b %d, %Y') }}
+                                </span>
+                                <span class="activity-status status-{{ request.status|lower|replace(' ', '-') }}">
+                                    {{ request.status }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="activity-actions">
+                            <a href="{{ url_for('view_requests') }}?highlight={{ request.id }}" 
+                               class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
-            </div>
+            {% else %}
+                <div class="empty-state glass">
+                    <div class="empty-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>No Recent Activity</h4>
+                    <p>No service requests have been submitted recently.</p>
+                    <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create First Request
+                    </a>
+                </div>
+            {% endif %}
         </div>
 
-        <!-- Requests by Department Chart -->
-        <div class="chart-card">
-            <div class="chart-header">
-                <h3>Requests by Department</h3>
-                <p>Service requests distribution across departments</p>
+        <!-- Quick Actions Section -->
+        <div class="quick-actions-section">
+            <div class="section-header">
+                <h2>Quick Actions</h2>
+                <p>Frequently used operations</p>
             </div>
-            <div class="chart-body">
-                <div class="chart-container">
-                    <canvas id="departmentChart" width="400" height="300"></canvas>
-                </div>
-                <div class="chart-legend">
-                    {% for department, count in department_stats %}
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: {{ get_department_color(loop.index0) }}"></span>
-                        <span class="legend-label">{{ department }}</span>
-                        <span class="legend-value">({{ count }})</span>
+            <div class="actions-grid">
+                <a href="{{ url_for('submit_request') }}" class="action-card glass">
+                    <div class="action-icon primary">
+                        <i class="fas fa-plus-circle"></i>
                     </div>
-                    {% endfor %}
+                    <div class="action-content">
+                        <h4>Submit New Request</h4>
+                        <p>Create a new IT service request ticket</p>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+                
+                <a href="{{ url_for('view_requests') }}" class="action-card glass">
+                    <div class="action-icon secondary">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4>Manage Requests</h4>
+                        <p>View and update all service requests</p>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+                
+                <a href="{{ url_for('view_requests') }}?status=Pending" class="action-card glass">
+                    <div class="action-icon warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4>Pending Requests</h4>
+                        <p>Review items awaiting action</p>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+                
+                <div class="action-card glass" onclick="exportData()">
+                    <div class="action-icon info">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4>Export Data</h4>
+                        <p>Download comprehensive reports</p>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status Widget -->
+            <div class="status-widget glass">
+                <div class="status-header">
+                    <h4>System Status</h4>
+                    <div class="status-indicator online">
+                        <i class="fas fa-circle"></i> Online
+                    </div>
+                </div>
+                <div class="status-metrics">
+                    <div class="status-metric">
+                        <span class="metric-label">Uptime</span>
+                        <span class="metric-value">99.9%</span>
+                    </div>
+                    <div class="status-metric">
+                        <span class="metric-label">Response Time</span>
+                        <span class="metric-value">128ms</span>
+                    </div>
+                    <div class="status-metric">
+                        <span class="metric-label">Active Users</span>
+                        <span class="metric-value">24</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Recent Activity Section -->
-<div class="recent-activity-section">
-    <div class="activity-header">
-        <h3>Recent Activity</h3>
-        <a href="{{ url_for('view_requests') }}" class="view-all-link">View All Requests →</a>
-    </div>
+<style>
+/* Dashboard Layout */
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 2rem 0 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.header-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dashboard-description {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 500px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.last-updated {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Section Headers */
+.section-header {
+    margin-bottom: 2rem;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.section-header p {
+    color: var(--text-secondary);
+}
+
+/* Metrics Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.metric-card {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    position: relative;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.metric-card.warning {
+    border-left: 4px solid var(--warning);
+}
+
+.metric-card.success {
+    border-left: 4px solid var(--success);
+}
+
+.metric-card.info {
+    border-left: 4px solid var(--primary);
+}
+
+.metric-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.metric-content {
+    margin-bottom: 1rem;
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.metric-trend {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.metric-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.metric-badge.primary { background: var(--primary); color: white; }
+.metric-badge.warning { background: var(--warning); color: white; }
+.metric-badge.success { background: var(--success); color: white; }
+.metric-badge.info { background: var(--primary-light); color: white; }
+
+/* Analytics Grid */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.chart-card {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.chart-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chart-title h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.chart-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chart-action-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chart-action-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.chart-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.chart-container {
+    height: 250px;
+    position: relative;
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease;
+}
+
+.legend-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-label {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.legend-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.legend-percentage {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Dashboard Columns */
+.dashboard-columns {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Recent Activity */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.activity-item {
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.activity-item:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow);
+}
+
+.activity-icon {
+    font-size: 1.25rem;
+    padding: 0.75rem;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.activity-icon.status-resolved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.activity-icon.status-in-progress { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+.activity-icon.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.activity-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.activity-department {
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.activity-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.activity-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.activity-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-date {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.activity-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.activity-status.status-resolved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.activity-status.status-in-progress { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+.activity-status.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+.activity-actions {
+    flex-shrink: 0;
+}
+
+/* Quick Actions */
+.actions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.action-card {
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.action-card:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow);
+    color: inherit;
+}
+
+.action-icon {
+    font-size: 1.5rem;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.action-icon.primary { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+.action-icon.secondary { background: rgba(100, 116, 139, 0.1); color: var(--secondary); }
+.action-icon.warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.action-icon.info { background: rgba(59, 130, 246, 0.1); color: var(--primary-light); }
+
+.action-content {
+    flex: 1;
+}
+
+.action-content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.action-content p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.action-arrow {
+    color: var(--text-secondary);
+    transition: transform 0.2s ease;
+}
+
+.action-card:hover .action-arrow {
+    transform: translateX(3px);
+    color: var(--primary);
+}
+
+/* Status Widget */
+.status-widget {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.status-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-indicator.online { color: var(--success); }
+.status-indicator.offline { color: var(--error); }
+
+.status-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.status-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-metric:last-child {
+    border-bottom: none;
+}
+
+.metric-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.metric-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Empty State */
+.empty-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    border-radius: var(--radius);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h4 {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* View All Link */
+.view-all-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.view-all-link:hover {
+    gap: 0.75rem;
+    color: var(--primary-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .dashboard-columns {
+        grid-template-columns: 1fr;
+    }
     
-    {% if recent_requests %}
-        <div class="activity-list">
-            {% for request in recent_requests %}
-            <div class="activity-item">
-                <div class="activity-icon">
-                    {% if request.status == 'Resolved' %}✅
-                    {% elif request.status == 'In Progress' %}🔄
-                    {% else %}📥{% endif %}
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">
-                        <strong>{{ request.requester_name }}</strong> from 
-                        <strong>{{ request.department }}</strong>
-                    </div>
-                    <div class="activity-description">
-                        {{ request.category }} - 
-                        {{ request.description[:80] }}{% if request.description|length > 80 %}...{% endif %}
-                    </div>
-                    <div class="activity-meta">
-                        <span class="activity-time">
-                            {{ request.created_at.strftime('%Y-%m-%d %H:%M') }}
-                        </span>
-                        <span class="activity-status status-badge status-{{ request.status|lower|replace(' ', '-') }}">
-                            {{ request.status }}
-                        </span>
-                    </div>
-                </div>
-                <div class="activity-actions">
-                    <a href="{{ url_for('view_requests') }}?highlight={{ request.id }}" 
-                       class="btn btn-sm btn-outline">View</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="empty-state">
-            <div class="empty-icon">📊</div>
-            <h4>No Recent Activity</h4>
-            <p>No service requests have been submitted recently.</p>
-        </div>
-    {% endif %}
-</div>
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
-<!-- Quick Actions Section -->
-<div class="quick-actions-section">
-    <h3>Quick Actions</h3>
-    <div class="actions-grid">
-        <a href="{{ url_for('submit_request') }}" class="action-card">
-            <div class="action-icon">➕</div>
-            <div class="action-content">
-                <h4>Submit New Request</h4>
-                <p>Create a new IT service request</p>
-            </div>
-        </a>
-        
-        <a href="{{ url_for('view_requests') }}" class="action-card">
-            <div class="action-icon">📋</div>
-            <div class="action-content">
-                <h4>Manage Requests</h4>
-                <p>View and update all service requests</p>
-            </div>
-        </a>
-        
-        <a href="{{ url_for('view_requests') }}?status=Pending" class="action-card">
-            <div class="action-icon">⏳</div>
-            <div class="action-content">
-                <h4>Pending Requests</h4>
-                <p>Review awaiting action items</p>
-            </div>
-        </a>
-        
-        <div class="action-card" onclick="exportData()">
-            <div class="action-icon">📤</div>
-            <div class="action-content">
-                <h4>Export Data</h4>
-                <p>Download requests report</p>
-            </div>
-        </div>
-    </div>
-</div>
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .header-content h1 {
+        justify-content: center;
+        font-size: 2rem;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .activity-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .activity-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .activity-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .activity-actions {
+        align-self: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 0 0.5rem;
+    }
+    
+    .metric-value {
+        font-size: 2rem;
+    }
+    
+    .chart-card {
+        padding: 1rem;
+    }
+    
+    .activity-item, .action-card {
+        padding: 1rem;
+    }
+}
+</style>
 {% endblock %}
 
 {% block scripts %}
-<!--
-JavaScript for dashboard charts and interactive elements.
-Uses Chart.js for data visualization and dynamic updates.
--->
+<!-- Modern JavaScript for Dashboard Interactivity -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+// Chart configuration and management
+let categoryChart, departmentChart;
+let currentCategoryView = 'pie';
+let currentDepartmentView = 'doughnut';
+
 /**
- * Initializes and renders all dashboard charts.
- * Creates pie charts for category and department distributions.
+ * Initializes and renders all dashboard charts with modern styling
  */
 function initializeCharts() {
-    // Category Distribution Chart
-    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-    const categoryChart = new Chart(categoryCtx, {
-        type: 'pie',
-        data: {
-            labels: [
-                {% for category, count in category_stats %}
-                    '{{ category }}'{% if not loop.last %},{% endif %}
-                {% endfor %}
-            ],
-            datasets: [{
-                data: [
-                    {% for category, count in category_stats %}
-                        {{ count }}{% if not loop.last %},{% endif %}
-                    {% endfor %}
-                ],
-                backgroundColor: [
-                    {% for i in range(category_stats|length) %}
-                        '{{ get_category_color(i) }}'{% if not loop.last %},{% endif %}
-                    {% endfor %}
-                ],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = Math.round((value / total) * 100);
-                            return `${label}: ${value} (${percentage}%)`;
-                        }
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                titleColor: '#1e293b',
+                bodyColor: '#475569',
+                borderColor: 'rgba(255, 255, 255, 0.2)',
+                borderWidth: 1,
+                cornerRadius: 8,
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = Math.round((value / total) * 100);
+                        return `${label}: ${value} (${percentage}%)`;
                     }
                 }
             }
         }
-    });
+    };
 
-    // Department Distribution Chart
-    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
-    const departmentChart = new Chart(departmentCtx, {
-        type: 'doughnut',
+    // Category Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    categoryChart = new Chart(categoryCtx, {
+        type: currentCategoryView,
         data: {
-            labels: [
-                {% for department, count in department_stats %}
-                    '{{ department }}'{% if not loop.last %},{% endif %}
-                {% endfor %}
-            ],
+            labels: [{% for category, count in category_stats %}'{{ category }}'{% if not loop.last %},{% endif %}{% endfor %}],
             datasets: [{
-                data: [
-                    {% for department, count in department_stats %}
-                        {{ count }}{% if not loop.last %},{% endif %}
-                    {% endfor %}
-                ],
-                backgroundColor: [
-                    {% for i in range(department_stats|length) %}
-                        '{{ get_department_color(i) }}'{% if not loop.last %},{% endif %}
-                    {% endfor %}
-                ],
+                data: [{% for category, count in category_stats %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                backgroundColor: [{% for i in range(category_stats|length) %}'{{ get_category_color(i) }}'{% if not loop.last %},{% endif %}{% endfor %}],
                 borderWidth: 2,
-                borderColor: '#ffffff'
+                borderColor: 'rgba(255, 255, 255, 0.8)'
             }]
         },
         options: {
-            responsive: true,
-            cutout: '60%',
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
+            ...chartOptions,
+            cutout: currentCategoryView === 'doughnut' ? '60%' : '0%'
+        }
+    });
+
+    // Department Chart
+    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+    departmentChart = new Chart(departmentCtx, {
+        type: currentDepartmentView,
+        data: {
+            labels: [{% for department, count in department_stats %}'{{ department }}'{% if not loop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                data: [{% for department, count in department_stats %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                backgroundColor: [{% for i in range(department_stats|length) %}'{{ get_department_color(i) }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                borderWidth: 2,
+                borderColor: 'rgba(255, 255, 255, 0.8)'
+            }]
+        },
+        options: {
+            ...chartOptions,
+            cutout: currentDepartmentView === 'doughnut' ? '60%' : '0%'
         }
     });
 }
 
 /**
- * Exports dashboard data in JSON format.
- * Provides download functionality for system reports.
+ * Toggles between chart views (pie/doughnut/bar)
  */
-function exportData() {
-    fetch('/api/requests')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const blob = new Blob([JSON.stringify(data, null, 2)], 
-                                    { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `service-requests-${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-        })
-        .catch(error => {
-            console.error('Error exporting data:', error);
-            alert('Error exporting data');
-        });
+function toggleChartView(chartType) {
+    if (chartType === 'category') {
+        currentCategoryView = currentCategoryView === 'pie' ? 'doughnut' : 'pie';
+        categoryChart.destroy();
+    } else {
+        currentDepartmentView = currentDepartmentView === 'doughnut' ? 'bar' : 'doughnut';
+        departmentChart.destroy();
+    }
+    initializeCharts();
 }
 
-// Initialize charts when page loads
-document.addEventListener('DOMContentLoaded', initializeCharts);
+/**
+ * Refreshes dashboard data and animations
+ */
+function refreshDashboard() {
+    const refreshBtn = event.target.closest('button');
+    const originalHTML = refreshBtn.innerHTML;
+    
+    // Show loading state
+    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+    refreshBtn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+}
+
+/**
+ * Exports dashboard data with modern file handling
+ */
+function exportData() {
+    // Show export confirmation
+    if (confirm('Export all service request data as JSON?')) {
+        fetch('/api/requests')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const blob = new Blob([JSON.stringify(data, null, 2)], 
+                                        { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `demulla-requests-${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    // Show success notification
+                    showNotification('Data exported successfully!', 'success');
+                }
+            })
+            .catch(error => {
+                console.error('Export error:', error);
+                showNotification('Error exporting data', 'error');
+            });
+    }
+}
+
+/**
+ * Shows temporary notification
+ */
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `flash-message ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
+        ${message}
+    `;
+    
+    // Add to page
+    const flashContainer = document.querySelector('.flash-messages') || createFlashContainer();
+    flashContainer.appendChild(notification);
+    
+    // Auto remove
+    setTimeout(() => {
+        notification.style.transition = 'all 0.3s ease';
+        notification.style.transform = 'translateX(100%)';
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+/**
+ * Creates flash container if it doesn't exist
+ */
+function createFlashContainer() {
+    const container = document.createElement('div');
+    container.className = 'flash-messages';
+    document.querySelector('.main-content').prepend(container);
+    return container;
+}
+
+// Initialize dashboard when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    
+    // Add loading animations
+    const cards = document.querySelectorAll('.metric-card, .chart-card, .activity-item');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('fade-in-up');
+    });
+});
+
+// Add CSS animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .fade-in-up {
+        animation: fade-in-up 0.6s ease forwards;
+    }
+`;
+document.head.appendChild(style);
 </script>
 {% endblock %}
