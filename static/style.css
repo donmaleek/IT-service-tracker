@@ -13,11 +13,11 @@
     
     /* Neutral Colors */
     --text-primary: #1f2937;
-    --text-secondary: #6b7280;
-    --text-light: #9ca3af;
-    --bg-primary: #ffffff94;
-    --bg-secondary: #c2ceda25;
-    --bg-tertiary: #f1f5f9b9;
+    --text-secondary: #000000;
+    --text-light: #000000;
+    --bg-primary: #00000094;
+    --bg-secondary: #000000d7;
+    --bg-tertiary: #d5d7dab9;
     
     /* Status Colors */
     --status-pending: #f59e0b;
