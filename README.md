@@ -49,14 +49,17 @@ git clone https://github.com/yourusername/IT-service-tracker.git
 cd IT-service-tracker
 
 2. SETUP VIRTUAL ENVIRONMENT
-# Create virtual environment
-python3 -m venv venv
+# Deactivate current environment
+deactivate
 
-# Activate virtual environment
-# On Linux/Mac:
+# Remove the broken virtual environment
+rm -rf venv
+
+# Create a new virtual environment with pip included
+python3 -m venv venv --prompt="it-service" --upgrade-deps
+
+# Activate the new virtual environment
 source venv/bin/activate
-# On Windows:
-venv\Scripts\activate
 
 3. INSTALL DEPENDENCIES
 pip install -r requirements.txt
