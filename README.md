@@ -34,6 +34,83 @@ A modern, web-based application designed to automate internal IT service request
 - **External APIs**: Mailgun (email notifications)
 - **Version Control**: Git
 
+
+# 🧰 IT Service Request Tracking System
+
+A modern, web-based application designed to automate internal IT service request management for enterprises.  
+This system replaces email-based request handling with a structured, trackable process for submitting and managing IT service requests — complete with role-based access control and analytics.
+
+---
+
+## 🌟 Key Features
+
+### 👨‍💼 For Employees
+- **Easy Request Submission** – Intuitive web form for creating IT service requests  
+- **Real-Time Tracking** – View progress and status updates instantly  
+- **Responsive UI** – Works seamlessly across all screen sizes
+
+### 🧑‍💻 For Administrators
+- **Centralized Dashboard** – Manage, update, and prioritize requests efficiently  
+- **Advanced Analytics** – Visual charts for workload and request trends  
+- **Role-Based Access** – Secure login and session-based authentication  
+- **Bulk Management** – Streamlined request handling for large organizations
+
+### ⚙️ System Features
+- **Mailgun Integration** – Automated email notifications for request events  
+- **Timestamp Tracking** – Automatic creation and update timestamps  
+- **RESTful API** – Provides JSON endpoints for external integrations  
+- **Scalable Design** – Works with both SQLite (dev) and PostgreSQL (production)
+
+---
+
+## 🏗 Technology Stack
+
+- **Backend:** Flask (Python) + SQLAlchemy ORM  
+- **Frontend:** HTML5, CSS3, JavaScript, Jinja2  
+- **Database:** SQLite (dev) / PostgreSQL (prod)  
+- **Styling:** Glassmorphism + CSS variables  
+- **Icons:** Font Awesome 6.4.0  
+- **Fonts:** Inter (Google Fonts)  
+- **Auth:** Session-based role management  
+- **Email API:** Mailgun  
+- **Version Control:** Git  
+
+---
+
+## 🖼️ UI Previews
+
+### 🔐 Admin Login  
+![Admin Login](https://drive.google.com/uc?export=view&id=1JahhiZ5LbyhdK-ITvnSsOcWTZeG1eCTp)
+
+### 🏠 Homepage  
+![Homepage](https://drive.google.com/uc?export=view&id=1MCIp6LtZo-ZC6IWY0T3y5xoXt1sb0RRm)
+
+### 📊 Dashboard  
+![Dashboard](https://drive.google.com/uc?export=view&id=1XHO4UXsgP_U3rAkEWYdRTB3JzTVFpTnX)
+
+### 📝 Requests Page  
+![Requests](https://drive.google.com/uc?export=view&id=1UamiQz0bo5IYZcsqOvItx-K_8ZMCHaY0)
+
+---
+
+## 📋 Prerequisites
+
+- Python **3.8+**  
+- Git  
+- Virtualenv  
+- Modern web browser (Chrome / Firefox / Edge)
+
+---
+
+## 🚀 Quick Start
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/yourusername/IT-service-tracker.git
+cd IT-service-tracker
+
+
+
 ## 📋 Prerequisites
 
 - **Python 3.8+**
