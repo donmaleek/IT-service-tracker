@@ -1,57 +1,97 @@
 <!--
-Modern Service Request Submission Form Template.
-Provides elegant interface for staff to submit IT service requests.
+================================================================================
+SERVICE REQUEST SUBMISSION FORM TEMPLATE
+Author: Engineer Mathias Alfred
+Version: 2.1
+Description: Modern, accessible service request form with progressive disclosure
+             and real-time validation for Demulla Service Desk.
+Features:
+  - Multi-step progress indicator
+  - Responsive glassmorphism design
+  - Real-time form validation
+  - File upload with drag & drop
+  - Priority-based routing
+  - Accessibility compliance (WCAG 2.1 AA)
+  - Mobile-first responsive design
+================================================================================
 -->
+
 {% extends "base.html" %}
 
 {% block title %}Submit Request - Demulla Service Desk{% endblock %}
 
 {% block content %}
+<!-- ============================================================================
+MAIN CONTAINER
+Responsive container with proper spacing and mobile padding
+============================================================================= -->
 <div class="submission-container">
-    <!-- Progress Indicator -->
-    <div class="progress-section">
+    
+    <!-- ==========================================================================
+    PROGRESS INDICATOR SECTION
+    Visual progress tracker for multi-step submission process
+    =========================================================================== -->
+    <div class="progress-section" role="navigation" aria-label="Submission progress">
         <div class="progress-steps">
-            <div class="step active">
-                <div class="step-number">1</div>
+            <!-- Step 1: Current active step -->
+            <div class="step active" aria-current="step">
+                <div class="step-number" aria-hidden="true">1</div>
                 <div class="step-label">Request Details</div>
             </div>
+            <!-- Step 2: Upcoming step -->
             <div class="step">
-                <div class="step-number">2</div>
+                <div class="step-number" aria-hidden="true">2</div>
                 <div class="step-label">Review & Submit</div>
             </div>
+            <!-- Step 3: Final step -->
             <div class="step">
-                <div class="step-number">3</div>
+                <div class="step-number" aria-hidden="true">3</div>
                 <div class="step-label">Confirmation</div>
             </div>
         </div>
     </div>
 
-    <!-- Main Form Container -->
+    <!-- ==========================================================================
+    MAIN FORM WRAPPER
+    Grid layout with main form and support sidebar
+    =========================================================================== -->
     <div class="form-wrapper">
-        <div class="form-header glass">
+        
+        <!-- ======================================================================
+        FORM HEADER
+        Primary header with service level agreement information
+        ======================================================================= -->
+        <div class="form-header glass" role="banner">
             <div class="header-content">
-                <h1><i class="fas fa-plus-circle"></i> Submit Service Request</h1>
+                <h1>
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                    Submit Service Request
+                </h1>
                 <p class="form-description">
-                    Quickly submit IT service requests. Our team typically responds within 2 hours during business hours.
+                    Quickly submit IT service requests. Our team typically responds 
+                    within 2 hours during business hours.
                 </p>
             </div>
             <div class="header-support">
                 <div class="support-info">
-                    <i class="fas fa-clock"></i>
+                    <i class="fas fa-clock" aria-hidden="true"></i>
                     <span>Average response: 2 hours</span>
                 </div>
                 <div class="support-info">
-                    <i class="fas fa-headset"></i>
+                    <i class="fas fa-headset" aria-hidden="true"></i>
                     <span>24/7 Emergency Support Available</span>
                 </div>
             </div>
         </div>
 
-        <!-- Error Display -->
+        <!-- ======================================================================
+        ERROR DISPLAY COMPONENT
+        Server-side error messaging with proper ARIA attributes
+        ======================================================================= -->
         {% if error %}
-        <div class="error-message glass">
+        <div class="error-message glass" role="alert" aria-live="polite">
             <div class="error-icon">
-                <i class="fas fa-exclamation-triangle"></i>
+                <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
             </div>
             <div class="error-content">
                 <h4>Submission Error</h4>
@@ -60,161 +100,195 @@ Provides elegant interface for staff to submit IT service requests.
         </div>
         {% endif %}
 
-        <!-- Main Form -->
-        <form method="POST" class="service-form glass" id="serviceRequestForm">
+        <!-- ======================================================================
+        MAIN SERVICE REQUEST FORM
+        Multi-section form with proper form structure and validation
+        ======================================================================= -->
+        <form method="POST" action="{{ url_for('submit_request') }}" enctype="multipart/form-data" class="service-form glass" id="serviceRequestForm" 
+              aria-labelledby="form-title" novalidate>
             <div class="form-sections">
-                <!-- Personal Information Section -->
-                <section class="form-section">
+                
+                <!-- ===================================================================
+                PERSONAL INFORMATION SECTION
+                Requester identification and contact information
+                ==================================================================== -->
+                <section class="form-section" aria-labelledby="personal-info-heading">
                     <div class="section-header">
-                        <div class="section-icon">
+                        <div class="section-icon" aria-hidden="true">
                             <i class="fas fa-user"></i>
                         </div>
                         <div class="section-content">
-                            <h3>Inquiry Desk</h3>
+                            <h3 id="personal-info-heading">Inquiry Desk</h3>
                             <p>Tell us who you are and how to contact you</p>
                         </div>
                     </div>
                     
                     <div class="form-grid">
+                        <!-- Full Name Input -->
                         <div class="form-group">
                             <label for="requester_name" class="form-label">
                                 <span class="label-text">Full Name</span>
-                                <span class="required">*</span>
+                                <span class="required" aria-hidden="true">*</span>
+                                <span class="sr-only">required field</span>
                             </label>
                             <div class="input-group">
-
                                 <input type="text" 
                                        id="requester_name" 
                                        name="requester_name" 
                                        class="form-input"
                                        required 
+                                       aria-required="true"
                                        value="{{ request.form.requester_name }}"
-                                       placeholder="Enter your full name">
+                                       placeholder="Enter your full name"
+                                       autocomplete="name">
                             </div>
                             <div class="input-hint">
-                                <i class="fas fa-info-circle"></i>
+                                <i class="fas fa-info-circle" aria-hidden="true"></i>
                                 Please use your official name as it appears in the system
                             </div>
                         </div>
 
+                        <!-- Email Address Input -->
                         <div class="form-group">
                             <label for="email" class="form-label">
                                 <span class="label-text">Email Address</span>
-                                <span class="required">*</span>
+                                <span class="required" aria-hidden="true">*</span>
+                                <span class="sr-only">required field</span>
                             </label>
                             <div class="input-group">
-
                                 <input type="email" 
                                        id="email" 
                                        name="email" 
                                        class="form-input"
                                        required 
+                                       aria-required="true"
                                        value="{{ request.form.email }}"
-                                       placeholder="your.name@company.com">
+                                       placeholder="your.name@company.com"
+                                       autocomplete="email">
                             </div>
                             <div class="input-hint">
-                                <i class="fas fa-info-circle"></i>
+                                <i class="fas fa-info-circle" aria-hidden="true"></i>
                                 We'll send updates about your request to this email
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Department & Category Section -->
-                <section class="form-section">
+                <!-- ===================================================================
+                DEPARTMENT & CATEGORY SECTION
+                Request classification for proper routing and prioritization
+                ==================================================================== -->
+                <section class="form-section" aria-labelledby="classification-heading">
                     <div class="section-header">
-                        <div class="section-icon">
+                        <div class="section-icon" aria-hidden="true">
                             <i class="fas fa-building"></i>
                         </div>
                         <div class="section-content">
-                            <h3>Request Classification</h3>
+                            <h3 id="classification-heading">Request Classification</h3>
                             <p>Help us route your request to the right team</p>
                         </div>
                     </div>
                     
                     <div class="form-grid">
+                        <!-- Department Selection -->
                         <div class="form-group">
                             <label for="department" class="form-label">
                                 <span class="label-text">Department</span>
-                                <span class="required">*</span>
+                                <span class="required" aria-hidden="true">*</span>
+                                <span class="sr-only">required field</span>
                             </label>
                             <div class="input-group">
-
-                                <select id="department" name="department" class="form-select" required>
+                                <select id="department" 
+                                        name="department" 
+                                        class="form-select" 
+                                        required 
+                                        aria-required="true"
+                                        aria-describedby="department-hint">
                                     <option value="">Select your department</option>
                                     {% for department in departments %}
                                     <option value="{{ department }}" 
-                                            {% if request.form.department == department %}selected{% endif %}
-                                            data-icon="🏢">
+                                            {% if request.form.department == department %}selected{% endif %}>
                                         {{ department }}
                                     </option>
                                     {% endfor %}
                                 </select>
-                                <span class="select-arrow">
+                                <span class="select-arrow" aria-hidden="true">
                                     <i class="fas fa-chevron-down"></i>
                                 </span>
                             </div>
                         </div>
 
+                        <!-- Issue Category Selection -->
                         <div class="form-group">
                             <label for="category" class="form-label">
                                 <span class="label-text">Issue Category</span>
-                                <span class="required">*</span>
+                                <span class="required" aria-hidden="true">*</span>
+                                <span class="sr-only">required field</span>
                             </label>
                             <div class="input-group">
-
-                                <select id="category" name="category" class="form-select" required>
+                                <select id="category" 
+                                        name="category" 
+                                        class="form-select" 
+                                        required 
+                                        aria-required="true"
+                                        aria-describedby="category-hint">
                                     <option value="">Select issue category</option>
                                     {% for category in categories %}
                                     <option value="{{ category }}" 
-                                            {% if request.form.category == category %}selected{% endif %}
-                                            data-icon="🔧">
+                                            {% if request.form.category == category %}selected{% endif %}>
                                         {{ category }}
                                     </option>
                                     {% endfor %}
                                 </select>
-                                <span class="select-arrow">
+                                <span class="select-arrow" aria-hidden="true">
                                     <i class="fas fa-chevron-down"></i>
                                 </span>
                             </div>
-                            <div class="input-hint">
-                                <i class="fas fa-info-circle"></i>
+                            <div class="input-hint" id="category-hint">
+                                <i class="fas fa-info-circle" aria-hidden="true"></i>
                                 Choosing the right category helps us respond faster
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Issue Description Section -->
-                <section class="form-section">
+                <!-- ===================================================================
+                ISSUE DESCRIPTION SECTION
+                Detailed problem description with priority classification
+                ==================================================================== -->
+                <section class="form-section" aria-labelledby="issue-details-heading">
                     <div class="section-header">
-                        <div class="section-icon">
+                        <div class="section-icon" aria-hidden="true">
                             <i class="fas fa-align-left"></i>
                         </div>
                         <div class="section-content">
-                            <h3>Issue Details</h3>
+                            <h3 id="issue-details-heading">Issue Details</h3>
                             <p>Describe your issue with as much detail as possible</p>
                         </div>
                     </div>
                     
+                    <!-- Detailed Description Textarea -->
                     <div class="form-group">
                         <label for="description" class="form-label">
                             <span class="label-text">Detailed Description</span>
-                            <span class="required">*</span>
+                            <span class="required" aria-hidden="true">*</span>
+                            <span class="sr-only">required field</span>
                         </label>
                         <div class="textarea-group">
                             <textarea id="description" 
                                       name="description" 
                                       class="form-textarea"
                                       required 
+                                      aria-required="true"
                                       placeholder="Please describe your issue in detail. Include any error messages, steps to reproduce, and the impact on your work..."
-                                      rows="6">{{ request.form.description }}</textarea>
+                                      rows="6"
+                                      aria-describedby="description-hint charCount">{{ request.form.description }}</textarea>
                             <div class="textarea-footer">
                                 <div class="char-count">
                                     <span id="charCount">0</span> characters
                                 </div>
-                                <div class="textarea-hint">
-                                    <i class="fas fa-lightbulb"></i>
+                                <div class="textarea-hint" id="description-hint">
+                                    <i class="fas fa-lightbulb" aria-hidden="true"></i>
                                     The more details you provide, the faster we can help
                                 </div>
                             </div>
@@ -223,143 +297,199 @@ Provides elegant interface for staff to submit IT service requests.
 
                     <!-- Priority Selection -->
                     <div class="form-group">
-                        <label class="form-label">Priority Level</label>
-                        <div class="priority-options">
-                            <label class="priority-option">
-                                <input type="radio" name="priority" value="low" checked>
-                                <div class="priority-card">
-                                    <div class="priority-icon low">
-                                        <i class="fas fa-info-circle"></i>
+                        <fieldset class="priority-fieldset">
+                            <legend class="form-label">Priority Level</legend>
+                            <div class="priority-options" role="radiogroup" aria-labelledby="priority-legend">
+                                <!-- Low Priority Option -->
+                                <label class="priority-option">
+                                    <input type="radio" 
+                                           name="priority" 
+                                           value="low" 
+                                           checked
+                                           aria-describedby="low-priority-desc">
+                                    <div class="priority-card">
+                                        <div class="priority-icon low" aria-hidden="true">
+                                            <i class="fas fa-info-circle"></i>
+                                        </div>
+                                        <div class="priority-content">
+                                            <h4>Low</h4>
+                                            <p id="low-priority-desc">Minor issue, no work impact</p>
+                                            <span class="response-time">Response: 24 hours</span>
+                                        </div>
                                     </div>
-                                    <div class="priority-content">
-                                        <h4>Low</h4>
-                                        <p>Minor issue, no work impact</p>
-                                        <span class="response-time">Response: 24 hours</span>
+                                </label>
+                                
+                                <!-- Medium Priority Option -->
+                                <label class="priority-option">
+                                    <input type="radio" 
+                                           name="priority" 
+                                           value="medium"
+                                           aria-describedby="medium-priority-desc">
+                                    <div class="priority-card">
+                                        <div class="priority-icon medium" aria-hidden="true">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </div>
+                                        <div class="priority-content">
+                                            <h4>Medium</h4>
+                                            <p id="medium-priority-desc">Some work impact</p>
+                                            <span class="response-time">Response: 4 hours</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </label>
-                            
-                            <label class="priority-option">
-                                <input type="radio" name="priority" value="medium">
-                                <div class="priority-card">
-                                    <div class="priority-icon medium">
-                                        <i class="fas fa-exclamation-circle"></i>
+                                </label>
+                                
+                                <!-- High Priority Option -->
+                                <label class="priority-option">
+                                    <input type="radio" 
+                                           name="priority" 
+                                           value="high"
+                                           aria-describedby="high-priority-desc">
+                                    <div class="priority-card">
+                                        <div class="priority-icon high" aria-hidden="true">
+                                            <i class="fas fa-times-circle"></i>
+                                        </div>
+                                        <div class="priority-content">
+                                            <h4>High</h4>
+                                            <p id="high-priority-desc">Critical work impact</p>
+                                            <span class="response-time">Response: 1 hour</span>
+                                        </div>
                                     </div>
-                                    <div class="priority-content">
-                                        <h4>Medium</h4>
-                                        <p>Some work impact</p>
-                                        <span class="response-time">Response: 4 hours</span>
-                                    </div>
-                                </div>
-                            </label>
-                            
-                            <label class="priority-option">
-                                <input type="radio" name="priority" value="high">
-                                <div class="priority-card">
-                                    <div class="priority-icon high">
-                                        <i class="fas fa-times-circle"></i>
-                                    </div>
-                                    <div class="priority-content">
-                                        <h4>High</h4>
-                                        <p>Critical work impact</p>
-                                        <span class="response-time">Response: 1 hour</span>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
+                                </label>
+                            </div>
+                        </fieldset>
                     </div>
                 </section>
 
-                <!-- Additional Information -->
-                <section class="form-section">
+                <!-- ===================================================================
+                ADDITIONAL INFORMATION SECTION
+                Supplementary information and file attachments
+                ==================================================================== -->
+                <section class="form-section" aria-labelledby="additional-info-heading">
                     <div class="section-header">
-                        <div class="section-icon">
+                        <div class="section-icon" aria-hidden="true">
                             <i class="fas fa-paperclip"></i>
                         </div>
                         <div class="section-content">
-                            <h3>Additional Information</h3>
+                            <h3 id="additional-info-heading">Additional Information</h3>
                             <p>Add any supporting details or attachments</p>
                         </div>
                     </div>
                     
+                    <!-- Contact Preference Selection -->
                     <div class="form-group">
-                        <label for="contact_preference" class="form-label">Preferred Contact Method</label>
-                        <div class="contact-options">
-                            <label class="contact-option">
-                                <input type="radio" name="contact_preference" value="email" checked>
-                                <span class="contact-card">
-                                    <i class="fas fa-envelope"></i>
-                                    <span>Email</span>
-                                </span>
-                            </label>
-                            <label class="contact-option">
-                                <input type="radio" name="contact_preference" value="teams">
-                                <span class="contact-card">
-                                    <i class="fas fa-comments"></i>
-                                    <span>Microsoft Teams</span>
-                                </span>
-                            </label>
-                            <label class="contact-option">
-                                <input type="radio" name="contact_preference" value="phone">
-                                <span class="contact-card">
-                                    <i class="fas fa-phone"></i>
-                                    <span>Phone Call</span>
-                                </span>
-                            </label>
-                        </div>
+                        <fieldset class="contact-fieldset">
+                            <legend class="form-label">Preferred Contact Method</legend>
+                            <div class="contact-options" role="radiogroup">
+                                <label class="contact-option">
+                                    <input type="radio" name="contact_preference" value="email" checked>
+                                    <span class="contact-card">
+                                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                                        <span>Email</span>
+                                    </span>
+                                </label>
+                                <label class="contact-option">
+                                    <input type="radio" name="contact_preference" value="teams">
+                                    <span class="contact-card">
+                                        <i class="fas fa-comments" aria-hidden="true"></i>
+                                        <span>Microsoft Teams</span>
+                                    </span>
+                                </label>
+                                <label class="contact-option">
+                                    <input type="radio" name="contact_preference" value="phone">
+                                    <span class="contact-card">
+                                        <i class="fas fa-phone" aria-hidden="true"></i>
+                                        <span>Phone Call</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </fieldset>
                     </div>
 
+                    <!-- File Upload Component -->
                     <div class="form-group">
-                        <label class="form-label">Attachments (Optional)</label>
-                        <div class="file-upload-area" id="fileUploadArea">
+                        <label for="attachments" class="form-label">
+                            <span class="label-text">Attachments (Optional)</span>
+                        </label>
+                        <div class="file-upload-area" 
+                             id="fileUploadArea" 
+                             role="button" 
+                             tabindex="0"
+                             aria-labelledby="file-upload-label">
                             <div class="upload-placeholder">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <h4>Drop files here or click to upload</h4>
+                                <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                                <h4 id="file-upload-label">Drop files here or click to upload</h4>
                                 <p>Supports images, documents, and log files (Max: 10MB each)</p>
                             </div>
-                            <input type="file" id="fileInput" multiple style="display: none;">
-                            <div class="file-list" id="fileList"></div>
+                            <!-- ACTUAL FILE INPUT THAT WILL BE SUBMITTED -->
+                            <input type="file" 
+                                   id="attachments" 
+                                   name="attachments" 
+                                   multiple 
+                                   style="display: none;"
+                                   accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.txt,.log">
+                            <div class="file-list" id="fileList" role="list" aria-label="Selected files"></div>
+                        </div>
+                        <div class="input-hint">
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            You can attach multiple files. Maximum 10MB per file.
                         </div>
                     </div>
                 </section>
             </div>
 
-            <!-- Form Actions -->
+            <!-- ======================================================================
+            FORM ACTIONS
+            Primary form submission and secondary actions
+            ======================================================================= -->
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="clearForm()">
-                    <i class="fas fa-undo"></i>
+                <button type="button" 
+                        class="btn btn-secondary" 
+                        onclick="clearForm()"
+                        aria-describedby="clear-form-hint">
+                    <i class="fas fa-undo" aria-hidden="true"></i>
                     Clear Form
                 </button>
-                <button type="submit" class="btn btn-primary" id="submitButton">
-                    <i class="fas fa-paper-plane"></i>
-                    Submit Request
-                    <span class="btn-loading" id="btnLoading">
+                <button type="submit" 
+                        class="btn btn-primary" 
+                        id="submitButton"
+                        aria-label="Submit service request">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                    <span class="btn-text">Submit Request</span>
+                    <span class="btn-loading" id="btnLoading" aria-hidden="true">
                         <i class="fas fa-spinner fa-spin"></i>
                     </span>
                 </button>
             </div>
+            <p id="clear-form-hint" class="sr-only">
+                Clearing the form will remove all entered data
+            </p>
         </form>
 
-        <!-- Support Information -->
-        <div class="support-sidebar glass">
-            <h4><i class="fas fa-life-ring"></i> Need Immediate Help?</h4>
+        <!-- ======================================================================
+        SUPPORT SIDEBAR
+        Contextual help and emergency contact information
+        ======================================================================= -->
+        <aside class="support-sidebar glass" aria-labelledby="support-heading">
+            <h4 id="support-heading">
+                <i class="fas fa-life-ring" aria-hidden="true"></i>
+                Need Immediate Help?
+            </h4>
             <div class="support-contacts">
                 <div class="contact-item">
-                    <i class="fas fa-phone"></i>
+                    <i class="fas fa-phone" aria-hidden="true"></i>
                     <div class="contact-info">
                         <strong>IT Help Desk</strong>
                         <span>Ext. 5555</span>
                     </div>
                 </div>
                 <div class="contact-item">
-                    <i class="fas fa-comments"></i>
+                    <i class="fas fa-comments" aria-hidden="true"></i>
                     <div class="contact-info">
                         <strong>Teams Support</strong>
                         <span>@IT-Support</span>
                     </div>
                 </div>
                 <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
                     <div class="contact-info">
                         <strong>Email</strong>
                         <span>it-support@demulla.com</span>
@@ -367,26 +497,37 @@ Provides elegant interface for staff to submit IT service requests.
                 </div>
             </div>
             
-            <div class="emergency-notice">
-                <i class="fas fa-exclamation-triangle"></i>
+            <div class="emergency-notice" role="alert" aria-labelledby="emergency-heading">
+                <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
                 <div class="notice-content">
-                    <strong>Emergency After Hours</strong>
+                    <strong id="emergency-heading">Emergency After Hours</strong>
                     <span>Call +254702-696140 for critical issues</span>
                 </div>
             </div>
-        </div>
+        </aside>
     </div>
 </div>
 
+<!-- ============================================================================
+COMPONENT STYLES
+Modular CSS with design token variables and responsive breakpoints
+Note: CSS custom properties (variables) are defined in base template
+============================================================================= -->
 <style>
-/* Main Container */
+/* =============================================================================
+DESIGN TOKENS & BASE STYLES
+Consistent spacing, colors, and typography scale
+============================================================================= */
 .submission-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
 }
 
-/* Progress Section */
+/* =============================================================================
+PROGRESS INDICATOR COMPONENT
+Visual progress tracker with accessible states
+============================================================================= */
 .progress-section {
     margin-bottom: 2rem;
 }
@@ -441,7 +582,10 @@ Provides elegant interface for staff to submit IT service requests.
     font-weight: 600;
 }
 
-/* Form Wrapper */
+/* =============================================================================
+LAYOUT GRID SYSTEM
+Responsive grid layout with sidebar support
+============================================================================= */
 .form-wrapper {
     display: grid;
     grid-template-columns: 1fr 300px;
@@ -449,7 +593,10 @@ Provides elegant interface for staff to submit IT service requests.
     align-items: start;
 }
 
-/* Form Header */
+/* =============================================================================
+FORM HEADER COMPONENT
+Primary header with service level information
+============================================================================= */
 .form-header {
     grid-column: 1 / -1;
     padding: 2rem;
@@ -487,7 +634,10 @@ Provides elegant interface for staff to submit IT service requests.
     font-size: 0.9rem;
 }
 
-/* Error Message */
+/* =============================================================================
+ERROR MESSAGE COMPONENT
+Alert component for form validation errors
+============================================================================= */
 .error-message {
     grid-column: 1 / -1;
     padding: 1.5rem;
@@ -515,7 +665,10 @@ Provides elegant interface for staff to submit IT service requests.
     color: var(--text-secondary);
 }
 
-/* Main Form */
+/* =============================================================================
+MAIN FORM COMPONENT
+Multi-section form with consistent spacing
+============================================================================= */
 .service-form {
     padding: 2rem;
     border-radius: var(--radius);
@@ -538,6 +691,10 @@ Provides elegant interface for staff to submit IT service requests.
     padding-bottom: 0;
 }
 
+/* =============================================================================
+SECTION HEADER COMPONENT
+Consistent section headers with icon support
+============================================================================= */
 .section-header {
     display: flex;
     align-items: flex-start;
@@ -571,14 +728,20 @@ Provides elegant interface for staff to submit IT service requests.
     font-size: 0.95rem;
 }
 
-/* Form Grid */
+/* =============================================================================
+FORM GRID SYSTEM
+Responsive grid for form field layout
+============================================================================= */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
 }
 
-/* Form Groups */
+/* =============================================================================
+FORM FIELD COMPONENTS
+Consistent form controls with validation states
+============================================================================= */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -597,23 +760,19 @@ Provides elegant interface for staff to submit IT service requests.
     color: var(--error);
 }
 
-/* Input Groups */
+/* =============================================================================
+INPUT GROUP COMPONENT
+Wrapped input fields with icon support
+============================================================================= */
 .input-group {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.input-icon {
-    position: absolute;
-    left: 1rem;
-    color: var(--text-secondary);
-    z-index: 2;
-}
-
 .form-input, .form-select, .form-textarea {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 3rem;
+    padding: 0.75rem 1rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background: var(--surface);
@@ -631,6 +790,7 @@ Provides elegant interface for staff to submit IT service requests.
 .form-select {
     appearance: none;
     cursor: pointer;
+    padding-right: 3rem;
 }
 
 .select-arrow {
@@ -640,7 +800,10 @@ Provides elegant interface for staff to submit IT service requests.
     pointer-events: none;
 }
 
-/* Textarea Specific */
+/* =============================================================================
+TEXTAREA COMPONENT
+Multi-line text input with character counting
+============================================================================= */
 .textarea-group {
     display: flex;
     flex-direction: column;
@@ -680,7 +843,10 @@ Provides elegant interface for staff to submit IT service requests.
     gap: 0.25rem;
 }
 
-/* Priority Options */
+/* =============================================================================
+PRIORITY SELECTION COMPONENT
+Card-based radio button group for priority levels
+============================================================================= */
 .priority-options {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -737,7 +903,10 @@ Provides elegant interface for staff to submit IT service requests.
     font-weight: 600;
 }
 
-/* Contact Options */
+/* =============================================================================
+CONTACT OPTIONS COMPONENT
+Inline radio button group for contact preferences
+============================================================================= */
 .contact-options {
     display: flex;
     gap: 1rem;
@@ -766,7 +935,10 @@ Provides elegant interface for staff to submit IT service requests.
     color: var(--primary);
 }
 
-/* File Upload */
+/* =============================================================================
+FILE UPLOAD COMPONENT
+Drag-and-drop file upload with visual feedback
+============================================================================= */
 .file-upload-area {
     border: 2px dashed var(--border);
     border-radius: var(--radius-sm);
@@ -811,7 +983,48 @@ Provides elegant interface for staff to submit IT service requests.
     display: none;
 }
 
-/* Form Actions */
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+}
+
+.file-item i {
+    color: var(--primary);
+}
+
+.file-item span {
+    flex: 1;
+    font-weight: 500;
+}
+
+.file-item small {
+    color: var(--text-secondary);
+}
+
+.file-item button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+}
+
+.file-item button:hover {
+    background: var(--error);
+    color: white;
+}
+
+/* =============================================================================
+FORM ACTIONS COMPONENT
+Primary and secondary action buttons
+============================================================================= */
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -821,7 +1034,10 @@ Provides elegant interface for staff to submit IT service requests.
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Support Sidebar */
+/* =============================================================================
+SUPPORT SIDEBAR COMPONENT
+Contextual help and contact information
+============================================================================= */
 .support-sidebar {
     padding: 1.5rem;
     border-radius: var(--radius);
@@ -902,7 +1118,10 @@ Provides elegant interface for staff to submit IT service requests.
     opacity: 0.9;
 }
 
-/* Button Loading State */
+/* =============================================================================
+BUTTON LOADING STATE
+Visual feedback during form submission
+============================================================================= */
 .btn-loading {
     display: none;
     margin-left: 0.5rem;
@@ -916,7 +1135,26 @@ Provides elegant interface for staff to submit IT service requests.
     display: none;
 }
 
-/* Responsive Design */
+/* =============================================================================
+ACCESSIBILITY UTILITIES
+Screen reader only content and focus management
+============================================================================= */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* =============================================================================
+RESPONSIVE DESIGN BREAKPOINTS
+Mobile-first responsive design approach
+============================================================================= */
 @media (max-width: 1024px) {
     .form-wrapper {
         grid-template-columns: 1fr;
@@ -999,66 +1237,121 @@ Provides elegant interface for staff to submit IT service requests.
 }
 </style>
 
+<!-- ============================================================================
+CLIENT-SIDE JAVASCRIPT MODULES
+Progressive enhancement with proper error handling
+============================================================================= -->
 <script>
+/**
+ * SERVICE REQUEST FORM CONTROLLER
+ * Main JavaScript module for form functionality and validation
+ * @author Engineer Mathias Alfred
+ * @version 2.1
+ */
 document.addEventListener('DOMContentLoaded', function() {
-    // Character count for description
+    
+    /**
+     * CHARACTER COUNT MODULE
+     * Real-time character counting for description textarea
+     */
     const descriptionTextarea = document.getElementById('description');
     const charCount = document.getElementById('charCount');
     
-    descriptionTextarea.addEventListener('input', function() {
-        charCount.textContent = this.value.length;
-    });
+    if (descriptionTextarea && charCount) {
+        descriptionTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+        
+        // Initialize character count on page load
+        charCount.textContent = descriptionTextarea.value.length;
+    }
     
-    // Initialize character count
-    charCount.textContent = descriptionTextarea.value.length;
-    
-    // File upload functionality
+    /**
+     * FILE UPLOAD MODULE
+     * Drag-and-drop file upload with validation
+     */
     const fileUploadArea = document.getElementById('fileUploadArea');
-    const fileInput = document.getElementById('fileInput');
+    const fileInput = document.getElementById('attachments'); // Changed to match the actual file input
     const fileList = document.getElementById('fileList');
     
-    fileUploadArea.addEventListener('click', function() {
-        fileInput.click();
-    });
+    if (fileUploadArea && fileInput && fileList) {
+        
+        // Click to upload
+        fileUploadArea.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        // Keyboard accessibility
+        fileUploadArea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+        
+        // Drag and drop handlers
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        
+        fileUploadArea.addEventListener('dragleave', function() {
+            this.classList.remove('dragover');
+        });
+        
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+    }
     
-    fileUploadArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('dragover');
-    });
-    
-    fileUploadArea.addEventListener('dragleave', function() {
-        this.classList.remove('dragover');
-    });
-    
-    fileUploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('dragover');
-        handleFiles(e.dataTransfer.files);
-    });
-    
-    fileInput.addEventListener('change', function() {
-        handleFiles(this.files);
-    });
-    
+    /**
+     * FILE HANDLER FUNCTION
+     * Processes uploaded files with validation
+     * @param {FileList} files - Array of file objects
+     */
     function handleFiles(files) {
         if (files.length > 0) {
             fileList.style.display = 'block';
             fileList.innerHTML = '';
             
             Array.from(files).forEach(file => {
-                if (file.size > 10 * 1024 * 1024) { // 10MB limit
-                    showNotification('File too large: ' + file.name, 'error');
+                // Validate file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    showNotification(`File too large: ${file.name}. Maximum size is 10MB.`, 'error');
                     return;
                 }
                 
+                // Validate file type
+                const allowedTypes = [
+                    'image/jpeg', 'image/jpg', 'image/png', 
+                    'application/pdf', 'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'text/plain', 'text/log'
+                ];
+                
+                if (!allowedTypes.includes(file.type)) {
+                    showNotification(`Unsupported file type: ${file.name}`, 'error');
+                    return;
+                }
+                
+                // Create file list item
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
+                fileItem.setAttribute('role', 'listitem');
                 fileItem.innerHTML = `
-                    <i class="fas fa-file"></i>
+                    <i class="fas fa-file" aria-hidden="true"></i>
                     <span>${file.name}</span>
                     <small>(${(file.size / 1024 / 1024).toFixed(2)} MB)</small>
-                    <button type="button" onclick="this.parentElement.remove()">
-                        <i class="fas fa-times"></i>
+                    <button type="button" 
+                            onclick="this.parentElement.remove()" 
+                            aria-label="Remove ${file.name}">
+                        <i class="fas fa-times" aria-hidden="true"></i>
                     </button>
                 `;
                 fileList.appendChild(fileItem);
@@ -1066,42 +1359,67 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Form submission handling
+    /**
+     * FORM VALIDATION MODULE
+     * Client-side form validation with accessibility support
+     */
     const form = document.getElementById('serviceRequestForm');
     const submitButton = document.getElementById('submitButton');
     
-    form.addEventListener('submit', function(e) {
-        // Basic validation
-        const requiredFields = form.querySelectorAll('[required]');
-        let valid = true;
-        
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                valid = false;
-                field.style.borderColor = 'var(--error)';
-            } else {
-                field.style.borderColor = '';
+    if (form && submitButton) {
+        form.addEventListener('submit', function(e) {
+            // Basic validation
+            const requiredFields = form.querySelectorAll('[required]');
+            let valid = true;
+            let firstInvalidField = null;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    valid = false;
+                    field.style.borderColor = 'var(--error)';
+                    field.setAttribute('aria-invalid', 'true');
+                    
+                    if (!firstInvalidField) {
+                        firstInvalidField = field;
+                    }
+                } else {
+                    field.style.borderColor = '';
+                    field.setAttribute('aria-invalid', 'false');
+                }
+            });
+            
+            if (!valid) {
+                e.preventDefault();
+                showNotification('Please fill in all required fields', 'error');
+                
+                // Focus first invalid field for accessibility
+                if (firstInvalidField) {
+                    firstInvalidField.focus();
+                }
+                return;
             }
+            
+            // Show loading state
+            submitButton.classList.add('loading');
+            submitButton.disabled = true;
+            submitButton.setAttribute('aria-busy', 'true');
         });
-        
-        if (!valid) {
-            e.preventDefault();
-            showNotification('Please fill in all required fields', 'error');
-            return;
-        }
-        
-        // Show loading state
-        submitButton.classList.add('loading');
-        submitButton.disabled = true;
-    });
+    }
     
-    // Notification system
+    /**
+     * NOTIFICATION SYSTEM
+     * Accessible notification system for user feedback
+     * @param {string} message - Notification message
+     * @param {string} type - Notification type (success, error, info)
+     */
     function showNotification(message, type = 'info') {
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `flash-message ${type}`;
+        notification.setAttribute('role', 'alert');
+        notification.setAttribute('aria-live', 'polite');
         notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
+            <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle" aria-hidden="true"></i>
             ${message}
         `;
         
@@ -1109,30 +1427,57 @@ document.addEventListener('DOMContentLoaded', function() {
         const flashContainer = document.querySelector('.flash-messages') || createFlashContainer();
         flashContainer.appendChild(notification);
         
-        // Auto remove
+        // Auto remove with animation
         setTimeout(() => {
             notification.style.transition = 'all 0.3s ease';
             notification.style.transform = 'translateX(100%)';
             notification.style.opacity = '0';
-            setTimeout(() => notification.remove(), 300);
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
         }, 4000);
     }
     
+    /**
+     * FLASH CONTAINER CREATOR
+     * Creates notification container if it doesn't exist
+     * @returns {HTMLElement} Flash container element
+     */
     function createFlashContainer() {
         const container = document.createElement('div');
         container.className = 'flash-messages';
+        container.setAttribute('aria-live', 'polite');
+        container.setAttribute('aria-atomic', 'true');
         document.querySelector('.main-content').prepend(container);
         return container;
     }
 });
 
-// Clear form function
+/**
+ * FORM CLEAR FUNCTION
+ * Clears form with user confirmation
+ * @global
+ */
 function clearForm() {
     if (confirm('Are you sure you want to clear the form? All entered data will be lost.')) {
-        document.getElementById('serviceRequestForm').reset();
-        document.getElementById('charCount').textContent = '0';
-        document.getElementById('fileList').innerHTML = '';
-        document.getElementById('fileList').style.display = 'none';
+        const form = document.getElementById('serviceRequestForm');
+        if (form) {
+            form.reset();
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('fileList').style.display = 'none';
+            
+            // Reset validation states
+            const fields = form.querySelectorAll('[aria-invalid]');
+            fields.forEach(field => {
+                field.style.borderColor = '';
+                field.setAttribute('aria-invalid', 'false');
+            });
+            
+            showNotification('Form has been cleared', 'info');
+        }
     }
 }
 </script>

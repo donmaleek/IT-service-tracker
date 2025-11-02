@@ -1,11 +1,36 @@
+<!--
+================================================================================
+SUCCESS CONFIRMATION TEMPLATE
+System: Demulla IT Service Desk
+Author: Engineer Mathias Alfred
+Version: 3.0.0
+Description: Engaging success confirmation page with comprehensive request 
+             tracking information, progress visualization, and next steps guidance.
+Features:
+  - Animated success indicators with confetti effects
+  - Interactive progress timeline with status tracking
+  - Comprehensive request details and support information
+  - WCAG 2.1 AA accessibility compliance
+  - Mobile-first responsive design
+  - Performance-optimized animations
+================================================================================
+-->
 {% extends "base.html" %}
 
 {% block title %}Submission Successful - Demulla Service Desk{% endblock %}
 
 {% block content %}
-<div class="success-page">
-    <!-- Animated Background -->
-    <div class="success-background">
+<!-- ============================================================================
+SUCCESS PAGE CONTAINER
+Main container with animated background and accessible structure
+============================================================================= -->
+<div class="success-page" role="main" aria-labelledby="success-heading">
+    
+    <!-- ==========================================================================
+    ANIMATED BACKGROUND ELEMENTS
+    Decorative background with floating shapes for visual interest
+    =========================================================================== -->
+    <div class="success-background" aria-hidden="true">
         <div class="floating-shapes">
             <div class="shape shape-1"></div>
             <div class="shape shape-2"></div>
@@ -14,66 +39,73 @@
         </div>
     </div>
 
-    <!-- Main Success Card -->
+    <!-- ==========================================================================
+    MAIN SUCCESS CONTENT CONTAINER
+    Centered content area with glassmorphism design
+    =========================================================================== -->
     <div class="success-container">
-        <div class="success-card glass">
-            <!-- Success Header -->
-            <div class="success-header">
+        <div class="success-card glass" role="article" aria-labelledby="success-heading">
+            
+            <!-- ======================================================================
+            SUCCESS HEADER SECTION
+            Primary success confirmation with animated icon and celebratory elements
+            ======================================================================= -->
+            <header class="success-header">
                 <div class="success-icon">
-                    <div class="icon-circle">
+                    <div class="icon-circle" aria-hidden="true">
                         <i class="fas fa-check"></i>
                     </div>
-                    <div class="confetti">
-                        <div class="confetti-piece"></div>
-                        <div class="confetti-piece"></div>
-                        <div class="confetti-piece"></div>
-                        <div class="confetti-piece"></div>
-                        <div class="confetti-piece"></div>
-                        <div class="confetti-piece"></div>
-                        <div class="confetti-piece"></div>
-                        <div class="confetti-piece"></div>
-                        <div class="confetti-piece"></div>
+                    <div class="confetti" aria-hidden="true">
+                        <!-- Confetti elements will be generated dynamically -->
                     </div>
                 </div>
-                <h1 class="success-title">
+                <h1 id="success-heading" class="success-title">
                     <span class="gradient-text">Request Submitted Successfully!</span>
                 </h1>
                 <p class="success-subtitle">
                     Your IT service request has been received and is now in our system
                 </p>
-            </div>
+            </header>
 
-            <!-- Request Details -->
-            <div class="request-details glass">
+            <!-- ======================================================================
+            REQUEST DETAILS SECTION
+            Comprehensive request confirmation with tracking information
+            ======================================================================= -->
+            <section class="request-details glass" aria-labelledby="request-details-heading">
                 <div class="detail-header">
-                    <i class="fas fa-ticket-alt"></i>
-                    <h3>Request Confirmation</h3>
+                    <i class="fas fa-ticket-alt" aria-hidden="true"></i>
+                    <h3 id="request-details-heading">Request Confirmation</h3>
                 </div>
-                <div class="detail-content">
-                    <div class="detail-item">
+                <div class="detail-content" role="list" aria-label="Request details">
+                    <div class="detail-item" role="listitem">
                         <span class="detail-label">Request ID:</span>
                         <span class="detail-value id-highlight">#{{ request_id }}</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item" role="listitem">
                         <span class="detail-label">Status:</span>
-                        <span class="detail-value status-badge pending">
-                            <i class="fas fa-clock"></i>
+                        <span class="detail-value status-badge pending" aria-label="Status: Pending Review">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
                             Pending Review
                         </span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item" role="listitem">
                         <span class="detail-label">Submitted:</span>
                         <span class="detail-value" id="submissionTime">{{ now }}</span>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Progress Timeline -->
-            <div class="progress-timeline glass">
-                <h3>What happens next?</h3>
-                <div class="timeline">
-                    <div class="timeline-item completed">
-                        <div class="timeline-marker">
+            <!-- ======================================================================
+            PROGRESS TIMELINE SECTION
+            Interactive timeline showing request lifecycle and next steps
+            ======================================================================= -->
+            <section class="progress-timeline glass" aria-labelledby="timeline-heading">
+                <h3 id="timeline-heading">What happens next?</h3>
+                <div class="timeline" role="list" aria-label="Request progress timeline">
+                    
+                    <!-- Timeline Step 1: Request Submitted -->
+                    <div class="timeline-item completed" role="listitem">
+                        <div class="timeline-marker" aria-hidden="true">
                             <i class="fas fa-check"></i>
                         </div>
                         <div class="timeline-content">
@@ -82,8 +114,10 @@
                             <span class="timeline-time">Just now</span>
                         </div>
                     </div>
-                    <div class="timeline-item active">
-                        <div class="timeline-marker">
+                    
+                    <!-- Timeline Step 2: Under Review -->
+                    <div class="timeline-item active" role="listitem">
+                        <div class="timeline-marker" aria-hidden="true">
                             <i class="fas fa-user-check"></i>
                         </div>
                         <div class="timeline-content">
@@ -92,8 +126,10 @@
                             <span class="timeline-time">Expected: Within 2 hours</span>
                         </div>
                     </div>
-                    <div class="timeline-item upcoming">
-                        <div class="timeline-marker">
+                    
+                    <!-- Timeline Step 3: In Progress -->
+                    <div class="timeline-item upcoming" role="listitem">
+                        <div class="timeline-marker" aria-hidden="true">
                             <i class="fas fa-cogs"></i>
                         </div>
                         <div class="timeline-content">
@@ -102,8 +138,10 @@
                             <span class="timeline-time">Expected: Within 24 hours</span>
                         </div>
                     </div>
-                    <div class="timeline-item upcoming">
-                        <div class="timeline-marker">
+                    
+                    <!-- Timeline Step 4: Resolved -->
+                    <div class="timeline-item upcoming" role="listitem">
+                        <div class="timeline-marker" aria-hidden="true">
                             <i class="fas fa-flag-checkered"></i>
                         </div>
                         <div class="timeline-content">
@@ -113,17 +151,22 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Support Information -->
-            <div class="support-info glass">
+            <!-- ======================================================================
+            SUPPORT INFORMATION SECTION
+            Comprehensive support contact methods and availability
+            ======================================================================= -->
+            <section class="support-info glass" aria-labelledby="support-heading">
                 <div class="support-header">
-                    <i class="fas fa-life-ring"></i>
-                    <h3>Need Immediate Assistance?</h3>
+                    <i class="fas fa-life-ring" aria-hidden="true"></i>
+                    <h3 id="support-heading">Need Immediate Assistance?</h3>
                 </div>
-                <div class="support-contacts">
-                    <div class="contact-method">
-                        <div class="contact-icon">
+                <div class="support-contacts" role="list" aria-label="Support contact methods">
+                    
+                    <!-- Phone Support -->
+                    <div class="contact-method" role="listitem">
+                        <div class="contact-icon" aria-hidden="true">
                             <i class="fas fa-phone"></i>
                         </div>
                         <div class="contact-details">
@@ -132,8 +175,10 @@
                             <small>Available 24/7 for emergencies</small>
                         </div>
                     </div>
-                    <div class="contact-method">
-                        <div class="contact-icon">
+                    
+                    <!-- Teams Support -->
+                    <div class="contact-method" role="listitem">
+                        <div class="contact-icon" aria-hidden="true">
                             <i class="fas fa-comments"></i>
                         </div>
                         <div class="contact-details">
@@ -142,8 +187,10 @@
                             <small>Quick chat support</small>
                         </div>
                     </div>
-                    <div class="contact-method">
-                        <div class="contact-icon">
+                    
+                    <!-- Email Support -->
+                    <div class="contact-method" role="listitem">
+                        <div class="contact-icon" aria-hidden="true">
                             <i class="fas fa-envelope"></i>
                         </div>
                         <div class="contact-details">
@@ -153,56 +200,72 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Action Buttons -->
-            <div class="action-section">
+            <!-- ======================================================================
+            ACTION SECTION
+            Primary call-to-action buttons and performance statistics
+            ======================================================================= -->
+            <section class="action-section" aria-labelledby="actions-heading">
                 <div class="action-buttons">
-                    <a href="{{ url_for('submit_request') }}" class="btn btn-primary btn-large">
-                        <i class="fas fa-plus-circle"></i>
+                    <a href="{{ url_for('submit_request') }}" 
+                       class="btn btn-primary btn-large"
+                       aria-label="Submit another service request">
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i>
                         Submit Another Request
                     </a>
-                    <a href="{{ url_for('view_requests') }}" class="btn btn-secondary btn-large">
-                        <i class="fas fa-list-alt"></i>
+                    <a href="{{ url_for('view_requests') }}" 
+                       class="btn btn-secondary btn-large"
+                       aria-label="Track your existing service requests">
+                        <i class="fas fa-list-alt" aria-hidden="true"></i>
                         Track Your Requests
                     </a>
-                    <a href="{{ url_for('index') }}" class="btn btn-outline btn-large">
-                        <i class="fas fa-home"></i>
+                    <a href="{{ url_for('index') }}" 
+                       class="btn btn-outline btn-large"
+                       aria-label="Return to homepage">
+                        <i class="fas fa-home" aria-hidden="true"></i>
                         Return to Home
                     </a>
                 </div>
                 
-                <!-- Quick Stats -->
-                <div class="quick-stats glass">
-                    <div class="stat">
-                        <i class="fas fa-clock"></i>
+                <!-- Performance Statistics -->
+                <div class="quick-stats glass" role="status" aria-label="Service performance statistics">
+                    <div class="stat" role="listitem">
+                        <i class="fas fa-clock" aria-hidden="true"></i>
                         <div class="stat-content">
                             <span class="stat-number">2</span>
                             <span class="stat-label">Avg. Response Time (Hours)</span>
                         </div>
                     </div>
-                    <div class="stat">
-                        <i class="fas fa-check-circle"></i>
+                    <div class="stat" role="listitem">
+                        <i class="fas fa-check-circle" aria-hidden="true"></i>
                         <div class="stat-content">
                             <span class="stat-number">95%</span>
                             <span class="stat-label">Resolution Rate</span>
                         </div>
                     </div>
-                    <div class="stat">
-                        <i class="fas fa-users"></i>
+                    <div class="stat" role="listitem">
+                        <i class="fas fa-users" aria-hidden="true"></i>
                         <div class="stat-content">
                             <span class="stat-number">24/7</span>
                             <span class="stat-label">Support Coverage</span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </div>
 
+<!-- ============================================================================
+SUCCESS PAGE STYLESHEET
+Comprehensive CSS with animations, responsive design, and accessibility
+============================================================================= -->
 <style>
-/* Success Page Layout */
+/**
+ * SUCCESS PAGE LAYOUT
+ * Full-viewport layout with gradient background and floating elements
+ */
 .success-page {
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -219,6 +282,10 @@
     z-index: 1;
 }
 
+/**
+ * FLOATING SHAPES ANIMATION
+ * Decorative background elements with smooth floating animations
+ */
 .floating-shapes {
     position: relative;
     width: 100%;
@@ -265,17 +332,24 @@
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+    }
+    50% { 
+        transform: translateY(-20px) rotate(180deg); 
+    }
 }
 
-/* Main Container */
+/**
+ * MAIN CONTENT CONTAINER
+ * Centered container with optimal reading width
+ */
 .success-container {
     position: relative;
     z-index: 2;
     max-width: 800px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: var(--space-2xl) var(--space-lg);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -284,20 +358,25 @@
 
 .success-card {
     width: 100%;
-    padding: 3rem 2rem;
-    border-radius: var(--radius);
+    padding: var(--space-3xl) var(--space-2xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
-/* Success Header */
+/**
+ * SUCCESS HEADER STYLES
+ * Celebratory header with animated icon and typography
+ */
 .success-header {
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-3xl);
 }
 
 .success-icon {
     position: relative;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
 }
 
 .icon-circle {
@@ -316,11 +395,21 @@
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
+    0%, 20%, 50%, 80%, 100% { 
+        transform: translateY(0); 
+    }
+    40% { 
+        transform: translateY(-10px); 
+    }
+    60% { 
+        transform: translateY(-5px); 
+    }
 }
 
+/**
+ * CONFETTI ANIMATION SYSTEM
+ * Celebratory confetti effects for success confirmation
+ */
 .confetti {
     position: absolute;
     top: 50%;
@@ -352,15 +441,27 @@
 .confetti-piece:nth-child(9) { transform: rotate(360deg); animation-delay: 0.9s; }
 
 @keyframes confetti {
-    0% { opacity: 0; transform: translateY(0) rotate(0deg); }
-    50% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(100px) rotate(360deg); }
+    0% { 
+        opacity: 0; 
+        transform: translateY(0) rotate(0deg); 
+    }
+    50% { 
+        opacity: 1; 
+    }
+    100% { 
+        opacity: 0; 
+        transform: translateY(100px) rotate(360deg); 
+    }
 }
 
+/**
+ * SUCCESS TYPOGRAPHY
+ * Gradient text and responsive typography hierarchy
+ */
 .success-title {
     font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
     line-height: 1.2;
 }
 
@@ -379,20 +480,25 @@
     margin: 0 auto;
 }
 
-/* Request Details */
+/**
+ * REQUEST DETAILS COMPONENT
+ * Structured request information with visual hierarchy
+ */
 .request-details {
-    padding: 2rem;
-    border-radius: var(--radius);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
     text-align: left;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .detail-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
     color: var(--primary);
 }
 
@@ -404,14 +510,14 @@
 .detail-content {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .detail-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
+    padding: var(--space-md) 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -431,7 +537,7 @@
 .id-highlight {
     background: var(--primary);
     color: white;
-    padding: 0.5rem 1rem;
+    padding: var(--space-sm) var(--space-lg);
     border-radius: 20px;
     font-weight: 700;
     font-size: 1.1rem;
@@ -440,11 +546,11 @@
 .status-badge {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
     border-radius: 20px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
 }
 
 .status-badge.pending {
@@ -452,17 +558,22 @@
     color: var(--warning);
 }
 
-/* Progress Timeline */
+/**
+ * PROGRESS TIMELINE COMPONENT
+ * Interactive timeline showing request lifecycle
+ */
 .progress-timeline {
-    padding: 2rem;
-    border-radius: var(--radius);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
     text-align: left;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .progress-timeline h3 {
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
     color: var(--text-primary);
     text-align: center;
 }
@@ -485,8 +596,8 @@
 
 .timeline-item {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-2xl);
     position: relative;
 }
 
@@ -523,30 +634,36 @@
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+    0% { 
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); 
+    }
+    70% { 
+        box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); 
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); 
+    }
 }
 
 .timeline-content {
     flex: 1;
-    padding-bottom: 0.5rem;
+    padding-bottom: var(--space-sm);
 }
 
 .timeline-content h4 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 var(--space-sm) 0;
     font-size: 1.1rem;
     color: var(--text-primary);
 }
 
 .timeline-content p {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 var(--space-sm) 0;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
 }
 
 .timeline-time {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
     font-weight: 600;
 }
@@ -560,19 +677,24 @@
     color: var(--primary);
 }
 
-/* Support Information */
+/**
+ * SUPPORT INFORMATION COMPONENT
+ * Comprehensive support contact methods and availability
+ */
 .support-info {
-    padding: 2rem;
-    border-radius: var(--radius);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .support-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
     color: var(--primary);
     justify-content: center;
 }
@@ -585,17 +707,17 @@
 .support-contacts {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+    gap: var(--space-xl);
 }
 
 .contact-method {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
     background: rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-sm);
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
 }
 
 .contact-method:hover {
@@ -622,62 +744,73 @@
 }
 
 .contact-details strong {
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--space-xs);
     color: var(--text-primary);
 }
 
 .contact-details span {
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 0.25rem;
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-xs);
 }
 
 .contact-details small {
     color: var(--text-secondary);
     opacity: 0.7;
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
 }
 
-/* Action Section */
+/**
+ * ACTION SECTION COMPONENT
+ * Primary call-to-action buttons and performance statistics
+ */
 .action-section {
     text-align: center;
 }
 
 .action-buttons {
     display: flex;
-    gap: 1rem;
+    gap: var(--space-lg);
     justify-content: center;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
     flex-wrap: wrap;
 }
 
 .btn-large {
-    padding: 1rem 2rem;
-    font-size: 1rem;
+    padding: var(--space-lg) var(--space-2xl);
+    font-size: var(--text-base);
     border-radius: var(--radius);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
     text-decoration: none;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
     min-width: 200px;
     justify-content: center;
+    border: 2px solid transparent;
+}
+
+.btn-large:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 .quick-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
-    padding: 1.5rem;
-    border-radius: var(--radius);
+    gap: var(--space-xl);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .stat {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .stat i {
@@ -697,18 +830,21 @@
 }
 
 .stat-label {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
 }
 
-/* Responsive Design */
+/**
+ * RESPONSIVE DESIGN BREAKPOINTS
+ * Mobile-first responsive design system
+ */
 @media (max-width: 768px) {
     .success-container {
-        padding: 1rem 0.5rem;
+        padding: var(--space-lg) var(--space-sm);
     }
     
     .success-card {
-        padding: 2rem 1rem;
+        padding: var(--space-2xl) var(--space-lg);
     }
     
     .success-title {
@@ -742,13 +878,13 @@
     }
     
     .timeline-item {
-        gap: 1rem;
+        gap: var(--space-lg);
     }
     
     .detail-item {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: var(--space-sm);
     }
 }
 
@@ -766,7 +902,7 @@
     .request-details,
     .progress-timeline,
     .support-info {
-        padding: 1.5rem;
+        padding: var(--space-xl);
     }
     
     .contact-method {
@@ -777,70 +913,361 @@
     .contact-icon {
         align-self: center;
     }
+    
+    .timeline-marker {
+        width: 32px;
+        height: 32px;
+        font-size: var(--text-sm);
+    }
+}
+
+/**
+ * ANIMATION UTILITIES
+ * Reusable animation classes for enhanced user experience
+ */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/**
+ * REDUCED MOTION PREFERENCES
+ * Respect user motion sensitivity preferences
+ */
+@media (prefers-reduced-motion: reduce) {
+    .shape,
+    .icon-circle,
+    .confetti-piece,
+    .timeline-marker,
+    .contact-method,
+    .btn-large {
+        animation: none;
+        transition: none;
+    }
+    
+    .fade-in-up {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/**
+ * DARK MODE ENHANCEMENTS
+ * Improved contrast and readability in dark mode
+ */
+@media (prefers-color-scheme: dark) {
+    .success-card,
+    .request-details,
+    .progress-timeline,
+    .support-info,
+    .quick-stats {
+        background: rgba(30, 41, 59, 0.95);
+        border-color: var(--border);
+    }
+    
+    .contact-method {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .contact-method:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
 }
 </style>
 
+<!-- ============================================================================
+SUCCESS PAGE JAVASCRIPT MODULES
+Interactive animations, dynamic content, and enhanced user experience
+============================================================================= -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Set current time for submission
-    const now = new Date();
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-    document.getElementById('submissionTime').textContent = now.toLocaleDateString('en-US', options);
-    
-    // Add entrance animations
-    const elements = document.querySelectorAll('.success-card > *');
-    elements.forEach((element, index) => {
-        element.style.animationDelay = `${index * 0.2}s`;
-        element.classList.add('fade-in-up');
-    });
-    
-    // Add confetti effect on load
-    setTimeout(() => {
-        createConfetti();
-    }, 500);
-});
+/**
+ * SUCCESS PAGE CONTROLLER MODULE
+ * Main JavaScript controller for success page functionality
+ * @author Engineer Mathias Alfred
+ * @version 3.0.0
+ */
+class SuccessPageController {
+    constructor() {
+        this.init();
+    }
 
-function createConfetti() {
-    const confettiContainer = document.querySelector('.confetti');
-    for (let i = 0; i < 20; i++) {
+    /**
+     * Initializes all success page components and animations
+     */
+    init() {
+        this.setSubmissionTime();
+        this.initEntranceAnimations();
+        this.initConfettiEffects();
+        this.setupEventListeners();
+        
+        // Performance monitoring
+        this.monitorPageLoad();
+    }
+
+    /**
+     * Sets and formats the current submission time
+     */
+    setSubmissionTime() {
+        const now = new Date();
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZoneName: 'short'
+        };
+        
+        const submissionTimeElement = document.getElementById('submissionTime');
+        if (submissionTimeElement) {
+            submissionTimeElement.textContent = now.toLocaleDateString('en-US', options);
+            submissionTimeElement.setAttribute('datetime', now.toISOString());
+        }
+    }
+
+    /**
+     * Initializes staggered entrance animations for page elements
+     */
+    initEntranceAnimations() {
+        const elements = document.querySelectorAll('.success-card > *');
+        
+        elements.forEach((element, index) => {
+            element.style.animationDelay = `${index * 0.2}s`;
+            element.classList.add('fade-in-up');
+        });
+    }
+
+    /**
+     * Creates celebratory confetti effects
+     */
+    initConfettiEffects() {
+        // Initial confetti burst
+        setTimeout(() => {
+            this.createConfettiBurst();
+        }, 500);
+        
+        // Additional confetti on user interaction
+        this.setupConfettiInteractions();
+    }
+
+    /**
+     * Creates a burst of confetti particles
+     */
+    createConfettiBurst() {
+        const confettiContainer = document.querySelector('.confetti');
+        if (!confettiContainer) return;
+        
+        const particleCount = 20;
+        const colors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'];
+        
+        for (let i = 0; i < particleCount; i++) {
+            this.createConfettiParticle(confettiContainer, colors, i);
+        }
+    }
+
+    /**
+     * Creates individual confetti particle
+     */
+    createConfettiParticle(container, colors, index) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti-piece';
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.animationDelay = Math.random() * 1 + 's';
-        confetti.style.background = getRandomColor();
-        confettiContainer.appendChild(confetti);
+        
+        // Random positioning and styling
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.animationDelay = `${Math.random() * 1}s`;
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        // Random size variation
+        const size = 6 + Math.random() * 6;
+        confetti.style.width = `${size}px`;
+        confetti.style.height = `${size * 2}px`;
+        
+        container.appendChild(confetti);
+        
+        // Clean up after animation
+        setTimeout(() => {
+            if (confetti.parentNode === container) {
+                container.removeChild(confetti);
+            }
+        }, 2000);
+    }
+
+    /**
+     * Sets up confetti effects on user interactions
+     */
+    setupConfettiInteractions() {
+        const actionButtons = document.querySelectorAll('.action-buttons .btn');
+        
+        actionButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                // Small confetti burst on button click
+                this.createMiniConfetti(event.target);
+            });
+        });
+    }
+
+    /**
+     * Creates mini confetti effect around clicked element
+     */
+    createMiniConfetti(element) {
+        const rect = element.getBoundingClientRect();
+        const miniContainer = document.createElement('div');
+        miniContainer.className = 'confetti-mini';
+        miniContainer.style.cssText = `
+            position: fixed;
+            top: ${rect.top}px;
+            left: ${rect.left}px;
+            width: ${rect.width}px;
+            height: ${rect.height}px;
+            pointer-events: none;
+            z-index: 1000;
+        `;
+        
+        document.body.appendChild(miniContainer);
+        
+        // Create 5 mini confetti particles
+        for (let i = 0; i < 5; i++) {
+            this.createMiniConfettiParticle(miniContainer, rect);
+        }
+        
+        // Clean up
+        setTimeout(() => {
+            if (miniContainer.parentNode) {
+                document.body.removeChild(miniContainer);
+            }
+        }, 1000);
+    }
+
+    /**
+     * Creates mini confetti particle for button interactions
+     */
+    createMiniConfettiParticle(container, rect) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: 4px;
+            height: 8px;
+            background: ${this.getRandomColor()};
+            border-radius: 1px;
+            animation: miniConfetti 1s ease-out forwards;
+            left: ${Math.random() * rect.width}px;
+            top: ${Math.random() * rect.height}px;
+        `;
+        
+        container.appendChild(particle);
+        
+        // Clean up
+        setTimeout(() => {
+            if (particle.parentNode === container) {
+                container.removeChild(particle);
+            }
+        }, 1000);
+    }
+
+    /**
+     * Returns random color for confetti particles
+     */
+    getRandomColor() {
+        const colors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    /**
+     * Sets up additional event listeners
+     */
+    setupEventListeners() {
+        // Keyboard navigation support
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                // Navigate to home on escape
+                window.location.href = "{{ url_for('index') }}";
+            }
+        });
+        
+        // Print functionality
+        this.setupPrintSupport();
+    }
+
+    /**
+     * Sets up print-specific functionality
+     */
+    setupPrintSupport() {
+        const style = document.createElement('style');
+        style.textContent = `
+            @media print {
+                .success-background,
+                .confetti,
+                .action-buttons,
+                .quick-stats {
+                    display: none !important;
+                }
+                
+                .success-card {
+                    box-shadow: none !important;
+                    background: white !important;
+                }
+                
+                .gradient-text {
+                    background: black !important;
+                    -webkit-text-fill-color: black !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    /**
+     * Monitors page load performance
+     */
+    monitorPageLoad() {
+        window.addEventListener('load', () => {
+            if ('performance' in window) {
+                const navTiming = performance.getEntriesByType('navigation')[0];
+                const loadTime = navTiming.loadEventEnd - navTiming.navigationStart;
+                
+                console.log(`Success page loaded in: ${loadTime}ms`);
+            }
+        });
     }
 }
 
-function getRandomColor() {
-    const colors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6'];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
+// Initialize success page when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    new SuccessPageController();
+});
 
-// Add CSS animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fade-in-up {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
+// Add mini confetti animation
+const miniConfettiStyle = document.createElement('style');
+miniConfettiStyle.textContent = `
+    @keyframes miniConfetti {
+        0% {
+            transform: translateY(0) rotate(0deg);
             opacity: 1;
-            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(-50px) rotate(180deg);
+            opacity: 0;
         }
     }
-    .fade-in-up {
-        animation: fade-in-up 0.6s ease forwards;
-        opacity: 0;
+    
+    @media (prefers-reduced-motion: reduce) {
+        .confetti-piece,
+        .confetti-mini div {
+            animation: none;
+            opacity: 0;
+        }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(miniConfettiStyle);
 </script>
 {% endblock %}

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ============================================================================= -->
+    <!-- META TAGS & PAGE CONFIGURATION -->
+    <!-- ============================================================================= -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Demulla IT Service Desk - Internal Server Error">
+    <meta name="author" content="Demulla IT Service Desk">
+    
+    <!-- ============================================================================= -->
+    <!-- PAGE TITLE -->
+    <!-- ============================================================================= -->
+    <title>500 - Internal Server Error | Demulla IT Service Desk</title>
+    
+    <!-- ============================================================================= -->
+    <!-- FAVICON -->
+    <!-- ============================================================================= -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+    
+    <!-- ============================================================================= -->
+    <!-- STYLESHEETS -->
+    <!-- ============================================================================= -->
+    <style>
+        /* ============================================================================= */
+        /* CSS VARIABLES FOR CONSISTENT THEMING */
+        /* ============================================================================= */
+        :root {
+            --primary-color: #3B82F6;
+            --primary-dark: #1D4ED8;
+            --danger-color: #EF4444;
+            --danger-dark: #DC2626;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        /* ============================================================================= */
+        /* BASE STYLES & RESETS */
+        /* ============================================================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================================= */
+        /* ANIMATED BACKGROUND ELEMENTS */
+        /* ============================================================================= */
+        .background-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-color);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--danger-color);
+            top: 60%;
+            left: 80%;
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--warning-color);
+            top: 20%;
+            left: 80%;
+            animation-delay: 10s;
+        }
+
+        .shape-4 {
+            width: 250px;
+            height: 250px;
+            background: var(--success-color);
+            top: 70%;
+            left: 10%;
+            animation-delay: 7s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(120deg);
+            }
+            66% {
+                transform: translateY(10px) rotate(240deg);
+            }
+        }
+
+        /* ============================================================================= */
+        /* MAIN ERROR CONTAINER */
+        /* ============================================================================= */
+        .error-container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.8s ease-out;
+            z-index: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================================= */
+        /* ERROR ICON WITH ANIMATION */
+        /* ============================================================================= */
+        .error-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        .error-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.1);
+            animation: ripple 3s infinite;
+        }
+
+        .error-icon svg {
+            width: 80px;
+            height: 80px;
+            color: var(--danger-color);
+            z-index: 2;
+            position: relative;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* ============================================================================= */
+        /* ERROR CONTENT STYLING */
+        /* ============================================================================= */
+        .error-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--danger-color);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .error-content h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 20px;
+        }
+
+        .error-content p {
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ============================================================================= */
+        /* ERROR DETAILS SECTION (EXPANDABLE) */
+        /* ============================================================================= */
+        .error-details {
+            background: var(--gray-50);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+            border-left: 4px solid var(--danger-color);
+            display: none;
+        }
+
+        .error-details.show {
+            display: block;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        .error-details h3 {
+            font-size: 1.2rem;
+            color: var(--gray-800);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-details h3 svg {
+            width: 20px;
+            height: 20px;
+            color: var(--danger-color);
+        }
+
+        .error-details pre {
+            background: var(--gray-100);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        /* ============================================================================= */
+        /* ACTION BUTTONS */
+        /* ============================================================================= */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ============================================================================= */
+        /* TECHNICAL DETAILS TOGGLE */
+        /* ============================================================================= */
+        .details-toggle {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 15px;
+            transition: var(--transition);
+        }
+
+        .details-toggle:hover {
+            color: var(--primary-dark);
+        }
+
+        .details-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .details-toggle.active svg {
+            transform: rotate(180deg);
+        }
+
+        /* ============================================================================= */
+        /* STATUS INDICATOR */
+        /* ============================================================================= */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .status-indicator::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--danger-color);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+            51%, 100% {
+                opacity: 0.3;
+            }
+        }
+
+        /* ============================================================================= */
+        /* FOOTER */
+        /* ============================================================================= */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* ============================================================================= */
+        /* RESPONSIVE DESIGN */
+        /* ============================================================================= */
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 30px 20px;
+            }
+            
+            .error-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .error-content h2 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .error-icon {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .error-icon svg {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .error-container {
+                padding: 25px 15px;
+            }
+            
+            .error-content h1 {
+                font-size: 2rem;
+            }
+            
+            .error-content h2 {
+                font-size: 1.3rem;
+            }
+            
+            .error-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================================================= -->
+    <!-- ANIMATED BACKGROUND SHAPES -->
+    <!-- ============================================================================= -->
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+
+    <!-- ============================================================================= -->
+    <!-- MAIN ERROR CONTAINER -->
+    <!-- ============================================================================= -->
+    <div class="error-container">
+        <!-- ============================================================================= -->
+        <!-- ANIMATED ERROR ICON -->
+        <!-- ============================================================================= -->
+        <div class="error-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+        </div>
+
+        <!-- ============================================================================= -->
+        <!-- ERROR STATUS INDICATOR -->
+        <!-- ============================================================================= -->
+        <div class="status-indicator">
+            HTTP 500 - Internal Server Error
+        </div>
+
+        <!-- ============================================================================= -->
+        <!-- ERROR CONTENT -->
+        <!-- ============================================================================= -->
+        <div class="error-content">
+            <h1>Something Went Wrong</h1>
+            <h2>We're experiencing technical difficulties</h2>
+            <p>
+                Our team has been notified and is working to resolve the issue. 
+                This is usually temporary, so please try again in a few moments.
+            </p>
+
+            <!-- ============================================================================= -->
+            <!-- EXPANDABLE ERROR DETAILS -->
+            <!-- ============================================================================= -->
+            <div class="error-details" id="errorDetails">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Technical Details
+                </h3>
+                <pre id="errorMessage">Server encountered an unexpected condition that prevented it from fulfilling the request.</pre>
+            </div>
+
+            <!-- ============================================================================= -->
+            <!-- TOGGLE FOR ERROR DETAILS -->
+            <!-- ============================================================================= -->
+            <button class="details-toggle" id="detailsToggle">
+                Show technical details
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+
+            <!-- ============================================================================= -->
+            <!-- ACTION BUTTONS -->
+            <!-- ============================================================================= -->
+            <div class="action-buttons">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Return to Homepage
+                </a>
+                
+                <button class="btn btn-secondary" id="refreshButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Try Again
+                </button>
+                
+                <a href="mailto:support@demulla.com" class="btn btn-outline">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================================= -->
+    <!-- FOOTER -->
+    <!-- ============================================================================= -->
+    <div class="footer">
+        <p>&copy; 2025 Demulla IT Service Desk. All rights reserved. | <a href="{{ url_for('index') }}">Home</a> | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </div>
+
+    <!-- ============================================================================= -->
+    <!-- JAVASCRIPT FOR INTERACTIVE FUNCTIONALITY -->
+    <!-- ============================================================================= -->
+    <script>
+        // =============================================================================
+        // DOM ELEMENTS
+        // =============================================================================
+        const detailsToggle = document.getElementById('detailsToggle');
+        const errorDetails = document.getElementById('errorDetails');
+        const refreshButton = document.getElementById('refreshButton');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // =============================================================================
+        // TOGGLE ERROR DETAILS VISIBILITY
+        // =============================================================================
+        detailsToggle.addEventListener('click', function() {
+            // Toggle visibility of error details
+            errorDetails.classList.toggle('show');
+            
+            // Update toggle button text and icon
+            if (errorDetails.classList.contains('show')) {
+                this.innerHTML = 'Hide technical details <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>';
+                this.classList.add('active');
+            } else {
+                this.innerHTML = 'Show technical details <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>';
+                this.classList.remove('active');
+            }
+        });
+
+        // =============================================================================
+        // REFRESH PAGE FUNCTIONALITY
+        // =============================================================================
+        refreshButton.addEventListener('click', function() {
+            // Add loading state to button
+            const originalText = this.innerHTML;
+            this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="animate-spin" style="width:18px;height:18px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4m0 12v4m8-10h-4M6 12H2m15.364-7.364l-2.828 2.828M7.464 17.536l-2.828 2.828m12.728 0l-2.828-2.828M7.464 6.464L4.636 3.636" /></svg> Refreshing...';
+            this.disabled = true;
+            
+            // Reload the page after a short delay to show the loading state
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        });
+
+        // =============================================================================
+        // ENHANCE ERROR MESSAGE WITH ACTUAL ERROR DETAILS IF AVAILABLE
+        // =============================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if there's an error message in the URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorParam = urlParams.get('error');
+            
+            if (errorParam) {
+                // Decode and display the error message
+                try {
+                    const decodedError = decodeURIComponent(errorParam);
+                    errorMessage.textContent = decodedError;
+                } catch (e) {
+                    console.warn('Could not decode error parameter:', e);
+                }
+            }
+            
+            // Add timestamp to error details
+            const timestamp = new Date().toISOString();
+            const timestampElement = document.createElement('div');
+            timestampElement.style.marginTop = '10px';
+            timestampElement.style.fontSize = '0.8rem';
+            timestampElement.style.color = 'var(--gray-500)';
+            timestampElement.textContent = `Error occurred at: ${timestamp}`;
+            errorDetails.appendChild(timestampElement);
+        });
+
+        // =============================================================================
+        // ADD VISUAL FEEDBACK FOR BUTTON INTERACTIONS
+        // =============================================================================
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mousedown', function() {
+                this.style.transform = 'translateY(1px)';
+            });
+            
+            button.addEventListener('mouseup', function() {
+                this.style.transform = '';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+    </script>
+</body>
+</html>

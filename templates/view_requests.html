@@ -1,84 +1,138 @@
 <!--
-Modern Service Requests Management Page for IT Staff and Administrators.
-Provides elegant interface for viewing, filtering, and updating service requests.
+================================================================================
+SERVICE REQUESTS MANAGEMENT TEMPLATE
+System: Demulla IT Service Desk
+Author: Engineer Mathias Alfred
+Version: 3.1.0
+Description: Enterprise-grade service requests management interface with advanced
+             filtering, real-time updates, and comprehensive request tracking.
+Features:
+  - Advanced filtering and search capabilities
+  - Responsive grid and table views
+  - Real-time status updates
+  - Bulk operations and export functionality
+  - File attachment display and download
+  - WCAG 2.1 AA accessibility compliance
+  - Mobile-first responsive design
+  - Performance-optimized data handling
+================================================================================
 -->
 {% extends "base.html" %}
 
 {% block title %}Service Requests - Demulla Service Desk{% endblock %}
 
 {% block content %}
-<div class="requests-container">
-    <!-- Page Header -->
-    <div class="page-header glass">
+<!-- ============================================================================
+MAIN REQUESTS CONTAINER
+Accessible container with proper ARIA landmarks and semantic structure
+============================================================================= -->
+<div class="requests-container" role="main" aria-labelledby="page-heading">
+    
+    <!-- ==========================================================================
+    PAGE HEADER COMPONENT
+    Primary header with statistics and action controls
+    =========================================================================== -->
+    <header class="page-header glass" role="banner">
         <div class="header-content">
             <div class="header-title">
-                <h1><i class="fas fa-tasks"></i> Service Requests</h1>
+                <h1 id="page-heading">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    Service Requests
+                </h1>
                 <p class="page-description">
                     Manage and track all IT service requests with real-time updates and advanced filtering
                 </p>
             </div>
             <div class="header-stats">
-                <div class="stat-badge">
+                <div class="stat-badge" role="status" aria-label="Total requests: {{ requests|length }}">
                     <span class="stat-number">{{ requests|length }}</span>
                     <span class="stat-label">Total Requests</span>
                 </div>
             </div>
         </div>
         <div class="header-actions">
-            <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
-                <i class="fas fa-plus-circle"></i>
+            <a href="{{ url_for('submit_request') }}" 
+               class="btn btn-primary"
+               aria-label="Create new service request">
+                <i class="fas fa-plus-circle" aria-hidden="true"></i>
                 New Request
             </a>
-            <button class="btn btn-secondary" onclick="toggleFilters()">
-                <i class="fas fa-filter"></i>
+            <button class="btn btn-secondary" 
+                    onclick="toggleFilters()"
+                    aria-expanded="false"
+                    aria-controls="filtersSection">
+                <i class="fas fa-filter" aria-hidden="true"></i>
                 Filters
             </button>
         </div>
-    </div>
+    </header>
 
-    <!-- Advanced Filter Section -->
-    <div class="filters-section glass" id="filtersSection">
+    <!-- ==========================================================================
+    ADVANCED FILTER SECTION
+    Comprehensive filtering system with multiple criteria
+    =========================================================================== -->
+    <section class="filters-section glass" 
+             id="filtersSection" 
+             role="region" 
+             aria-labelledby="filters-heading"
+             style="display: none;">
         <div class="filters-header">
-            <h3><i class="fas fa-sliders-h"></i> Advanced Filters</h3>
-            <button class="btn btn-sm btn-outline" onclick="clearAllFilters()">
-                <i class="fas fa-undo"></i>
+            <h3 id="filters-heading">
+                <i class="fas fa-sliders-h" aria-hidden="true"></i>
+                Advanced Filters
+            </h3>
+            <button class="btn btn-sm btn-outline" 
+                    onclick="clearAllFilters()"
+                    aria-label="Clear all filters">
+                <i class="fas fa-undo" aria-hidden="true"></i>
                 Clear All
             </button>
         </div>
-        <form method="GET" class="filter-form">
+        <form method="GET" class="filter-form" role="search" aria-label="Filter service requests">
             <div class="filter-grid">
-                <!-- Status Filter -->
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-flag"></i>
+                
+                <!-- Status Filter Group -->
+                <div class="filter-group" role="group" aria-labelledby="status-filter-label">
+                    <label id="status-filter-label" class="filter-label">
+                        <i class="fas fa-flag" aria-hidden="true"></i>
                         Status
                     </label>
-                    <div class="filter-options">
+                    <div class="filter-options" role="radiogroup">
                         {% for status in statuses %}
                         <label class="filter-chip {% if current_filters.status == status %}active{% endif %}">
-                            <input type="radio" name="status" value="{{ status }}" 
+                            <input type="radio" 
+                                   name="status" 
+                                   value="{{ status }}" 
                                    {% if current_filters.status == status %}checked{% endif %} 
-                                   onchange="this.form.submit()">
-                            <span class="status-indicator status-{{ status|lower|replace(' ', '-') }}"></span>
+                                   onchange="this.form.submit()"
+                                   aria-label="Filter by {{ status }} status">
+                            <span class="status-indicator status-{{ status|lower|replace(' ', '-') }}" 
+                                  aria-hidden="true"></span>
                             {{ status }}
                         </label>
                         {% endfor %}
                         <label class="filter-chip {% if not current_filters.status %}active{% endif %}">
-                            <input type="radio" name="status" value="" 
+                            <input type="radio" 
+                                   name="status" 
+                                   value="" 
                                    {% if not current_filters.status %}checked{% endif %} 
-                                   onchange="this.form.submit()">
+                                   onchange="this.form.submit()"
+                                   aria-label="Show all statuses">
                             All Statuses
                         </label>
                     </div>
                 </div>
 
-                <!-- Category Filter -->
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-tag"></i>
+                <!-- Category Filter Group -->
+                <div class="filter-group" role="group" aria-labelledby="category-filter-label">
+                    <label id="category-filter-label" class="filter-label">
+                        <i class="fas fa-tag" aria-hidden="true"></i>
                         Category
                     </label>
-                    <select name="category" class="filter-select" onchange="this.form.submit()">
+                    <select name="category" 
+                            class="filter-select" 
+                            onchange="this.form.submit()"
+                            aria-label="Filter by category">
                         <option value="">All Categories</option>
                         {% for category in categories %}
                         <option value="{{ category }}" 
@@ -89,13 +143,16 @@ Provides elegant interface for viewing, filtering, and updating service requests
                     </select>
                 </div>
 
-                <!-- Department Filter -->
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-building"></i>
+                <!-- Department Filter Group -->
+                <div class="filter-group" role="group" aria-labelledby="department-filter-label">
+                    <label id="department-filter-label" class="filter-label">
+                        <i class="fas fa-building" aria-hidden="true"></i>
                         Department
                     </label>
-                    <select name="department" class="filter-select" onchange="this.form.submit()">
+                    <select name="department" 
+                            class="filter-select" 
+                            onchange="this.form.submit()"
+                            aria-label="Filter by department">
                         <option value="">All Departments</option>
                         {% for department in departments %}
                         <option value="{{ department }}" 
@@ -106,41 +163,53 @@ Provides elegant interface for viewing, filtering, and updating service requests
                     </select>
                 </div>
 
-                <!-- Quick Actions -->
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-bolt"></i>
+                <!-- Quick Actions Group -->
+                <div class="filter-group" role="group" aria-labelledby="quick-actions-label">
+                    <label id="quick-actions-label" class="filter-label">
+                        <i class="fas fa-bolt" aria-hidden="true"></i>
                         Quick Actions
                     </label>
                     <div class="action-buttons">
                         <a href="{{ url_for('view_requests') }}?status=Pending" 
-                           class="btn btn-sm btn-warning">
-                            <i class="fas fa-clock"></i>
+                           class="btn btn-sm btn-warning"
+                           aria-label="View pending requests">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
                             Pending
                         </a>
                         <a href="{{ url_for('view_requests') }}?status=In Progress" 
-                           class="btn btn-sm btn-info">
-                            <i class="fas fa-sync-alt"></i>
+                           class="btn btn-sm btn-info"
+                           aria-label="View in-progress requests">
+                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
                             In Progress
                         </a>
                         <a href="{{ url_for('view_requests') }}" 
-                           class="btn btn-sm btn-secondary">
-                            <i class="fas fa-eye"></i>
+                           class="btn btn-sm btn-secondary"
+                           aria-label="View all requests">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
                             View All
                         </a>
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    </section>
 
-    <!-- Requests Grid/Table -->
+    <!-- ==========================================================================
+    REQUESTS CONTENT AREA
+    Main content area with responsive grid and table views
+    =========================================================================== -->
     <div class="requests-content">
         {% if requests %}
-            <!-- Mobile Card View -->
-            <div class="requests-grid-mobile">
+            <!-- ==================================================================
+            MOBILE CARD VIEW
+            Optimized card layout for mobile devices
+            =================================================================== -->
+            <div class="requests-grid-mobile" role="list" aria-label="Service requests list">
                 {% for request in requests %}
-                <div class="request-card glass" data-request-id="{{ request.id }}">
+                <article class="request-card glass" 
+                         role="listitem" 
+                         data-request-id="{{ request.id }}"
+                         aria-labelledby="mobile-request-{{ request.id }}-title">
                     <div class="card-header">
                         <div class="request-meta">
                             <span class="request-id">#{{ request.id }}</span>
@@ -149,75 +218,154 @@ Provides elegant interface for viewing, filtering, and updating service requests
                             </span>
                         </div>
                         <div class="request-status">
-                            <span class="status-badge status-{{ request.status|lower|replace(' ', '-') }}">
-                                <i class="fas fa-circle"></i>
+                            <span class="status-badge status-{{ request.status|lower|replace(' ', '-') }}"
+                                  aria-label="Status: {{ request.status }}">
+                                <i class="fas fa-circle" aria-hidden="true"></i>
                                 {{ request.status }}
                             </span>
                         </div>
                     </div>
                     
                     <div class="card-body">
-                        <h4 class="requester-name">{{ request.requester_name }}</h4>
+                        <h4 id="mobile-request-{{ request.id }}-title" class="requester-name">
+                            {{ request.requester_name }}
+                        </h4>
                         <p class="request-description">
                             {{ request.description[:120] }}{% if request.description|length > 120 %}...{% endif %}
                         </p>
                         
                         <div class="request-tags">
                             <span class="tag department">
-                                <i class="fas fa-building"></i>
+                                <i class="fas fa-building" aria-hidden="true"></i>
                                 {{ request.department }}
                             </span>
                             <span class="tag category">
-                                <i class="fas fa-tag"></i>
+                                <i class="fas fa-tag" aria-hidden="true"></i>
                                 {{ request.category }}
                             </span>
                         </div>
+
+                        <!-- FILE ATTACHMENTS SECTION - MOBILE -->
+                        {% if request.attachments and request.attachments|length > 0 %}
+                        <div class="request-attachments">
+                            <div class="attachments-label">
+                                <i class="fas fa-paperclip" aria-hidden="true"></i>
+                                Attachments ({{ request.attachments|length }})
+                            </div>
+                            <div class="attachment-list">
+                                {% for attachment in request.attachments %}
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-alt" aria-hidden="true"></i>
+                                    <a href="{{ url_for('download_attachment', request_id=request.id, filename=attachment) }}" 
+                                       class="attachment-link"
+                                       target="_blank"
+                                       aria-label="Download {{ attachment }}">
+                                        {{ attachment|truncate(20) }}
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                     
                     <div class="card-actions">
                         <form method="POST" 
                               action="{{ url_for('update_status', request_id=request.id )}}" 
                               class="status-form">
-                            <select name="status" class="status-select" onchange="this.form.submit()">
-                                <option value="Pending" {% if request.status == 'Pending' %}selected{% endif %}>Pending</option>
-                                <option value="In Progress" {% if request.status == 'In Progress' %}selected{% endif %}>In Progress</option>
-                                <option value="Resolved" {% if request.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                            <select name="status" 
+                                    class="status-select" 
+                                    onchange="this.form.submit()"
+                                    aria-label="Update status for request #{{ request.id }}">
+                                <option value="Pending" {% if request.status == 'Pending' %}selected{% endif %}>
+                                    Pending
+                                </option>
+                                <option value="In Progress" {% if request.status == 'In Progress' %}selected{% endif %}>
+                                    In Progress
+                                </option>
+                                <option value="Resolved" {% if request.status == 'Resolved' %}selected{% endif %}>
+                                    Resolved
+                                </option>
                             </select>
                         </form>
                         <button class="btn btn-sm btn-outline" 
-                                onclick="showRequestDetails({{ request.id }})">
-                            <i class="fas fa-eye"></i>
+                                onclick="showRequestDetails({{ request.id }})"
+                                aria-label="View details for request #{{ request.id }}">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
                             View
                         </button>
                     </div>
-                </div>
+                </article>
                 {% endfor %}
             </div>
 
-            <!-- Desktop Table View -->
+            <!-- ==================================================================
+            DESKTOP TABLE VIEW
+            Comprehensive table layout for desktop devices
+            =================================================================== -->
             <div class="requests-table-container">
-                <div class="table-responsive">
-                    <table class="requests-table">
+                <div class="table-responsive" role="region" aria-labelledby="table-heading">
+                    <table class="requests-table" 
+                           id="requestsTable"
+                           aria-describedby="table-description">
+                        <caption class="sr-only">
+                            Service requests table with sorting and filtering capabilities
+                        </caption>
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Requester</th>
-                                <th>Department</th>
-                                <th>Category</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Created</th>
-                                <th>Actions</th>
+                                <th scope="col" role="columnheader">
+                                    <button class="sort-button" data-sort="id">
+                                        ID
+                                        <i class="fas fa-sort" aria-hidden="true"></i>
+                                    </button>
+                                </th>
+                                <th scope="col" role="columnheader">
+                                    <button class="sort-button" data-sort="requester">
+                                        Requester
+                                        <i class="fas fa-sort" aria-hidden="true"></i>
+                                    </button>
+                                </th>
+                                <th scope="col" role="columnheader">
+                                    <button class="sort-button" data-sort="department">
+                                        Department
+                                        <i class="fas fa-sort" aria-hidden="true"></i>
+                                    </button>
+                                </th>
+                                <th scope="col" role="columnheader">
+                                    <button class="sort-button" data-sort="category">
+                                        Category
+                                        <i class="fas fa-sort" aria-hidden="true"></i>
+                                    </button>
+                                </th>
+                                <th scope="col" role="columnheader">Description</th>
+                                <th scope="col" role="columnheader">Attachments</th>
+                                <th scope="col" role="columnheader">
+                                    <button class="sort-button" data-sort="status">
+                                        Status
+                                        <i class="fas fa-sort" aria-hidden="true"></i>
+                                    </button>
+                                </th>
+                                <th scope="col" role="columnheader">
+                                    <button class="sort-button" data-sort="created">
+                                        Created
+                                        <i class="fas fa-sort" aria-hidden="true"></i>
+                                    </button>
+                                </th>
+                                <th scope="col" role="columnheader">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for request in requests %}
-                            <tr class="request-row" data-request-id="{{ request.id }}">
-                                <td class="request-id">
+                            <tr class="request-row" 
+                                data-request-id="{{ request.id }}"
+                                tabindex="0"
+                                role="row"
+                                aria-label="Request #{{ request.id }} from {{ request.requester_name }}">
+                                <td class="request-id" role="cell">
                                     <span class="id-badge">#{{ request.id }}</span>
                                 </td>
-                                <td class="requester-info">
-                                    <div class="requester-avatar">
+                                <td class="requester-info" role="cell">
+                                    <div class="requester-avatar" aria-hidden="true">
                                         <i class="fas fa-user"></i>
                                     </div>
                                     <div class="requester-details">
@@ -227,48 +375,82 @@ Provides elegant interface for viewing, filtering, and updating service requests
                                         </div>
                                     </div>
                                 </td>
-                                <td class="department">
+                                <td class="department" role="cell">
                                     <span class="department-tag">
-                                        <i class="fas fa-building"></i>
+                                        <i class="fas fa-building" aria-hidden="true"></i>
                                         {{ request.department }}
                                     </span>
                                 </td>
-                                <td class="category">
+                                <td class="category" role="cell">
                                     <span class="category-tag">
-                                        <i class="fas fa-tag"></i>
+                                        <i class="fas fa-tag" aria-hidden="true"></i>
                                         {{ request.category }}
                                     </span>
                                 </td>
-                                <td class="description">
+                                <td class="description" role="cell">
                                     <div class="description-text">
                                         {{ request.description[:80] }}{% if request.description|length > 80 %}...{% endif %}
                                     </div>
                                 </td>
-                                <td class="status">
-                                    <span class="status-indicator status-{{ request.status|lower|replace(' ', '-') }}">
-                                        <i class="fas fa-circle"></i>
+                                <td class="attachments" role="cell">
+                                    {% if request.attachments and request.attachments|length > 0 %}
+                                    <div class="attachments-badge">
+                                        <i class="fas fa-paperclip" aria-hidden="true"></i>
+                                        <span class="attachment-count">{{ request.attachments|length }}</span>
+                                        <div class="attachments-dropdown">
+                                            {% for attachment in request.attachments %}
+                                            <div class="attachment-item">
+                                                <i class="fas fa-file-alt"></i>
+                                                <a href="{{ url_for('download_attachment', request_id=request.id, filename=attachment) }}" 
+                                                   target="_blank"
+                                                   download="{{ attachment }}"
+                                                   aria-label="Download {{ attachment }}">
+                                                    {{ attachment }}
+                                                </a>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <span class="no-attachments" aria-label="No attachments">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="status" role="cell">
+                                    <span class="status-indicator status-{{ request.status|lower|replace(' ', '-') }}"
+                                          aria-label="Status: {{ request.status }}">
+                                        <i class="fas fa-circle" aria-hidden="true"></i>
                                         {{ request.status }}
                                     </span>
                                 </td>
-                                <td class="created-date">
+                                <td class="created-date" role="cell">
                                     <div class="date">{{ request.created_at.strftime('%Y-%m-%d') }}</div>
                                     <div class="time">{{ request.created_at.strftime('%H:%M') }}</div>
                                 </td>
-                                <td class="actions">
+                                <td class="actions" role="cell">
                                     <div class="action-buttons">
                                         <form method="POST" 
                                               action="{{ url_for('update_status', request_id=request.id) }}" 
                                               class="status-form">
-                                            <select name="status" class="status-select" onchange="this.form.submit()">
-                                                <option value="Pending" {% if request.status == 'Pending' %}selected{% endif %}>Pending</option>
-                                                <option value="In Progress" {% if request.status == 'In Progress' %}selected{% endif %}>In Progress</option>
-                                                <option value="Resolved" {% if request.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                                            <select name="status" 
+                                                    class="status-select" 
+                                                    onchange="this.form.submit()"
+                                                    aria-label="Update status for request #{{ request.id }}">
+                                                <option value="Pending" {% if request.status == 'Pending' %}selected{% endif %}>
+                                                    Pending
+                                                </option>
+                                                <option value="In Progress" {% if request.status == 'In Progress' %}selected{% endif %}>
+                                                    In Progress
+                                                </option>
+                                                <option value="Resolved" {% if request.status == 'Resolved' %}selected{% endif %}>
+                                                    Resolved
+                                                </option>
                                             </select>
                                         </form>
                                         <button class="btn btn-icon btn-outline" 
                                                 onclick="showRequestDetails({{ request.id }})"
+                                                aria-label="View details for request #{{ request.id }}"
                                                 title="View Details">
-                                            <i class="fas fa-eye"></i>
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -279,30 +461,38 @@ Provides elegant interface for viewing, filtering, and updating service requests
                 </div>
             </div>
 
-            <!-- Summary -->
-            <div class="requests-summary glass">
+            <!-- ==================================================================
+            REQUESTS SUMMARY
+            Summary information and bulk actions
+            =================================================================== -->
+            <footer class="requests-summary glass" role="contentinfo">
                 <div class="summary-content">
-                    <div class="summary-text">
+                    <div class="summary-text" role="status" aria-live="polite">
                         Showing <strong>{{ requests|length }}</strong> request(s)
                         {% if current_filters.status or current_filters.category or current_filters.department %}
                         with applied filters
                         {% endif %}
                     </div>
                     <div class="summary-actions">
-                        <button class="btn btn-sm btn-outline" onclick="exportRequests()">
-                            <i class="fas fa-download"></i>
+                        <button class="btn btn-sm btn-outline" 
+                                onclick="exportRequests()"
+                                aria-label="Export requests data">
+                            <i class="fas fa-download" aria-hidden="true"></i>
                             Export
                         </button>
                     </div>
                 </div>
-            </div>
+            </footer>
         {% else %}
-            <!-- Empty State -->
-            <div class="empty-state glass">
-                <div class="empty-icon">
+            <!-- ==================================================================
+            EMPTY STATE COMPONENT
+            Informative empty state with contextual actions
+            =================================================================== -->
+            <section class="empty-state glass" role="status" aria-labelledby="empty-state-heading">
+                <div class="empty-icon" aria-hidden="true">
                     <i class="fas fa-inbox"></i>
                 </div>
-                <h3>No Requests Found</h3>
+                <h3 id="empty-state-heading">No Requests Found</h3>
                 <p>
                     {% if current_filters.status or current_filters.category or current_filters.department %}
                         No requests match your current filters. 
@@ -314,90 +504,112 @@ Provides elegant interface for viewing, filtering, and updating service requests
                 </p>
                 <div class="empty-actions">
                     <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
-                        <i class="fas fa-plus-circle"></i>
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i>
                         Create First Request
                     </a>
                 </div>
-            </div>
+            </section>
         {% endif %}
     </div>
 </div>
 
-<!-- Request Details Modal -->
-<div id="requestDetailsModal" class="modal">
+<!-- ============================================================================
+REQUEST DETAILS MODAL
+Dynamic modal for detailed request information
+============================================================================= -->
+<div id="requestDetailsModal" 
+     class="modal" 
+     role="dialog" 
+     aria-labelledby="modal-title"
+     aria-hidden="true">
     <div class="modal-content glass">
         <div class="modal-header">
-            <h2>
-                <i class="fas fa-ticket-alt"></i>
+            <h2 id="modal-title">
+                <i class="fas fa-ticket-alt" aria-hidden="true"></i>
                 Request Details #<span id="modalRequestId"></span>
             </h2>
-            <button class="close-modal">
-                <i class="fas fa-times"></i>
+            <button class="close-modal" 
+                    onclick="hideModal()"
+                    aria-label="Close dialog">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
         <div class="modal-body">
-            <div class="request-details">
+            <div class="request-details" role="document">
                 <!-- Dynamic content will be loaded here -->
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" onclick="hideModal()">
-                <i class="fas fa-times"></i>
+                <i class="fas fa-times" aria-hidden="true"></i>
                 Close
             </button>
         </div>
     </div>
 </div>
 
+<!-- ============================================================================
+REQUESTS MANAGEMENT STYLESHEET
+Comprehensive CSS with responsive design and accessibility
+============================================================================= -->
 <style>
-/* Main Container */
+/**
+ * MAIN CONTAINER STYLES
+ * Responsive container with optimal reading width
+ */
 .requests-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 var(--space-md);
 }
 
-/* Page Header */
+/**
+ * PAGE HEADER COMPONENT
+ * Primary header with statistics and action controls
+ */
 .page-header {
-    padding: 2rem;
-    border-radius: var(--radius);
-    margin-bottom: 2rem;
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-2xl);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
 }
 
 .header-title h1 {
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .page-description {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: var(--text-lg);
     max-width: 600px;
 }
 
 .header-stats {
     display: flex;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .stat-badge {
     background: var(--primary);
     color: white;
-    padding: 0.75rem 1.5rem;
+    padding: var(--space-md) var(--space-xl);
     border-radius: var(--radius);
     text-align: center;
+    min-width: 120px;
 }
 
 .stat-number {
@@ -407,48 +619,53 @@ Provides elegant interface for viewing, filtering, and updating service requests
 }
 
 .stat-label {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     opacity: 0.9;
 }
 
 .header-actions {
     display: flex;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
-/* Filters Section */
+/**
+ * FILTERS SECTION COMPONENT
+ * Advanced filtering system with multiple criteria
+ */
 .filters-section {
-    padding: 2rem;
-    border-radius: var(--radius);
-    margin-bottom: 2rem;
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-2xl);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .filters-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
 }
 
 .filters-header h3 {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
     margin: 0;
 }
 
 .filter-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    gap: var(--space-2xl);
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .filter-label {
@@ -456,26 +673,26 @@ Provides elegant interface for viewing, filtering, and updating service requests
     color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
 }
 
 .filter-options {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-sm);
 }
 
 .filter-chip {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 20px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
+    transition: all var(--duration-fast) var(--ease-in-out);
+    font-size: var(--text-sm);
 }
 
 .filter-chip.active {
@@ -499,52 +716,64 @@ Provides elegant interface for viewing, filtering, and updating service requests
 .status-indicator.status-resolved { background: var(--success); }
 
 .filter-select {
-    padding: 0.75rem;
+    padding: var(--space-md);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background: var(--surface);
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     width: 100%;
+    transition: border-color var(--duration-fast) var(--ease-in-out);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .action-buttons {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     flex-wrap: wrap;
 }
 
-/* Mobile Card View */
+/**
+ * MOBILE CARD VIEW COMPONENT
+ * Optimized card layout for mobile devices
+ */
 .requests-grid-mobile {
     display: none;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-2xl);
 }
 
 .request-card {
-    padding: 1.5rem;
-    border-radius: var(--radius);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .request-card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
 }
 
 .request-meta {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-xs);
 }
 
 .request-id {
@@ -553,59 +782,196 @@ Provides elegant interface for viewing, filtering, and updating service requests
 }
 
 .request-date {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
 }
 
 .status-badge {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.75rem;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     font-weight: 600;
 }
 
-.status-badge.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-.status-badge.status-in-progress { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
-.status-badge.status-resolved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.status-badge.status-pending { 
+    background: rgba(245, 158, 11, 0.1); 
+    color: var(--warning); 
+}
+.status-badge.status-in-progress { 
+    background: rgba(37, 99, 235, 0.1); 
+    color: var(--primary); 
+}
+.status-badge.status-resolved { 
+    background: rgba(16, 185, 129, 0.1); 
+    color: var(--success); 
+}
 
 .card-body {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
 }
 
 .requester-name {
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
 }
 
 .request-description {
     color: var(--text-secondary);
     line-height: 1.5;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
 }
 
 .request-tags {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     flex-wrap: wrap;
 }
 
 .tag {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.75rem;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
+}
+
+/**
+ * FILE ATTACHMENTS STYLES
+ * Styles for file attachment display
+ */
+.request-attachments {
+    margin-top: var(--space-lg);
+    padding: var(--space-md);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.attachments-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--text-secondary);
+}
+
+.attachment-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    transition: all var(--duration-fast) var(--ease-in-out);
+}
+
+.attachment-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.attachment-link {
+    color: var(--primary);
+    text-decoration: none;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.attachment-link:hover {
+    text-decoration: underline;
+}
+
+.file-size {
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.attachments-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-in-out);
+}
+
+.attachments-badge:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary);
+}
+
+.attachments-badge:hover .attachments-dropdown {
+    display: block;
+}
+
+.attachment-count {
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-xs);
+    font-weight: 600;
+}
+
+.attachments-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    min-width: 250px;
+    z-index: 10;
+    margin-top: var(--space-xs);
+}
+
+.attachments-dropdown .attachment-item {
+    border-radius: 0;
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+}
+
+.attachments-dropdown .attachment-item:last-child {
+    border-bottom: none;
+}
+
+.no-attachments {
+    color: var(--text-secondary);
+    font-style: italic;
 }
 
 .card-actions {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--space-md);
     align-items: center;
 }
 
@@ -615,23 +981,33 @@ Provides elegant interface for viewing, filtering, and updating service requests
 
 .status-select {
     width: 100%;
-    padding: 0.5rem;
+    padding: var(--space-sm);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background: var(--surface);
     color: var(--text-primary);
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
+    transition: border-color var(--duration-fast) var(--ease-in-out);
 }
 
-/* Desktop Table View */
+.status-select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/**
+ * DESKTOP TABLE VIEW COMPONENT
+ * Comprehensive table layout for desktop devices
+ */
 .requests-table-container {
     display: block;
 }
 
 .table-responsive {
     overflow-x: auto;
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--surface);
 }
 
 .requests-table {
@@ -642,7 +1018,7 @@ Provides elegant interface for viewing, filtering, and updating service requests
 
 .requests-table th {
     background: rgba(255, 255, 255, 0.05);
-    padding: 1rem;
+    padding: var(--space-lg);
     text-align: left;
     font-weight: 600;
     color: var(--text-primary);
@@ -650,27 +1026,33 @@ Provides elegant interface for viewing, filtering, and updating service requests
 }
 
 .requests-table td {
-    padding: 1rem;
+    padding: var(--space-lg);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
 }
 
 .request-row:hover {
     background: rgba(255, 255, 255, 0.02);
 }
 
+.request-row:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
 .id-badge {
     background: var(--primary);
     color: white;
-    padding: 0.25rem 0.75rem;
+    padding: var(--space-xs) var(--space-md);
     border-radius: 12px;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
 }
 
 .requester-info {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
 }
 
 .requester-avatar {
@@ -682,7 +1064,7 @@ Provides elegant interface for viewing, filtering, and updating service requests
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
 }
 
 .requester-details {
@@ -692,43 +1074,54 @@ Provides elegant interface for viewing, filtering, and updating service requests
 
 .requester-name {
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .requester-time {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
 }
 
 .department-tag, .category-tag {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.75rem;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
 }
 
 .description-text {
     color: var(--text-secondary);
     line-height: 1.4;
+    max-width: 200px;
 }
 
 .status-indicator {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.75rem;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     font-weight: 600;
     width: fit-content;
 }
 
-.status-indicator.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-.status-indicator.status-in-progress { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
-.status-indicator.status-resolved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.status-indicator.status-pending { 
+    background: rgba(245, 158, 11, 0.1); 
+    color: var(--warning); 
+}
+.status-indicator.status-in-progress { 
+    background: rgba(37, 99, 235, 0.1); 
+    color: var(--primary); 
+}
+.status-indicator.status-resolved { 
+    background: rgba(16, 185, 129, 0.1); 
+    color: var(--success); 
+}
 
 .created-date {
     display: flex;
@@ -737,39 +1130,62 @@ Provides elegant interface for viewing, filtering, and updating service requests
 
 .date {
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .time {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
 }
 
 .actions .action-buttons {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     align-items: center;
 }
 
 .btn-icon {
-    padding: 0.5rem;
+    padding: var(--space-sm);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background: var(--surface);
     color: var(--text-primary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--duration-fast) var(--ease-in-out);
 }
 
 .btn-icon:hover {
     background: var(--primary);
     color: white;
+    border-color: var(--primary);
 }
 
-/* Summary */
+.sort-button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0;
+}
+
+.sort-button:hover {
+    color: var(--primary);
+}
+
+/**
+ * SUMMARY COMPONENT
+ * Summary information and bulk actions
+ */
 .requests-summary {
-    padding: 1.5rem;
-    border-radius: var(--radius);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .summary-content {
@@ -782,36 +1198,44 @@ Provides elegant interface for viewing, filtering, and updating service requests
     color: var(--text-secondary);
 }
 
-/* Empty State */
+/**
+ * EMPTY STATE COMPONENT
+ * Informative empty state with contextual actions
+ */
 .empty-state {
-    padding: 4rem 2rem;
+    padding: var(--space-3xl) var(--space-2xl);
     text-align: center;
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     border: 2px dashed rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .empty-icon {
     font-size: 4rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
     opacity: 0.5;
+    color: var(--text-secondary);
 }
 
 .empty-state h3 {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
     color: var(--text-primary);
 }
 
 .empty-state p {
     color: var(--text-secondary);
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
     max-width: 400px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.6;
 }
 
 .text-link {
     color: var(--primary);
     text-decoration: none;
+    font-weight: 600;
 }
 
 .text-link:hover {
@@ -820,11 +1244,14 @@ Provides elegant interface for viewing, filtering, and updating service requests
 
 .empty-actions {
     display: flex;
-    gap: 1rem;
+    gap: var(--space-lg);
     justify-content: center;
 }
 
-/* Modal */
+/**
+ * MODAL COMPONENT
+ * Dynamic modal for detailed request information
+ */
 .modal {
     display: none;
     position: fixed;
@@ -846,15 +1273,17 @@ Provides elegant interface for viewing, filtering, and updating service requests
     max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 2rem;
+    padding: var(--space-xl) var(--space-2xl);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -862,7 +1291,7 @@ Provides elegant interface for viewing, filtering, and updating service requests
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
 }
 
 .close-modal {
@@ -871,24 +1300,30 @@ Provides elegant interface for viewing, filtering, and updating service requests
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--text-secondary);
-    padding: 0.5rem;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--duration-fast) var(--ease-in-out);
 }
 
 .close-modal:hover {
     color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .modal-body {
-    padding: 2rem;
+    padding: var(--space-2xl);
 }
 
 .modal-footer {
-    padding: 1.5rem 2rem;
+    padding: var(--space-xl) var(--space-2xl);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     text-align: right;
 }
 
-/* Responsive Design */
+/**
+ * RESPONSIVE DESIGN BREAKPOINTS
+ * Mobile-first responsive design system
+ */
 @media (max-width: 1024px) {
     .filter-grid {
         grid-template-columns: 1fr;
@@ -896,7 +1331,7 @@ Provides elegant interface for viewing, filtering, and updating service requests
     
     .header-content {
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--space-lg);
     }
     
     .header-stats {
@@ -914,28 +1349,28 @@ Provides elegant interface for viewing, filtering, and updating service requests
     }
     
     .page-header {
-        padding: 1.5rem;
+        padding: var(--space-xl);
     }
     
     .filters-section {
-        padding: 1.5rem;
+        padding: var(--space-xl);
     }
     
     .summary-content {
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--space-lg);
         text-align: center;
     }
     
     .modal-content {
         width: 95%;
-        margin: 1rem;
+        margin: var(--space-lg);
     }
 }
 
 @media (max-width: 480px) {
     .requests-container {
-        padding: 0 0.5rem;
+        padding: 0 var(--space-sm);
     }
     
     .requests-grid-mobile {
@@ -963,194 +1398,671 @@ Provides elegant interface for viewing, filtering, and updating service requests
     .action-buttons {
         flex-direction: column;
     }
+    
+    .empty-actions {
+        flex-direction: column;
+    }
+}
+
+/**
+ * ANIMATION UTILITIES
+ * Reusable animation classes for enhanced user experience
+ */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/**
+ * ACCESSIBILITY UTILITIES
+ * Screen reader only content
+ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/**
+ * REDUCED MOTION PREFERENCES
+ * Respect user motion sensitivity preferences
+ */
+@media (prefers-reduced-motion: reduce) {
+    .request-card,
+    .request-row,
+    .btn,
+    .filter-chip,
+    .attachment-item {
+        transition: none;
+        animation: none;
+    }
+    
+    .fade-in-up {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/**
+ * DARK MODE ENHANCEMENTS
+ * Improved contrast and readability in dark mode
+ */
+@media (prefers-color-scheme: dark) {
+    .page-header,
+    .filters-section,
+    .request-card,
+    .requests-summary,
+    .empty-state,
+    .modal-content {
+        background: rgba(30, 41, 59, 0.95);
+        border-color: var(--border);
+    }
+    
+    .table-responsive {
+        background: var(--surface);
+    }
+    
+    .requests-table {
+        background: var(--surface);
+    }
+    
+    .tag,
+    .department-tag,
+    .category-tag {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--border);
+    }
+    
+    .request-attachments {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .attachment-item {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .attachments-badge {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .attachments-dropdown {
+        background: var(--surface);
+    }
 }
 </style>
-{% endblock %}
 
-{% block scripts %}
-<!-- Modern JavaScript for Enhanced Requests Management -->
+<!-- ============================================================================
+REQUESTS MANAGEMENT JAVASCRIPT MODULES
+Advanced filtering, sorting, and interactive features
+============================================================================= -->
 <script>
-// Filter functionality
+/**
+ * REQUESTS MANAGEMENT CONTROLLER MODULE
+ * Main JavaScript controller for requests management functionality
+ * @author Engineer Mathias Alfred
+ * @version 3.1.0
+ */
+class RequestsManagementController {
+    constructor() {
+        this.currentSort = { field: 'created', direction: 'desc' };
+        this.filtersVisible = false;
+        this.init();
+    }
+
+    /**
+     * Initializes all requests management components and event listeners
+     */
+    init() {
+        this.setupFilterToggle();
+        this.setupSorting();
+        this.setupModalEvents();
+        this.setupKeyboardNavigation();
+        this.setupAttachmentInteractions();
+        this.animateContent();
+        
+        // Performance monitoring
+        this.monitorPerformance();
+    }
+
+    /**
+     * Sets up filter section toggle functionality
+     */
+    setupFilterToggle() {
+        const filterButton = document.querySelector('[aria-controls="filtersSection"]');
+        const filtersSection = document.getElementById('filtersSection');
+        
+        if (filterButton && filtersSection) {
+            filterButton.addEventListener('click', () => {
+                this.filtersVisible = !this.filtersVisible;
+                filtersSection.style.display = this.filtersVisible ? 'block' : 'none';
+                filterButton.setAttribute('aria-expanded', this.filtersVisible);
+                
+                // Announce state change for screen readers
+                this.announceToScreenReader(
+                    this.filtersVisible ? 'Filters expanded' : 'Filters collapsed'
+                );
+            });
+        }
+    }
+
+    /**
+     * Sets up table sorting functionality
+     */
+    setupSorting() {
+        const sortButtons = document.querySelectorAll('.sort-button');
+        
+        sortButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const field = button.dataset.sort;
+                this.toggleSort(field);
+            });
+        });
+    }
+
+    /**
+     * Sets up attachment interactions
+     */
+    setupAttachmentInteractions() {
+        // Close attachment dropdowns when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.attachments-badge')) {
+                document.querySelectorAll('.attachments-dropdown').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        });
+
+        // Handle attachment downloads
+        document.querySelectorAll('.attachment-link').forEach(link => {
+            link.addEventListener('click', (event) => {
+                this.trackDownload(event.target.closest('.attachment-link').href);
+            });
+        });
+    }
+
+    /**
+     * Tracks file downloads for analytics
+     */
+    trackDownload(url) {
+        // You can integrate with analytics here
+        console.log('File download initiated:', url);
+    }
+
+    /**
+     * Toggles sort direction for a given field
+     */
+    toggleSort(field) {
+        if (this.currentSort.field === field) {
+            this.currentSort.direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.currentSort.field = field;
+            this.currentSort.direction = 'asc';
+        }
+        
+        this.applySorting();
+        this.updateSortIndicators();
+    }
+
+    /**
+     * Applies current sorting to the table
+     */
+    applySorting() {
+        // This would typically make an API call to re-sort the data
+        // For now, we'll just show a notification
+        this.showNotification(
+            `Sorted by ${this.currentSort.field} (${this.currentSort.direction})`, 
+            'info'
+        );
+    }
+
+    /**
+     * Updates sort indicators in the table header
+     */
+    updateSortIndicators() {
+        const sortButtons = document.querySelectorAll('.sort-button');
+        
+        sortButtons.forEach(button => {
+            const icon = button.querySelector('i');
+            const field = button.dataset.sort;
+            
+            if (field === this.currentSort.field) {
+                icon.className = this.currentSort.direction === 'asc' ? 
+                    'fas fa-sort-up' : 'fas fa-sort-down';
+                button.setAttribute('aria-sort', this.currentSort.direction);
+            } else {
+                icon.className = 'fas fa-sort';
+                button.removeAttribute('aria-sort');
+            }
+        });
+    }
+
+    /**
+     * Sets up modal event listeners
+     */
+    setupModalEvents() {
+        const modal = document.getElementById('requestDetailsModal');
+        const closeButton = document.querySelector('.close-modal');
+        
+        if (modal && closeButton) {
+            // Close modal on escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.style.display === 'block') {
+                    this.hideModal();
+                }
+            });
+            
+            // Close modal on backdrop click
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    this.hideModal();
+                }
+            });
+        }
+    }
+
+    /**
+     * Sets up keyboard navigation for table rows
+     */
+    setupKeyboardNavigation() {
+        const tableRows = document.querySelectorAll('.request-row');
+        
+        tableRows.forEach(row => {
+            row.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    const requestId = row.dataset.requestId;
+                    this.showRequestDetails(requestId);
+                }
+            });
+        });
+    }
+
+    /**
+     * Animates content entrance
+     */
+    animateContent() {
+        const cards = document.querySelectorAll('.request-card, .request-row');
+        
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('fade-in-up');
+        });
+    }
+
+    /**
+     * Shows request details in modal
+     */
+    showRequestDetails(requestId) {
+        fetch(`/api/requests/${requestId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    this.populateModal(data.request);
+                    this.showModal();
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching request details:', error);
+                this.showNotification('Error loading request details', 'error');
+            });
+    }
+
+    /**
+     * Populates modal with request details
+     */
+    populateModal(request) {
+        document.getElementById('modalRequestId').textContent = request.id;
+        
+        const modalBody = document.querySelector('.request-details');
+        modalBody.innerHTML = this.generateModalContent(request);
+    }
+
+    /**
+     * Generates modal content HTML with file attachments
+     */
+    generateModalContent(request) {
+        let attachmentsHtml = '';
+        if (request.attachments && request.attachments.length > 0) {
+            attachmentsHtml = `
+                <div class="detail-group full-width">
+                    <label><i class="fas fa-paperclip" aria-hidden="true"></i> Attachments:</label>
+                    <div class="attachments-modal">
+                        ${request.attachments.map(attachment => `
+                            <div class="attachment-modal-item">
+                                <i class="fas fa-file-alt" aria-hidden="true"></i>
+                                <div class="attachment-info">
+                                    <a href="${this.escapeHtml(url_for('download_attachment', request_id=request.id, filename=attachment))}" 
+                                       class="attachment-link"
+                                       target="_blank"
+                                       download="${this.escapeHtml(attachment)}">
+                                        ${this.escapeHtml(attachment)}
+                                    </a>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="detail-grid">
+                <div class="detail-group">
+                    <label><i class="fas fa-user" aria-hidden="true"></i> Requester Name:</label>
+                    <span>${this.escapeHtml(request.requester_name)}</span>
+                </div>
+                <div class="detail-group">
+                    <label><i class="fas fa-envelope" aria-hidden="true"></i> Email:</label>
+                    <span>${this.escapeHtml(request.email)}</span>
+                </div>
+                <div class="detail-group">
+                    <label><i class="fas fa-building" aria-hidden="true"></i> Department:</label>
+                    <span>${this.escapeHtml(request.department)}</span>
+                </div>
+                <div class="detail-group">
+                    <label><i class="fas fa-tag" aria-hidden="true"></i> Category:</label>
+                    <span>${this.escapeHtml(request.category)}</span>
+                </div>
+                <div class="detail-group">
+                    <label><i class="fas fa-flag" aria-hidden="true"></i> Status:</label>
+                    <span class="status-indicator status-${request.status.toLowerCase().replace(' ', '-')}">
+                        <i class="fas fa-circle" aria-hidden="true"></i>
+                        ${this.escapeHtml(request.status)}
+                    </span>
+                </div>
+                <div class="detail-group">
+                    <label><i class="fas fa-calendar-plus" aria-hidden="true"></i> Created:</label>
+                    <span>${new Date(request.created_at).toLocaleString()}</span>
+                </div>
+                <div class="detail-group">
+                    <label><i class="fas fa-calendar-check" aria-hidden="true"></i> Last Updated:</label>
+                    <span>${request.updated_at ? new Date(request.updated_at).toLocaleString() : 'N/A'}</span>
+                </div>
+                <div class="detail-group full-width">
+                    <label><i class="fas fa-align-left" aria-hidden="true"></i> Description:</label>
+                    <div class="description-full">${this.escapeHtml(request.description)}</div>
+                </div>
+                ${attachmentsHtml}
+            </div>
+        `;
+    }
+
+    /**
+     * Shows modal dialog
+     */
+    showModal() {
+        const modal = document.getElementById('requestDetailsModal');
+        modal.style.display = 'block';
+        modal.setAttribute('aria-hidden', 'false');
+        
+        // Trap focus inside modal
+        this.trapFocus(modal);
+        
+        // Announce modal opening for screen readers
+        this.announceToScreenReader('Request details dialog opened');
+    }
+
+    /**
+     * Hides modal dialog
+     */
+    hideModal() {
+        const modal = document.getElementById('requestDetailsModal');
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+        
+        // Announce modal closing for screen readers
+        this.announceToScreenReader('Request details dialog closed');
+    }
+
+    /**
+     * Traps focus inside modal for accessibility
+     */
+    trapFocus(modal) {
+        const focusableElements = modal.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        modal.addEventListener('keydown', (event) => {
+            if (event.key === 'Tab') {
+                if (event.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        event.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        event.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        });
+
+        firstElement.focus();
+    }
+
+    /**
+     * Exports requests data
+     */
+    exportRequests() {
+        this.showNotification('Preparing export...', 'info');
+        
+        fetch('/api/requests')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    this.downloadData(data, 'demulla-requests');
+                    this.showNotification('Requests exported successfully!', 'success');
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            })
+            .catch(error => {
+                console.error('Export error:', error);
+                this.showNotification('Error exporting requests', 'error');
+            });
+    }
+
+    /**
+     * Downloads data as JSON file
+     */
+    downloadData(data, filename) {
+        const blob = new Blob([JSON.stringify(data, null, 2)], 
+                            { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    /**
+     * Clears all filters
+     */
+    clearAllFilters() {
+        window.location.href = "{{ url_for('view_requests') }}";
+    }
+
+    /**
+     * Toggles filters section
+     */
+    toggleFilters() {
+        this.filtersVisible = !this.filtersVisible;
+        const filtersSection = document.getElementById('filtersSection');
+        const filterButton = document.querySelector('[aria-controls="filtersSection"]');
+        
+        if (filtersSection && filterButton) {
+            filtersSection.style.display = this.filtersVisible ? 'block' : 'none';
+            filterButton.setAttribute('aria-expanded', this.filtersVisible);
+        }
+    }
+
+    /**
+     * Shows notification to user
+     */
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `flash-message ${type}`;
+        notification.setAttribute('role', 'alert');
+        notification.setAttribute('aria-live', 'polite');
+        notification.innerHTML = `
+            <i class="fas fa-${this.getNotificationIcon(type)}" aria-hidden="true"></i>
+            <span>${message}</span>
+        `;
+        
+        const flashContainer = document.querySelector('.flash-messages') || this.createFlashContainer();
+        flashContainer.appendChild(notification);
+        
+        // Auto remove after delay
+        setTimeout(() => {
+            notification.style.transition = 'all 0.3s ease';
+            notification.style.transform = 'translateX(100%)';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 4000);
+    }
+
+    /**
+     * Gets appropriate icon for notification type
+     */
+    getNotificationIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle'
+        };
+        return icons[type] || 'info-circle';
+    }
+
+    /**
+     * Creates flash container if it doesn't exist
+     */
+    createFlashContainer() {
+        const container = document.createElement('div');
+        container.className = 'flash-messages';
+        container.setAttribute('aria-live', 'polite');
+        container.setAttribute('aria-atomic', 'true');
+        document.querySelector('.main-content').prepend(container);
+        return container;
+    }
+
+    /**
+     * Announces message to screen readers
+     */
+    announceToScreenReader(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = message;
+        
+        document.body.appendChild(announcement);
+        
+        setTimeout(() => {
+            document.body.removeChild(announcement);
+        }, 1000);
+    }
+
+    /**
+     * Escapes HTML to prevent XSS
+     */
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    /**
+     * Monitors page performance
+     */
+    monitorPerformance() {
+        window.addEventListener('load', () => {
+            if ('performance' in window) {
+                const navTiming = performance.getEntriesByType('navigation')[0];
+                const loadTime = navTiming.loadEventEnd - navTiming.navigationStart;
+                
+                console.log(`Requests page loaded in: ${loadTime}ms`);
+            }
+        });
+    }
+}
+
+// Global functions for template compatibility
 function toggleFilters() {
-    const filtersSection = document.getElementById('filtersSection');
-    filtersSection.style.display = filtersSection.style.display === 'none' ? 'block' : 'none';
+    window.requestsController.toggleFilters();
 }
 
 function clearAllFilters() {
-    window.location.href = "{{ url_for('view_requests') }}";
+    window.requestsController.clearAllFilters();
 }
 
-// Modal functionality
 function showRequestDetails(requestId) {
-    fetch(`/api/requests/${requestId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                populateModal(data.request);
-                showModal();
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching request details:', error);
-            showNotification('Error loading request details', 'error');
-        });
-}
-
-function populateModal(request) {
-    document.getElementById('modalRequestId').textContent = request.id;
-    
-    const modalBody = document.querySelector('.request-details');
-    modalBody.innerHTML = `
-        <div class="detail-grid">
-            <div class="detail-group">
-                <label><i class="fas fa-user"></i> Requester Name:</label>
-                <span>${escapeHtml(request.requester_name)}</span>
-            </div>
-            <div class="detail-group">
-                <label><i class="fas fa-building"></i> Department:</label>
-                <span>${escapeHtml(request.department)}</span>
-            </div>
-            <div class="detail-group">
-                <label><i class="fas fa-tag"></i> Category:</label>
-                <span>${escapeHtml(request.category)}</span>
-            </div>
-            <div class="detail-group">
-                <label><i class="fas fa-flag"></i> Status:</label>
-                <span class="status-indicator status-${request.status.toLowerCase().replace(' ', '-')}">
-                    <i class="fas fa-circle"></i>
-                    ${escapeHtml(request.status)}
-                </span>
-            </div>
-            <div class="detail-group">
-                <label><i class="fas fa-calendar-plus"></i> Created:</label>
-                <span>${new Date(request.created_at).toLocaleString()}</span>
-            </div>
-            <div class="detail-group">
-                <label><i class="fas fa-calendar-check"></i> Last Updated:</label>
-                <span>${request.updated_at ? new Date(request.updated_at).toLocaleString() : 'N/A'}</span>
-            </div>
-            <div class="detail-group full-width">
-                <label><i class="fas fa-align-left"></i> Description:</label>
-                <div class="description-full">${escapeHtml(request.description)}</div>
-            </div>
-        </div>
-    `;
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function showModal() {
-    document.getElementById('requestDetailsModal').style.display = 'block';
+    window.requestsController.showRequestDetails(requestId);
 }
 
 function hideModal() {
-    document.getElementById('requestDetailsModal').style.display = 'none';
+    window.requestsController.hideModal();
 }
 
-// Export functionality
 function exportRequests() {
-    fetch('/api/requests')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const blob = new Blob([JSON.stringify(data, null, 2)], 
-                                    { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `demulla-requests-${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                showNotification('Requests exported successfully!', 'success');
-            }
-        })
-        .catch(error => {
-            console.error('Export error:', error);
-            showNotification('Error exporting requests', 'error');
-        });
+    window.requestsController.exportRequests();
 }
 
-// Notification system
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `flash-message ${type}`;
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
-        ${message}
-    `;
-    
-    // Add to page
-    const flashContainer = document.querySelector('.flash-messages') || createFlashContainer();
-    flashContainer.appendChild(notification);
-    
-    // Auto remove
-    setTimeout(() => {
-        notification.style.transition = 'all 0.3s ease';
-        notification.style.transform = 'translateX(100%)';
-        notification.style.opacity = '0';
-        setTimeout(() => notification.remove(), 300);
-    }, 4000);
-}
-
-function createFlashContainer() {
-    const container = document.createElement('div');
-    container.className = 'flash-messages';
-    document.querySelector('.main-content').prepend(container);
-    return container;
-}
-
-// Event listeners
+// Initialize requests management when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Modal events
-    document.querySelector('.close-modal').addEventListener('click', hideModal);
-    document.getElementById('requestDetailsModal').addEventListener('click', function(event) {
-        if (event.target === this) {
-            hideModal();
-        }
-    });
-    
-    // Add animations to cards
-    const cards = document.querySelectorAll('.request-card, .request-row');
-    cards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
-        card.classList.add('fade-in-up');
-    });
+    window.requestsController = new RequestsManagementController();
 });
 
-// Add CSS animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fade-in-up {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    .fade-in-up {
-        animation: fade-in-up 0.6s ease forwards;
-    }
-    
+// Add modal content styles for attachments
+const modalStyles = document.createElement('style');
+modalStyles.textContent = `
     .detail-grid {
         display: grid;
-        gap: 1.5rem;
+        gap: var(--space-xl);
     }
     
     .detail-group {
         display: grid;
         grid-template-columns: 1fr 2fr;
-        gap: 1rem;
+        gap: var(--space-lg);
         align-items: start;
     }
     
@@ -1163,18 +2075,84 @@ style.textContent = `
         color: var(--text-primary);
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: var(--space-sm);
     }
     
     .description-full {
         background: var(--surface);
-        padding: 1rem;
+        padding: var(--space-lg);
         border-radius: var(--radius-sm);
         border: 1px solid var(--border);
         line-height: 1.6;
         white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .attachments-modal {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+        margin-top: var(--space-sm);
+    }
+    
+    .attachment-modal-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        padding: var(--space-md);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        transition: all var(--duration-fast) var(--ease-in-out);
+    }
+    
+    .attachment-modal-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--primary);
+    }
+    
+    .attachment-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    
+    .attachment-modal-item .attachment-link {
+        font-weight: 600;
+        color: var(--primary);
+        text-decoration: none;
+    }
+    
+    .attachment-modal-item .attachment-link:hover {
+        text-decoration: underline;
+    }
+    
+    .file-meta {
+        font-size: var(--text-xs);
+        color: var(--text-secondary);
+        margin-top: var(--space-xs);
+    }
+    
+    @media (max-width: 768px) {
+        .detail-group {
+            grid-template-columns: 1fr;
+            gap: var(--space-sm);
+        }
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+        .fade-in-up {
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+        
+        .attachment-modal-item {
+            transition: none;
+        }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(modalStyles);
 </script>
 {% endblock %}

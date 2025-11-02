@@ -1,42 +1,73 @@
 <!--
-Modern Homepage for IT Service Request Tracking System.
-Provides elegant overview and navigation to main system features.
+================================================================================
+MODERN HOMEPAGE TEMPLATE
+System: Demulla IT Service Desk
+Author: Engineer Mathias Alfred
+Version: 3.0.0
+Description: Enterprise-grade homepage with interactive features, real-time 
+             statistics, and engaging user experience for IT service management.
+Features:
+  - Animated hero section with floating elements
+  - Real-time statistics with counting animations
+  - Interactive feature cards with hover effects
+  - Performance-optimized scroll animations
+  - WCAG 2.1 AA accessibility compliance
+  - Mobile-first responsive design
+  - Progressive enhancement with graceful degradation
+================================================================================
 -->
 {% extends "base.html" %}
 
 {% block title %}Home - Demulla Service Desk{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="hero-background">
+<!-- ============================================================================
+HERO SECTION
+Primary landing area with compelling value proposition and call-to-action
+============================================================================= -->
+<section class="hero-section" role="banner" aria-labelledby="hero-heading">
+    <div class="hero-background" aria-hidden="true">
         <div class="hero-overlay"></div>
     </div>
     <div class="hero-container">
+        <!-- Hero Content Area -->
         <div class="hero-content">
-            <div class="hero-badge">
-                <i class="fas fa-star"></i>
+            <!-- Premium Badge -->
+            <div class="hero-badge" role="status" aria-label="Enterprise IT Solution">
+                <i class="fas fa-star" aria-hidden="true"></i>
                 Enterprise IT Solution
             </div>
-            <h1 class="hero-title">
+            
+            <!-- Main Heading -->
+            <h1 id="hero-heading" class="hero-title">
                 <span class="gradient-text">Demulla Service Desk</span>
                 <br>Intelligent IT Support
             </h1>
+            
+            <!-- Value Proposition -->
             <p class="hero-description">
                 Streamline your internal IT support with our automated tracking system. 
                 Experience seamless request management with real-time tracking and intelligent automation.
             </p>
+            
+            <!-- Primary Call-to-Action Buttons -->
             <div class="hero-actions">
-                <a href="{{ url_for('submit_request') }}" class="btn btn-primary btn-hero">
-                    <i class="fas fa-plus-circle"></i>
+                <a href="{{ url_for('submit_request') }}" 
+                   class="btn btn-primary btn-hero"
+                   aria-label="Submit new IT service request">
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
                     Submit New Request
                 </a>
-                <a href="{{ url_for('view_requests') }}" class="btn btn-secondary btn-hero">
-                    <i class="fas fa-list-alt"></i>
+                <a href="{{ url_for('view_requests') }}" 
+                   class="btn btn-secondary btn-hero"
+                   aria-label="View existing service requests">
+                    <i class="fas fa-list-alt" aria-hidden="true"></i>
                     View Requests
                 </a>
             </div>
-            <div class="hero-stats">
+            
+            <!-- Real-time Statistics -->
+            <div class="hero-stats" role="status" aria-live="polite">
                 <div class="stat-item">
                     <div class="stat-number" id="live-total">0</div>
                     <div class="stat-label">Requests Handled</div>
@@ -51,7 +82,9 @@ Provides elegant overview and navigation to main system features.
                 </div>
             </div>
         </div>
-        <div class="hero-visual">
+        
+        <!-- Hero Visual Elements -->
+        <div class="hero-visual" aria-hidden="true">
             <div class="floating-card card-1">
                 <i class="fas fa-ticket-alt"></i>
                 <span>New Ticket</span>
@@ -68,78 +101,121 @@ Provides elegant overview and navigation to main system features.
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="features-section">
+<!-- ============================================================================
+FEATURES SECTION
+Comprehensive feature showcase with detailed benefits and capabilities
+============================================================================= -->
+<section class="features-section" aria-labelledby="features-heading">
     <div class="container">
+        <!-- Section Header -->
         <div class="section-header">
-            <h2>Why Choose Our Service Desk?</h2>
+            <h2 id="features-heading">Why Choose Our Service Desk?</h2>
             <p>Experience the future of IT support with our comprehensive suite of features</p>
         </div>
-        <div class="features-grid">
-            <!-- Feature 1 -->
-            <div class="feature-card glass">
-                <div class="feature-icon">
+        
+        <!-- Features Grid -->
+        <div class="features-grid" role="list" aria-label="Service desk features">
+            
+            <!-- Feature 1: Intuitive Request Submission -->
+            <div class="feature-card glass" role="listitem">
+                <div class="feature-icon" aria-hidden="true">
                     <i class="fas fa-pencil-alt"></i>
                 </div>
                 <h3>Intuitive Request Submission</h3>
                 <p>Submit IT service requests through our beautifully designed web interface with smart form validation and guidance.</p>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check"></i> Smart form with conditional fields</li>
-                    <li><i class="fas fa-check"></i> Department and category selection</li>
-                    <li><i class="fas fa-check"></i> Rich text description support</li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Smart form with conditional fields
+                    </li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Department and category selection
+                    </li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Rich text description support
+                    </li>
                 </ul>
-                <div class="feature-arrow">
+                <div class="feature-arrow" aria-hidden="true">
                     <i class="fas fa-arrow-right"></i>
                 </div>
             </div>
 
-            <!-- Feature 2 -->
-            <div class="feature-card glass">
-                <div class="feature-icon">
+            <!-- Feature 2: Real-time Request Tracking -->
+            <div class="feature-card glass" role="listitem">
+                <div class="feature-icon" aria-hidden="true">
                     <i class="fas fa-search"></i>
                 </div>
                 <h3>Real-time Request Tracking</h3>
                 <p>Monitor your requests with live updates, comprehensive filtering, and detailed progress tracking.</p>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check"></i> Live status updates</li>
-                    <li><i class="fas fa-check"></i> Advanced filtering & search</li>
-                    <li><i class="fas fa-check"></i> Progress visualization</li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Live status updates
+                    </li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Advanced filtering & search
+                    </li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Progress visualization
+                    </li>
                 </ul>
-                <div class="feature-arrow">
+                <div class="feature-arrow" aria-hidden="true">
                     <i class="fas fa-arrow-right"></i>
                 </div>
             </div>
 
-            <!-- Feature 3 -->
-            <div class="feature-card glass">
-                <div class="feature-icon">
+            <!-- Feature 3: Smart Automation -->
+            <div class="feature-card glass" role="listitem">
+                <div class="feature-icon" aria-hidden="true">
                     <i class="fas fa-bolt"></i>
                 </div>
                 <h3>Smart Automation</h3>
                 <p>Leverage intelligent automation for status management, notifications, and workflow optimization.</p>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check"></i> Automated status assignment</li>
-                    <li><i class="fas fa-check"></i> Smart email notifications</li>
-                    <li><i class="fas fa-check"></i> Workflow automation</li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Automated status assignment
+                    </li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Smart email notifications
+                    </li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Workflow automation
+                    </li>
                 </ul>
-                <div class="feature-arrow">
+                <div class="feature-arrow" aria-hidden="true">
                     <i class="fas fa-arrow-right"></i>
                 </div>
             </div>
 
-            <!-- Feature 4 -->
-            <div class="feature-card glass">
-                <div class="feature-icon">
+            <!-- Feature 4: Advanced Analytics -->
+            <div class="feature-card glass" role="listitem">
+                <div class="feature-icon" aria-hidden="true">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <h3>Advanced Analytics</h3>
                 <p>Gain insights with comprehensive dashboards, real-time metrics, and detailed reporting.</p>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check"></i> Real-time KPIs</li>
-                    <li><i class="fas fa-check"></i> Interactive charts</li>
-                    <li><i class="fas fa-check"></i> Performance analytics</li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Real-time KPIs
+                    </li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Interactive charts
+                    </li>
+                    <li>
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                        Performance analytics
+                    </li>
                 </ul>
-                <div class="feature-arrow">
+                <div class="feature-arrow" aria-hidden="true">
                     <i class="fas fa-arrow-right"></i>
                 </div>
             </div>
@@ -147,65 +223,76 @@ Provides elegant overview and navigation to main system features.
     </div>
 </section>
 
-<!-- Statistics Section -->
-<section class="stats-section">
+<!-- ============================================================================
+STATISTICS SECTION
+Real-time system performance metrics with animated counters
+============================================================================= -->
+<section class="stats-section" aria-labelledby="stats-heading">
     <div class="container">
+        <!-- Section Header -->
         <div class="section-header">
-            <h2>System Performance</h2>
+            <h2 id="stats-heading">System Performance</h2>
             <p>Real-time metrics showcasing our service desk efficiency</p>
         </div>
-        <div class="stats-grid">
-            <div class="stat-card glass">
-                <div class="stat-icon">
+        
+        <!-- Statistics Grid -->
+        <div class="stats-grid" role="list" aria-label="System performance statistics">
+            
+            <!-- Total Requests Stat -->
+            <div class="stat-card glass" role="listitem">
+                <div class="stat-icon" aria-hidden="true">
                     <i class="fas fa-clipboard-list"></i>
                 </div>
                 <div class="stat-content">
                     <div class="stat-number" id="total-requests">0</div>
                     <div class="stat-label">Total Requests</div>
                     <div class="stat-trend">
-                        <i class="fas fa-chart-line success"></i>
+                        <i class="fas fa-chart-line success" aria-hidden="true"></i>
                         <span>All service requests</span>
                     </div>
                 </div>
             </div>
 
-            <div class="stat-card glass">
-                <div class="stat-icon">
+            <!-- Pending Requests Stat -->
+            <div class="stat-card glass" role="listitem">
+                <div class="stat-icon" aria-hidden="true">
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-content">
                     <div class="stat-number" id="pending-requests">0</div>
                     <div class="stat-label">Pending Requests</div>
                     <div class="stat-trend">
-                        <i class="fas fa-exclamation-circle warning"></i>
+                        <i class="fas fa-exclamation-circle warning" aria-hidden="true"></i>
                         <span>Awaiting resolution</span>
                     </div>
                 </div>
             </div>
 
-            <div class="stat-card glass">
-                <div class="stat-icon">
+            <!-- Resolved Requests Stat -->
+            <div class="stat-card glass" role="listitem">
+                <div class="stat-icon" aria-hidden="true">
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stat-content">
                     <div class="stat-number" id="resolved-requests">0</div>
                     <div class="stat-label">Resolved Requests</div>
                     <div class="stat-trend">
-                        <i class="fas fa-trophy success"></i>
+                        <i class="fas fa-trophy success" aria-hidden="true"></i>
                         <span id="resolution-rate">0% success rate</span>
                     </div>
                 </div>
             </div>
 
-            <div class="stat-card glass">
-                <div class="stat-icon">
+            <!-- Active Departments Stat -->
+            <div class="stat-card glass" role="listitem">
+                <div class="stat-icon" aria-hidden="true">
                     <i class="fas fa-building"></i>
                 </div>
                 <div class="stat-content">
                     <div class="stat-number" id="active-departments">0</div>
                     <div class="stat-label">Active Departments</div>
                     <div class="stat-trend">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-users" aria-hidden="true"></i>
                         <span>Using the system</span>
                     </div>
                 </div>
@@ -214,36 +301,48 @@ Provides elegant overview and navigation to main system features.
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="cta-section">
-    <div class="cta-background"></div>
+<!-- ============================================================================
+CALL-TO-ACTION SECTION
+Compelling final section to drive user engagement and conversions
+============================================================================= -->
+<section class="cta-section" aria-labelledby="cta-heading">
+    <div class="cta-background" aria-hidden="true"></div>
     <div class="container">
         <div class="cta-content">
+            <!-- CTA Text Content -->
             <div class="cta-text">
-                <h2>Ready to Transform Your IT Support?</h2>
+                <h2 id="cta-heading">Ready to Transform Your IT Support?</h2>
                 <p>Join hundreds of satisfied users who have streamlined their IT support process with our intelligent service desk solution.</p>
-                <div class="cta-features">
-                    <div class="cta-feature">
-                        <i class="fas fa-shield-alt"></i>
+                
+                <!-- Feature Highlights -->
+                <div class="cta-features" role="list" aria-label="Key benefits">
+                    <div class="cta-feature" role="listitem">
+                        <i class="fas fa-shield-alt" aria-hidden="true"></i>
                         <span>Enterprise Security</span>
                     </div>
-                    <div class="cta-feature">
-                        <i class="fas fa-rocket"></i>
+                    <div class="cta-feature" role="listitem">
+                        <i class="fas fa-rocket" aria-hidden="true"></i>
                         <span>Lightning Fast</span>
                     </div>
-                    <div class="cta-feature">
-                        <i class="fas fa-headset"></i>
+                    <div class="cta-feature" role="listitem">
+                        <i class="fas fa-headset" aria-hidden="true"></i>
                         <span>24/7 Support</span>
                     </div>
                 </div>
             </div>
+            
+            <!-- CTA Action Buttons -->
             <div class="cta-actions">
-                <a href="{{ url_for('submit_request') }}" class="btn btn-primary btn-large">
-                    <i class="fas fa-plus-circle"></i>
+                <a href="{{ url_for('submit_request') }}" 
+                   class="btn btn-primary btn-large"
+                   aria-label="Get started with Demulla Service Desk">
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
                     Get Started Now
                 </a>
-                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-large">
-                    <i class="fas fa-chart-bar"></i>
+                <a href="{{ url_for('dashboard') }}" 
+                   class="btn btn-secondary btn-large"
+                   aria-label="View administrative dashboard">
+                    <i class="fas fa-chart-bar" aria-hidden="true"></i>
                     View Dashboard
                 </a>
             </div>
@@ -251,8 +350,15 @@ Provides elegant overview and navigation to main system features.
     </div>
 </section>
 
+<!-- ============================================================================
+HOMEPAGE STYLESHEET
+Comprehensive CSS with design system integration and performance optimizations
+============================================================================= -->
 <style>
-/* Hero Section */
+/**
+ * HERO SECTION STYLES
+ * Premium hero section with gradient background and floating animations
+ */
 .hero-section {
     position: relative;
     min-height: 90vh;
@@ -284,10 +390,10 @@ Provides elegant overview and navigation to main system features.
     position: relative;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 var(--space-2xl);
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: var(--space-3xl);
     align-items: center;
 }
 
@@ -296,25 +402,35 @@ Provides elegant overview and navigation to main system features.
     z-index: 2;
 }
 
+/**
+ * HERO BADGE COMPONENT
+ * Premium badge with glassmorphism effect
+ */
 .hero-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    padding: 0.5rem 1rem;
+    padding: var(--space-sm) var(--space-lg);
     border-radius: 50px;
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     font-weight: 600;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
+/**
+ * HERO TYPOGRAPHY SYSTEM
+ * Responsive typography with gradient effects
+ */
 .hero-title {
     font-size: 3.5rem;
     font-weight: 800;
     line-height: 1.1;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-lg);
 }
 
 .gradient-text {
@@ -327,33 +443,47 @@ Provides elegant overview and navigation to main system features.
 .hero-description {
     font-size: 1.3rem;
     line-height: 1.6;
-    margin-bottom: 2.5rem;
+    margin-bottom: var(--space-2xl);
     opacity: 0.9;
     max-width: 500px;
 }
 
+/**
+ * HERO ACTION BUTTONS
+ * Prominent call-to-action buttons
+ */
 .hero-actions {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 3rem;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-3xl);
     flex-wrap: wrap;
 }
 
 .btn-hero {
-    padding: 1rem 2rem;
+    padding: var(--space-lg) var(--space-2xl);
     font-size: 1.1rem;
     border-radius: 12px;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
     text-decoration: none;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
+    border: 2px solid transparent;
 }
 
+.btn-hero:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/**
+ * HERO STATISTICS
+ * Real-time statistics with animated counters
+ */
 .hero-stats {
     display: flex;
-    gap: 3rem;
+    gap: var(--space-3xl);
 }
 
 .stat-item {
@@ -363,7 +493,7 @@ Provides elegant overview and navigation to main system features.
 .stat-number {
     font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -371,12 +501,15 @@ Provides elegant overview and navigation to main system features.
 }
 
 .stat-label {
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     opacity: 0.8;
     font-weight: 500;
 }
 
-/* Hero Visual */
+/**
+ * HERO VISUAL ELEMENTS
+ * Animated floating cards for visual interest
+ */
 .hero-visual {
     position: relative;
     height: 400px;
@@ -388,14 +521,14 @@ Provides elegant overview and navigation to main system features.
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: var(--space-xl);
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-lg);
     font-weight: 600;
     color: white;
     animation: float 6s ease-in-out infinite;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-xl);
 }
 
 .floating-card i {
@@ -421,25 +554,32 @@ Provides elegant overview and navigation to main system features.
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(2deg); }
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+    }
+    50% { 
+        transform: translateY(-20px) rotate(2deg); 
+    }
 }
 
-/* Features Section */
+/**
+ * FEATURES SECTION STYLES
+ * Comprehensive feature showcase with interactive cards
+ */
 .features-section {
-    padding: 6rem 0;
+    padding: var(--space-3xl) 0;
     background: var(--background);
 }
 
 .section-header {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: var(--space-3xl);
 }
 
 .section-header h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -451,21 +591,28 @@ Provides elegant overview and navigation to main system features.
     color: var(--text-secondary);
     max-width: 600px;
     margin: 0 auto;
+    line-height: 1.6;
 }
 
+/**
+ * FEATURES GRID SYSTEM
+ * Responsive grid layout for feature cards
+ */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    gap: var(--space-2xl);
 }
 
 .feature-card {
-    padding: 2.5rem 2rem;
-    border-radius: var(--radius);
+    padding: var(--space-2xl) var(--space-2xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
     position: relative;
     overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .feature-card::before {
@@ -476,7 +623,7 @@ Provides elegant overview and navigation to main system features.
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.5s ease;
+    transition: left var(--duration-slow) var(--ease-in-out);
 }
 
 .feature-card:hover::before {
@@ -485,25 +632,25 @@ Provides elegant overview and navigation to main system features.
 
 .feature-card:hover {
     transform: translateY(-10px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
 }
 
 .feature-icon {
     font-size: 3rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
     color: var(--primary);
 }
 
 .feature-card h3 {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
     color: var(--text-primary);
 }
 
 .feature-card p {
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
     line-height: 1.6;
 }
 
@@ -514,24 +661,25 @@ Provides elegant overview and navigation to main system features.
 }
 
 .feature-list li {
-    padding: 0.5rem 0;
+    padding: var(--space-sm) 0;
     color: var(--text-secondary);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
+    line-height: 1.4;
 }
 
 .feature-list i {
     color: var(--success);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
 }
 
 .feature-arrow {
     position: absolute;
-    top: 2rem;
-    right: 2rem;
+    top: var(--space-xl);
+    right: var(--space-xl);
     color: var(--text-secondary);
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
 }
 
 .feature-card:hover .feature-arrow {
@@ -539,24 +687,29 @@ Provides elegant overview and navigation to main system features.
     color: var(--primary);
 }
 
-/* Stats Section */
+/**
+ * STATISTICS SECTION STYLES
+ * Performance metrics with animated counters
+ */
 .stats-section {
-    padding: 4rem 0;
+    padding: var(--space-3xl) 0;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    gap: var(--space-2xl);
 }
 
 .stat-card {
-    padding: 2rem;
-    border-radius: var(--radius);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .stat-card:hover {
@@ -566,14 +719,14 @@ Provides elegant overview and navigation to main system features.
 
 .stat-icon {
     font-size: 2.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
     color: var(--primary);
 }
 
 .stat-number {
     font-size: 3rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -583,7 +736,7 @@ Provides elegant overview and navigation to main system features.
 .stat-label {
     font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     color: var(--text-primary);
 }
 
@@ -591,18 +744,21 @@ Provides elegant overview and navigation to main system features.
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
     color: var(--text-secondary);
 }
 
 .stat-trend .success { color: var(--success); }
 .stat-trend .warning { color: var(--warning); }
 
-/* CTA Section */
+/**
+ * CALL-TO-ACTION SECTION STYLES
+ * Compelling final section to drive conversions
+ */
 .cta-section {
     position: relative;
-    padding: 6rem 0;
+    padding: var(--space-3xl) 0;
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     color: white;
     overflow: hidden;
@@ -628,13 +784,13 @@ Provides elegant overview and navigation to main system features.
 .cta-content h2 {
     font-size: 3rem;
     font-weight: 800;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-lg);
     line-height: 1.1;
 }
 
 .cta-content p {
     font-size: 1.3rem;
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-3xl);
     opacity: 0.9;
     line-height: 1.6;
 }
@@ -642,15 +798,15 @@ Provides elegant overview and navigation to main system features.
 .cta-features {
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    margin-bottom: 3rem;
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-3xl);
     flex-wrap: wrap;
 }
 
 .cta-feature {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
     font-weight: 600;
 }
 
@@ -661,28 +817,37 @@ Provides elegant overview and navigation to main system features.
 .cta-actions {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
+    gap: var(--space-xl);
     flex-wrap: wrap;
 }
 
 .btn-large {
-    padding: 1.25rem 2.5rem;
+    padding: var(--space-xl) var(--space-2xl);
     font-size: 1.1rem;
     border-radius: 12px;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
     text-decoration: none;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
+    border: 2px solid transparent;
 }
 
-/* Responsive Design */
+.btn-large:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/**
+ * RESPONSIVE DESIGN BREAKPOINTS
+ * Mobile-first responsive design system
+ */
 @media (max-width: 1024px) {
     .hero-container {
         grid-template-columns: 1fr;
         text-align: center;
-        gap: 3rem;
+        gap: var(--space-3xl);
     }
     
     .hero-title {
@@ -691,6 +856,10 @@ Provides elegant overview and navigation to main system features.
     
     .hero-stats {
         justify-content: center;
+    }
+    
+    .hero-description {
+        margin: 0 auto var(--space-2xl);
     }
 }
 
@@ -709,7 +878,7 @@ Provides elegant overview and navigation to main system features.
     
     .hero-stats {
         flex-direction: column;
-        gap: 2rem;
+        gap: var(--space-2xl);
     }
     
     .features-grid {
@@ -742,7 +911,7 @@ Provides elegant overview and navigation to main system features.
 
 @media (max-width: 480px) {
     .hero-container {
-        padding: 0 1rem;
+        padding: 0 var(--space-lg);
     }
     
     .stats-grid {
@@ -751,7 +920,7 @@ Provides elegant overview and navigation to main system features.
     
     .cta-features {
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--space-lg);
     }
     
     .section-header h2 {
@@ -759,11 +928,18 @@ Provides elegant overview and navigation to main system features.
     }
     
     .feature-card {
-        padding: 2rem 1.5rem;
+        padding: var(--space-xl) var(--space-lg);
+    }
+    
+    .hero-title {
+        font-size: 1.75rem;
     }
 }
 
-/* Animation Classes */
+/**
+ * ANIMATION CLASSES
+ * Reusable animation utilities for enhanced UX
+ */
 .fade-in-up {
     opacity: 0;
     transform: translateY(30px);
@@ -777,7 +953,10 @@ Provides elegant overview and navigation to main system features.
     }
 }
 
-/* Stagger animations for cards */
+/**
+ * STAGGERED ANIMATIONS
+ * Sequential animations for better visual hierarchy
+ */
 .feature-card:nth-child(1) { animation-delay: 0.1s; }
 .feature-card:nth-child(2) { animation-delay: 0.2s; }
 .feature-card:nth-child(3) { animation-delay: 0.3s; }
@@ -787,62 +966,180 @@ Provides elegant overview and navigation to main system features.
 .stat-card:nth-child(2) { animation-delay: 0.2s; }
 .stat-card:nth-child(3) { animation-delay: 0.3s; }
 .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+/**
+ * REDUCED MOTION PREFERENCES
+ * Respect user motion sensitivity preferences
+ */
+@media (prefers-reduced-motion: reduce) {
+    .floating-card,
+    .feature-card,
+    .stat-card,
+    .btn-hero,
+    .btn-large {
+        animation: none;
+        transition: none;
+    }
+    
+    .fade-in-up {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/**
+ * DARK MODE ENHANCEMENTS
+ * Improved contrast and readability in dark mode
+ */
+@media (prefers-color-scheme: dark) {
+    .features-section {
+        background: var(--surface);
+    }
+    
+    .stats-section {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+    
+    .feature-card,
+    .stat-card {
+        background: rgba(30, 41, 59, 0.95);
+        border-color: var(--border);
+    }
+}
 </style>
 {% endblock %}
 
 {% block scripts %}
-<!-- Modern JavaScript for interactive homepage -->
+<!-- ============================================================================
+HOMEPAGE JAVASCRIPT MODULES
+Interactive features, animations, and real-time data management
+============================================================================= -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+/**
+ * HOMEPAGE CONTROLLER MODULE
+ * Main JavaScript controller for homepage functionality
+ * @author Engineer Mathias Alfred
+ * @version 3.0.0
+ */
+class HomepageController {
+    constructor() {
+        this.statistics = {
+            total: 0,
+            pending: 0,
+            resolved: 0,
+            departments: 0
+        };
+        
+        this.init();
+    }
+
     /**
-     * Loads and animates real-time statistics
+     * Initializes all homepage components and event listeners
      */
-    async function loadStatistics() {
+    init() {
+        this.loadStatistics();
+        this.initScrollAnimations();
+        this.initHoverEffects();
+        this.startAutoRefresh();
+        
+        // Add performance monitoring
+        this.monitorPerformance();
+    }
+
+    /**
+     * Loads and animates real-time statistics from API
+     */
+    async loadStatistics() {
         try {
             const response = await fetch('/api/requests');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
             
             if (data.success) {
-                const requests = data.requests;
-                const total = requests.length;
-                const pending = requests.filter(req => req.status === 'Pending').length;
-                const resolved = requests.filter(req => req.status === 'Resolved').length;
-                const departments = new Set(requests.map(req => req.department)).size;
-                const resolutionRate = total > 0 ? Math.round((resolved / total) * 100) : 0;
-                
-                // Animate numbers
-                animateValue('total-requests', 0, total, 1500);
-                animateValue('pending-requests', 0, pending, 1500);
-                animateValue('resolved-requests', 0, resolved, 1500);
-                animateValue('active-departments', 0, departments, 1500);
-                animateValue('live-total', 0, total, 1500);
-                animateValue('live-resolved', 0, resolved, 1500);
-                
-                // Update resolution rate
-                document.getElementById('resolution-rate').textContent = `${resolutionRate}% success rate`;
+                this.processStatistics(data.requests);
+            } else {
+                throw new Error('Invalid response format');
             }
         } catch (error) {
             console.error('Error loading statistics:', error);
-            // Set default values
-            ['total-requests', 'pending-requests', 'resolved-requests', 'active-departments', 'live-total', 'live-resolved']
-                .forEach(id => document.getElementById(id).textContent = '0');
+            this.handleStatisticsError();
         }
     }
-    
+
     /**
-     * Animates number counting effect
+     * Processes and updates statistics data
      */
-    function animateValue(id, start, end, duration) {
+    processStatistics(requests) {
+        this.statistics.total = requests.length;
+        this.statistics.pending = requests.filter(req => req.status === 'Pending').length;
+        this.statistics.resolved = requests.filter(req => req.status === 'Resolved').length;
+        this.statistics.departments = new Set(requests.map(req => req.department)).size;
+        this.statistics.resolutionRate = this.statistics.total > 0 ? 
+            Math.round((this.statistics.resolved / this.statistics.total) * 100) : 0;
+        
+        this.updateStatisticsUI();
+    }
+
+    /**
+     * Updates the user interface with animated statistics
+     */
+    updateStatisticsUI() {
+        this.animateValue('total-requests', 0, this.statistics.total, 1500);
+        this.animateValue('pending-requests', 0, this.statistics.pending, 1500);
+        this.animateValue('resolved-requests', 0, this.statistics.resolved, 1500);
+        this.animateValue('active-departments', 0, this.statistics.departments, 1500);
+        this.animateValue('live-total', 0, this.statistics.total, 1500);
+        this.animateValue('live-resolved', 0, this.statistics.resolved, 1500);
+        
+        // Update resolution rate
+        document.getElementById('resolution-rate').textContent = 
+            `${this.statistics.resolutionRate}% success rate`;
+    }
+
+    /**
+     * Handles statistics loading errors gracefully
+     */
+    handleStatisticsError() {
+        const defaultValues = {
+            'total-requests': 0,
+            'pending-requests': 0,
+            'resolved-requests': 0,
+            'active-departments': 0,
+            'live-total': 0,
+            'live-resolved': 0
+        };
+        
+        Object.keys(defaultValues).forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = defaultValues[id];
+            }
+        });
+        
+        document.getElementById('resolution-rate').textContent = '0% success rate';
+    }
+
+    /**
+     * Animates number counting effect with easing
+     */
+    animateValue(id, start, end, duration) {
         const element = document.getElementById(id);
         if (!element) return;
         
         const range = end - start;
         const startTime = performance.now();
         
-        function updateValue(currentTime) {
+        const updateValue = (currentTime) => {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+            
+            // Ease out cubic function for smooth animation
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
             
             const value = Math.floor(start + (range * easeProgress));
             element.textContent = value.toLocaleString();
@@ -852,15 +1149,15 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 element.textContent = end.toLocaleString();
             }
-        }
+        };
         
         requestAnimationFrame(updateValue);
     }
-    
+
     /**
-     * Adds scroll animations
+     * Initializes scroll-triggered animations
      */
-    function initScrollAnimations() {
+    initScrollAnimations() {
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -870,6 +1167,7 @@ document.addEventListener('DOMContentLoaded', function() {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('fade-in-up');
+                    observer.unobserve(entry.target); // Only animate once
                 }
             });
         }, observerOptions);
@@ -879,60 +1177,141 @@ document.addEventListener('DOMContentLoaded', function() {
             observer.observe(card);
         });
     }
-    
+
     /**
-     * Adds hover effects to interactive elements
+     * Initializes interactive hover effects
      */
-    function initHoverEffects() {
-        // Add ripple effect to buttons
+    initHoverEffects() {
+        this.addRippleEffects();
+        this.enhanceCardInteractions();
+    }
+
+    /**
+     * Adds ripple effect to interactive elements
+     */
+    addRippleEffects() {
         document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                const rect = btn.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.cssText = `
-                    position: absolute;
-                    border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.6);
-                    transform: scale(0);
-                    animation: ripple 600ms linear;
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${x}px;
-                    top: ${y}px;
-                `;
-                
-                btn.style.position = 'relative';
-                btn.style.overflow = 'hidden';
-                btn.appendChild(ripple);
-                
-                setTimeout(() => ripple.remove(), 600);
+            btn.addEventListener('click', (e) => {
+                this.createRippleEffect(e, btn);
             });
         });
     }
-    
-    // Add ripple animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
+
+    /**
+     * Creates ripple effect animation
+     */
+    createRippleEffect(event, element) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 600ms linear;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            pointer-events: none;
+        `;
+        
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode === element) {
+                element.removeChild(ripple);
             }
+        }, 600);
+    }
+
+    /**
+     * Enhances card interactions with additional effects
+     */
+    enhanceCardInteractions() {
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.zIndex = '';
+            });
+        });
+    }
+
+    /**
+     * Starts auto-refresh mechanism for real-time data
+     */
+    startAutoRefresh() {
+        // Refresh statistics every 30 seconds
+        setInterval(() => {
+            this.loadStatistics();
+        }, 30000);
+    }
+
+    /**
+     * Monitors and reports performance metrics
+     */
+    monitorPerformance() {
+        window.addEventListener('load', () => {
+            if ('performance' in window) {
+                const navTiming = performance.getEntriesByType('navigation')[0];
+                const loadTime = navTiming.loadEventEnd - navTiming.navigationStart;
+                
+                console.log(`Page load time: ${loadTime}ms`);
+                
+                // Report long tasks for performance monitoring
+                if ('PerformanceObserver' in window) {
+                    const observer = new PerformanceObserver((list) => {
+                        list.getEntries().forEach((entry) => {
+                            if (entry.duration > 50) {
+                                console.warn('Long task detected:', entry);
+                            }
+                        });
+                    });
+                    
+                    observer.observe({ entryTypes: ['longtask'] });
+                }
+            }
+        });
+    }
+}
+
+// Global functions for template compatibility
+function initHomepage() {
+    window.homepageController = new HomepageController();
+}
+
+// Initialize homepage when DOM is loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHomepage);
+} else {
+    initHomepage();
+}
+
+// Add ripple animation styles
+const rippleStyles = document.createElement('style');
+rippleStyles.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
         }
-    `;
-    document.head.appendChild(style);
+    }
     
-    // Initialize all functions
-    loadStatistics();
-    initScrollAnimations();
-    initHoverEffects();
-    
-    // Refresh statistics every 30 seconds
-    setInterval(loadStatistics, 30000);
-});
+    @media (prefers-reduced-motion: reduce) {
+        .ripple {
+            animation: none;
+        }
+    }
+`;
+document.head.appendChild(rippleStyles);
 </script>
 {% endblock %}

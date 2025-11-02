@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ============================================================================= -->
+    <!-- META TAGS & PAGE CONFIGURATION -->
+    <!-- ============================================================================= -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Demulla IT Service Desk - Page Not Found">
+    <meta name="author" content="Demulla IT Service Desk">
+    
+    <!-- ============================================================================= -->
+    <!-- PAGE TITLE -->
+    <!-- ============================================================================= -->
+    <title>404 - Page Not Found | Demulla IT Service Desk</title>
+    
+    <!-- ============================================================================= -->
+    <!-- FAVICON -->
+    <!-- ============================================================================= -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+    
+    <!-- ============================================================================= -->
+    <!-- STYLESHEETS -->
+    <!-- ============================================================================= -->
+    <style>
+        /* ============================================================================= */
+        /* CSS VARIABLES FOR CONSISTENT THEMING */
+        /* ============================================================================= */
+        :root {
+            --primary-color: #3B82F6;
+            --primary-dark: #1D4ED8;
+            --secondary-color: #8B5CF6;
+            --secondary-dark: #7C3AED;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        /* ============================================================================= */
+        /* BASE STYLES & RESETS */
+        /* ============================================================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================================= */
+        /* ANIMATED BACKGROUND ELEMENTS */
+        /* ============================================================================= */
+        .background-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-color);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--secondary-color);
+            top: 60%;
+            left: 80%;
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--primary-color);
+            top: 20%;
+            left: 80%;
+            animation-delay: 10s;
+        }
+
+        .shape-4 {
+            width: 250px;
+            height: 250px;
+            background: var(--secondary-color);
+            top: 70%;
+            left: 10%;
+            animation-delay: 7s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-30px) rotate(120deg);
+            }
+            66% {
+                transform: translateY(15px) rotate(240deg);
+            }
+        }
+
+        /* ============================================================================= */
+        /* MAIN ERROR CONTAINER */
+        /* ============================================================================= */
+        .error-container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.8s ease-out;
+            z-index: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================================= */
+        /* ERROR ICON WITH ANIMATION */
+        /* ============================================================================= */
+        .error-icon {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 30px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.1);
+            animation: pulse 3s infinite;
+        }
+
+        .error-icon svg {
+            width: 100px;
+            height: 100px;
+            color: var(--secondary-color);
+            z-index: 2;
+            position: relative;
+            animation: search 4s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes search {
+            0%, 100% {
+                transform: rotate(0deg) translateX(0);
+            }
+            25% {
+                transform: rotate(15deg) translateX(5px);
+            }
+            50% {
+                transform: rotate(0deg) translateX(0);
+            }
+            75% {
+                transform: rotate(-15deg) translateX(-5px);
+            }
+        }
+
+        /* ============================================================================= */
+        /* ERROR CONTENT STYLING */
+        /* ============================================================================= */
+        .error-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .error-content h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 20px;
+        }
+
+        .error-content p {
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ============================================================================= */
+        /* SUGGESTED ACTIONS SECTION */
+        /* ============================================================================= */
+        .suggested-actions {
+            background: var(--gray-50);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .suggested-actions h3 {
+            font-size: 1.2rem;
+            color: var(--gray-800);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .suggested-actions h3 svg {
+            width: 20px;
+            height: 20px;
+            color: var(--secondary-color);
+        }
+
+        .suggested-actions ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .suggested-actions li {
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--gray-700);
+        }
+
+        .suggested-actions li svg {
+            width: 18px;
+            height: 18px;
+            color: var(--secondary-color);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* ============================================================================= */
+        /* ACTION BUTTONS */
+        /* ============================================================================= -->
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ============================================================================= -->
+        <!-- STATUS INDICATOR -->
+        <!-- ============================================================================= -->
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--secondary-color);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .status-indicator::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+            51%, 100% {
+                opacity: 0.3;
+            }
+        }
+
+        /* ============================================================================= -->
+        <!-- SEARCH BAR -->
+        <!-- ============================================================================= -->
+        .search-container {
+            max-width: 500px;
+            margin: 20px auto 30px;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            border: 2px solid var(--gray-300);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+        }
+
+        .search-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ============================================================================= -->
+        <!-- FOOTER -->
+        <!-- ============================================================================= -->
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* ============================================================================= -->
+        <!-- RESPONSIVE DESIGN -->
+        <!-- ============================================================================= -->
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 30px 20px;
+            }
+            
+            .error-content h1 {
+                font-size: 3rem;
+            }
+            
+            .error-content h2 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .error-icon {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .error-icon svg {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .suggested-actions {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .error-container {
+                padding: 25px 15px;
+            }
+            
+            .error-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .error-content h2 {
+                font-size: 1.3rem;
+            }
+            
+            .error-content p {
+                font-size: 1rem;
+            }
+            
+            .search-container {
+                margin: 15px auto 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================================================= -->
+    <!-- ANIMATED BACKGROUND SHAPES -->
+    <!-- ============================================================================= -->
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+
+    <!-- ============================================================================= -->
+    <!-- MAIN ERROR CONTAINER -->
+    <!-- ============================================================================= -->
+    <div class="error-container">
+        <!-- ============================================================================= -->
+        <!-- ANIMATED ERROR ICON -->
+        <!-- ============================================================================= -->
+        <div class="error-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+
+        <!-- ============================================================================= -->
+        <!-- ERROR STATUS INDICATOR -->
+        <!-- ============================================================================= -->
+        <div class="status-indicator">
+            HTTP 404 - Page Not Found
+        </div>
+
+        <!-- ============================================================================= -->
+        <!-- ERROR CONTENT -->
+        <!-- ============================================================================= -->
+        <div class="error-content">
+            <h1>Lost in Cyberspace?</h1>
+            <h2>We couldn't find that page</h2>
+            <p>
+                The page you're looking for doesn't exist or may have been moved. 
+                Don't worry, even the best explorers sometimes take wrong turns.
+            </p>
+
+            <!-- ============================================================================= -->
+            <!-- SEARCH BAR -->
+            <!-- ============================================================================= -->
+            <div class="search-container">
+                <div class="search-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input type="text" class="search-bar" id="searchInput" placeholder="Search our website...">
+            </div>
+
+            <!-- ============================================================================= -->
+            <!-- SUGGESTED ACTIONS -->
+            <!-- ============================================================================= -->
+            <div class="suggested-actions">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Here are some helpful options:
+                </h3>
+                <ul>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        Return to the homepage and navigate from there
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                        Contact our support team for assistance
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Check if you typed the URL correctly
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ============================================================================= -->
+            <!-- ACTION BUTTONS -->
+            <!-- ============================================================================= -->
+            <div class="action-buttons">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Return to Homepage
+                </a>
+                
+                <button class="btn btn-secondary" id="goBackButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Go Back
+                </button>
+                
+                <a href="{{ url_for('submit_request') }}" class="btn btn-outline">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                    Submit a Request
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================================= -->
+    <!-- FOOTER -->
+    <!-- ============================================================================= -->
+    <div class="footer">
+        <p>&copy; 2025 Demulla IT Service Desk. All rights reserved. | <a href="{{ url_for('index') }}">Home</a> | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </div>
+
+    <!-- ============================================================================= -->
+    <!-- JAVASCRIPT FOR INTERACTIVE FUNCTIONALITY -->
+    <!-- ============================================================================= -->
+    <script>
+        // =============================================================================
+        // DOM ELEMENTS
+        // =============================================================================
+        const goBackButton = document.getElementById('goBackButton');
+        const searchInput = document.getElementById('searchInput');
+
+        // =============================================================================
+        // GO BACK BUTTON FUNCTIONALITY
+        // =============================================================================
+        goBackButton.addEventListener('click', function() {
+            // Check if there's history to go back to
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                // If no history, redirect to homepage
+                window.location.href = "{{ url_for('index') }}";
+            }
+        });
+
+        // =============================================================================
+        // SEARCH FUNCTIONALITY
+        // =============================================================================
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.trim();
+                if (searchTerm) {
+                    // In a real implementation, this would redirect to a search results page
+                    // For now, we'll show an alert and clear the input
+                    alert(`Search functionality would look for: "${searchTerm}"`);
+                    this.value = '';
+                    
+                    // Add a visual effect to show search was performed
+                    this.style.borderColor = 'var(--primary-color)';
+                    setTimeout(() => {
+                        this.style.borderColor = '';
+                    }, 1000);
+                }
+            }
+        });
+
+        // =============================================================================
+        // ADD VISUAL FEEDBACK FOR BUTTON INTERACTIONS
+        // =============================================================================
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mousedown', function() {
+                this.style.transform = 'translateY(1px)';
+            });
+            
+            button.addEventListener('mouseup', function() {
+                this.style.transform = '';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+
+        // =============================================================================
+        // ADD RANDOM QUOTE ON LOAD
+        // =============================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const quotes = [
+                "Not all those who wander are lost. - J.R.R. Tolkien",
+                "The only true wisdom is in knowing you know nothing. - Socrates",
+                "It's not a bug - it's an undocumented feature. - Anonymous",
+                "The page you seek is not here, but adventure awaits elsewhere!"
+            ];
+            
+            // Select a random quote
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            
+            // Create and append quote element
+            const quoteElement = document.createElement('p');
+            quoteElement.style.fontStyle = 'italic';
+            quoteElement.style.color = 'var(--gray-500)';
+            quoteElement.style.marginTop = '15px';
+            quoteElement.style.fontSize = '0.9rem';
+            quoteElement.textContent = randomQuote;
+            
+            document.querySelector('.error-content').appendChild(quoteElement);
+        });
+
+        // =============================================================================
+        // ADD PAGE LOAD ANIMATION
+        // =============================================================================
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

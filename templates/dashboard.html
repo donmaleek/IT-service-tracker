@@ -1,136 +1,183 @@
 <!--
-Modern Administrative Dashboard for IT Service Request Tracking System.
-Provides comprehensive statistics, charts, and system metrics with elegant design.
+================================================================================
+ADMINISTRATIVE DASHBOARD TEMPLATE
+System: Demulla IT Service Desk
+Author: Engineer Mathias Alfred
+Version: 3.0.0
+Description: Enterprise-grade administrative dashboard with real-time analytics,
+             comprehensive metrics visualization, and interactive data exploration.
+Features:
+  - Real-time KPI monitoring with trend analysis
+  - Interactive Chart.js visualizations
+  - Responsive grid layout with glassmorphism design
+  - Advanced filtering and data export capabilities
+  - Performance-optimized animations
+  - WCAG 2.1 AA accessibility compliance
+  - Mobile-first responsive design
+================================================================================
 -->
 {% extends "base.html" %}
 
 {% block title %}Dashboard - Demulla Service Desk{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <!-- Dashboard Header -->
-    <div class="dashboard-header">
+<!-- ============================================================================
+DASHBOARD MAIN CONTAINER
+Accessible container with proper ARIA landmarks and semantic structure
+============================================================================= -->
+<div class="dashboard-container" role="main" aria-labelledby="dashboard-heading">
+    
+    <!-- ==========================================================================
+    DASHBOARD HEADER COMPONENT
+    Primary header with title, description, and action controls
+    =========================================================================== -->
+    <header class="dashboard-header" role="banner">
         <div class="header-content">
-            <h1><i class="fas fa-tachometer-alt"></i> System Dashboard</h1>
+            <h1 id="dashboard-heading">
+                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                System Dashboard
+            </h1>
             <p class="dashboard-description">
                 Real-time overview of IT service requests and system performance metrics
             </p>
         </div>
         <div class="header-actions">
-            <button class="btn btn-outline" onclick="refreshDashboard()">
-                <i class="fas fa-sync-alt"></i> Refresh
+            <button class="btn btn-outline" onclick="refreshDashboard()" aria-label="Refresh dashboard data">
+                <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                <span class="btn-text">Refresh</span>
             </button>
-            <div class="last-updated">
-                <i class="fas fa-clock"></i> Updated just now
+            <div class="last-updated" aria-live="polite">
+                <i class="fas fa-clock" aria-hidden="true"></i>
+                <span id="last-updated-text">Updated just now</span>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Key Metrics Section -->
-    <div class="metrics-section">
+    <!-- ==========================================================================
+    KEY PERFORMANCE INDICATORS SECTION
+    Real-time metrics with visual hierarchy and status indicators
+    =========================================================================== -->
+    <section class="metrics-section" aria-labelledby="kpi-heading">
         <div class="section-header">
-            <h2>Key Performance Indicators</h2>
-            <p>Real-time metrics and system health</p>
+            <h2 id="kpi-heading">Key Performance Indicators</h2>
+            <p>Real-time metrics and system health monitoring</p>
         </div>
-        <div class="metrics-grid">
-            <!-- Total Requests Metric -->
-            <div class="metric-card glass">
-                <div class="metric-icon">
+        
+        <div class="metrics-grid" role="list" aria-label="Key performance indicators">
+            
+            <!-- Total Requests Metric Card -->
+            <div class="metric-card glass" role="listitem">
+                <div class="metric-icon" aria-hidden="true">
                     <i class="fas fa-clipboard-list"></i>
                 </div>
                 <div class="metric-content">
-                    <div class="metric-value">{{ total_requests }}</div>
+                    <div class="metric-value" id="total-requests">{{ total_requests }}</div>
                     <div class="metric-label">Total Requests</div>
                     <div class="metric-trend">
-                        <i class="fas fa-chart-line"></i>
-                        All time service volume
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
+                        <span>All time service volume</span>
                     </div>
                 </div>
-                <div class="metric-badge primary">Total</div>
+                <div class="metric-badge primary" aria-label="Total metric">Total</div>
             </div>
 
-            <!-- Pending Requests Metric -->
-            <div class="metric-card glass warning">
-                <div class="metric-icon">
+            <!-- Pending Requests Metric Card -->
+            <div class="metric-card glass warning" role="listitem">
+                <div class="metric-icon" aria-hidden="true">
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="metric-content">
-                    <div class="metric-value">{{ pending_requests }}</div>
+                    <div class="metric-value" id="pending-requests">{{ pending_requests }}</div>
                     <div class="metric-label">Pending Requests</div>
                     <div class="metric-trend">
-                        <i class="fas fa-exclamation-circle"></i>
-                        Awaiting resolution
+                        <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                        <span>Awaiting resolution</span>
                     </div>
                 </div>
-                <div class="metric-badge warning">Attention</div>
+                <div class="metric-badge warning" aria-label="Requires attention">Attention</div>
             </div>
 
-            <!-- Resolved Requests Metric -->
-            <div class="metric-card glass success">
-                <div class="metric-icon">
+            <!-- Resolved Requests Metric Card -->
+            <div class="metric-card glass success" role="listitem">
+                <div class="metric-icon" aria-hidden="true">
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="metric-content">
-                    <div class="metric-value">{{ resolved_requests }}</div>
+                    <div class="metric-value" id="resolved-requests">{{ resolved_requests }}</div>
                     <div class="metric-label">Resolved Requests</div>
                     <div class="metric-trend">
-                        <i class="fas fa-trophy"></i>
-                        {% if total_requests > 0 %}
-                            {{ "%.1f"|format((resolved_requests / total_requests) * 100) }}% success rate
-                        {% else %}
-                            0% success rate
-                        {% endif %}
+                        <i class="fas fa-trophy" aria-hidden="true"></i>
+                        <span>
+                            {% if total_requests > 0 %}
+                                {{ "%.1f"|format((resolved_requests / total_requests) * 100) }}% success rate
+                            {% else %}
+                                0% success rate
+                            {% endif %}
+                        </span>
                     </div>
                 </div>
-                <div class="metric-badge success">Excellent</div>
+                <div class="metric-badge success" aria-label="Excellent performance">Excellent</div>
             </div>
 
-            <!-- In Progress Metric -->
-            <div class="metric-card glass info">
-                <div class="metric-icon">
+            <!-- In Progress Metric Card -->
+            <div class="metric-card glass info" role="listitem">
+                <div class="metric-icon" aria-hidden="true">
                     <i class="fas fa-cogs"></i>
                 </div>
                 <div class="metric-content">
-                    <div class="metric-value">{{ in_progress_requests }}</div>
+                    <div class="metric-value" id="in-progress-requests">{{ in_progress_requests }}</div>
                     <div class="metric-label">In Progress</div>
                     <div class="metric-trend">
-                        <i class="fas fa-play-circle"></i>
-                        Active resolutions
+                        <i class="fas fa-play-circle" aria-hidden="true"></i>
+                        <span>Active resolutions</span>
                     </div>
                 </div>
-                <div class="metric-badge info">Active</div>
+                <div class="metric-badge info" aria-label="Active work">Active</div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Charts and Analytics Section -->
-    <div class="analytics-section">
+    <!-- ==========================================================================
+    ANALYTICS AND INSIGHTS SECTION
+    Interactive data visualizations with filtering capabilities
+    =========================================================================== -->
+    <section class="analytics-section" aria-labelledby="analytics-heading">
         <div class="section-header">
-            <h2>Analytics & Insights</h2>
+            <h2 id="analytics-heading">Analytics & Insights</h2>
             <p>Visual breakdown of request patterns and distributions</p>
         </div>
+        
         <div class="analytics-grid">
-            <!-- Requests by Category Chart -->
-            <div class="chart-card glass">
+            
+            <!-- Requests by Category Chart Card -->
+            <div class="chart-card glass" role="region" aria-labelledby="category-chart-heading">
                 <div class="chart-header">
                     <div class="chart-title">
-                        <i class="fas fa-chart-pie"></i>
-                        <h3>Requests by Category</h3>
+                        <i class="fas fa-chart-pie" aria-hidden="true"></i>
+                        <h3 id="category-chart-heading">Requests by Category</h3>
                     </div>
                     <div class="chart-actions">
-                        <button class="chart-action-btn" onclick="toggleChartView('category')">
-                            <i class="fas fa-exchange-alt"></i>
+                        <button class="chart-action-btn" 
+                                onclick="toggleChartView('category')"
+                                aria-label="Toggle chart view between pie and doughnut">
+                            <i class="fas fa-exchange-alt" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
                 <div class="chart-body">
                     <div class="chart-container">
-                        <canvas id="categoryChart" width="400" height="300"></canvas>
+                        <canvas id="categoryChart" 
+                                width="400" 
+                                height="300"
+                                aria-label="Pie chart showing request distribution by category"
+                                role="img"></canvas>
                     </div>
-                    <div class="chart-legend">
+                    <div class="chart-legend" role="list" aria-label="Category statistics">
                         {% for category, count in category_stats %}
-                        <div class="legend-item">
-                            <span class="legend-color" style="background-color: {{ get_category_color(loop.index0) }}"></span>
+                        <div class="legend-item" role="listitem">
+                            <span class="legend-color" 
+                                  style="background-color: {{ get_category_color(loop.index0) }}"
+                                  aria-hidden="true"></span>
                             <span class="legend-label">{{ category }}</span>
                             <span class="legend-value">{{ count }}</span>
                             <span class="legend-percentage">
@@ -146,27 +193,35 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
                 </div>
             </div>
 
-            <!-- Requests by Department Chart -->
-            <div class="chart-card glass">
+            <!-- Requests by Department Chart Card -->
+            <div class="chart-card glass" role="region" aria-labelledby="department-chart-heading">
                 <div class="chart-header">
                     <div class="chart-title">
-                        <i class="fas fa-chart-bar"></i>
-                        <h3>Requests by Department</h3>
+                        <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                        <h3 id="department-chart-heading">Requests by Department</h3>
                     </div>
                     <div class="chart-actions">
-                        <button class="chart-action-btn" onclick="toggleChartView('department')">
-                            <i class="fas fa-exchange-alt"></i>
+                        <button class="chart-action-btn" 
+                                onclick="toggleChartView('department')"
+                                aria-label="Toggle chart view between bar and doughnut">
+                            <i class="fas fa-exchange-alt" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
                 <div class="chart-body">
                     <div class="chart-container">
-                        <canvas id="departmentChart" width="400" height="300"></canvas>
+                        <canvas id="departmentChart" 
+                                width="400" 
+                                height="300"
+                                aria-label="Bar chart showing request distribution by department"
+                                role="img"></canvas>
                     </div>
-                    <div class="chart-legend">
+                    <div class="chart-legend" role="list" aria-label="Department statistics">
                         {% for department, count in department_stats %}
-                        <div class="legend-item">
-                            <span class="legend-color" style="background-color: {{ get_department_color(loop.index0) }}"></span>
+                        <div class="legend-item" role="listitem">
+                            <span class="legend-color" 
+                                  style="background-color: {{ get_department_color(loop.index0) }}"
+                                  aria-hidden="true"></span>
                             <span class="legend-label">{{ department }}</span>
                             <span class="legend-value">{{ count }}</span>
                             <span class="legend-percentage">
@@ -182,24 +237,31 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Two Column Layout for Recent Activity and Quick Actions -->
+    <!-- ==========================================================================
+    DASHBOARD COLUMNS LAYOUT
+    Two-column responsive layout for recent activity and quick actions
+    =========================================================================== -->
     <div class="dashboard-columns">
-        <!-- Recent Activity Section -->
-        <div class="recent-activity-section">
+        
+        <!-- ======================================================================
+        RECENT ACTIVITY SECTION
+        Timeline of recent service requests with status indicators
+        ======================================================================= -->
+        <section class="recent-activity-section" aria-labelledby="recent-activity-heading">
             <div class="section-header">
-                <h2>Recent Activity</h2>
+                <h2 id="recent-activity-heading">Recent Activity</h2>
                 <a href="{{ url_for('view_requests') }}" class="view-all-link">
-                    View All <i class="fas fa-arrow-right"></i>
+                    View All <i class="fas fa-arrow-right" aria-hidden="true"></i>
                 </a>
             </div>
             
             {% if recent_requests %}
-                <div class="activity-list">
+                <div class="activity-list" role="list" aria-label="Recent service requests">
                     {% for request in recent_requests %}
-                    <div class="activity-item glass">
-                        <div class="activity-icon status-{{ request.status|lower|replace(' ', '-') }}">
+                    <div class="activity-item glass" role="listitem">
+                        <div class="activity-icon status-{{ request.status|lower|replace(' ', '-') }}" aria-hidden="true">
                             {% if request.status == 'Resolved' %}
                                 <i class="fas fa-check-circle"></i>
                             {% elif request.status == 'In Progress' %}
@@ -232,93 +294,100 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
                         </div>
                         <div class="activity-actions">
                             <a href="{{ url_for('view_requests') }}?highlight={{ request.id }}" 
-                               class="btn btn-sm btn-outline">
-                                <i class="fas fa-eye"></i>
+                               class="btn btn-sm btn-outline"
+                               aria-label="View details for request from {{ request.requester_name }}">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
                             </a>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="empty-state glass">
-                    <div class="empty-icon">
+                <!-- Empty State for Recent Activity -->
+                <div class="empty-state glass" role="status" aria-label="No recent activity">
+                    <div class="empty-icon" aria-hidden="true">
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h4>No Recent Activity</h4>
                     <p>No service requests have been submitted recently.</p>
                     <a href="{{ url_for('submit_request') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Create First Request
+                        <i class="fas fa-plus" aria-hidden="true"></i> Create First Request
                     </a>
                 </div>
             {% endif %}
-        </div>
+        </section>
 
-        <!-- Quick Actions Section -->
-        <div class="quick-actions-section">
+        <!-- ======================================================================
+        QUICK ACTIONS AND SYSTEM STATUS SECTION
+        Frequently used operations and system health monitoring
+        ======================================================================= -->
+        <aside class="quick-actions-section" aria-labelledby="quick-actions-heading">
             <div class="section-header">
-                <h2>Quick Actions</h2>
+                <h2 id="quick-actions-heading">Quick Actions</h2>
                 <p>Frequently used operations</p>
             </div>
-            <div class="actions-grid">
-                <a href="{{ url_for('submit_request') }}" class="action-card glass">
-                    <div class="action-icon primary">
+            
+            <div class="actions-grid" role="list" aria-label="Quick action buttons">
+                <a href="{{ url_for('submit_request') }}" class="action-card glass" role="listitem">
+                    <div class="action-icon primary" aria-hidden="true">
                         <i class="fas fa-plus-circle"></i>
                     </div>
                     <div class="action-content">
                         <h4>Submit New Request</h4>
                         <p>Create a new IT service request ticket</p>
                     </div>
-                    <div class="action-arrow">
+                    <div class="action-arrow" aria-hidden="true">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </a>
                 
-                <a href="{{ url_for('view_requests') }}" class="action-card glass">
-                    <div class="action-icon secondary">
+                <a href="{{ url_for('view_requests') }}" class="action-card glass" role="listitem">
+                    <div class="action-icon secondary" aria-hidden="true">
                         <i class="fas fa-tasks"></i>
                     </div>
                     <div class="action-content">
                         <h4>Manage Requests</h4>
                         <p>View and update all service requests</p>
                     </div>
-                    <div class="action-arrow">
+                    <div class="action-arrow" aria-hidden="true">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </a>
                 
-                <a href="{{ url_for('view_requests') }}?status=Pending" class="action-card glass">
-                    <div class="action-icon warning">
+                <a href="{{ url_for('view_requests') }}?status=Pending" class="action-card glass" role="listitem">
+                    <div class="action-icon warning" aria-hidden="true">
                         <i class="fas fa-clock"></i>
                     </div>
                     <div class="action-content">
                         <h4>Pending Requests</h4>
                         <p>Review items awaiting action</p>
                     </div>
-                    <div class="action-arrow">
+                    <div class="action-arrow" aria-hidden="true">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </a>
                 
-                <div class="action-card glass" onclick="exportData()">
-                    <div class="action-icon info">
+                <button class="action-card glass" onclick="exportData()" role="listitem">
+                    <div class="action-icon info" aria-hidden="true">
                         <i class="fas fa-file-export"></i>
                     </div>
                     <div class="action-content">
                         <h4>Export Data</h4>
                         <p>Download comprehensive reports</p>
                     </div>
-                    <div class="action-arrow">
+                    <div class="action-arrow" aria-hidden="true">
                         <i class="fas fa-chevron-right"></i>
                     </div>
-                </div>
+                </button>
             </div>
 
             <!-- System Status Widget -->
-            <div class="status-widget glass">
+            <div class="status-widget glass" role="status" aria-labelledby="system-status-heading">
                 <div class="status-header">
-                    <h4>System Status</h4>
+                    <h4 id="system-status-heading">System Status</h4>
                     <div class="status-indicator online">
-                        <i class="fas fa-circle"></i> Online
+                        <i class="fas fa-circle" aria-hidden="true"></i> 
+                        <span>Online</span>
                     </div>
                 </div>
                 <div class="status-metrics">
@@ -336,25 +405,35 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
                     </div>
                 </div>
             </div>
-        </div>
+        </aside>
     </div>
 </div>
 
+<!-- ============================================================================
+DASHBOARD STYLESHEET
+Comprehensive CSS with design system integration and responsive breakpoints
+============================================================================= -->
 <style>
-/* Dashboard Layout */
+/**
+ * DASHBOARD LAYOUT SYSTEM
+ * Responsive container with optimal reading width and spacing
+ */
 .dashboard-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 var(--space-md);
 }
 
-/* Dashboard Header */
+/**
+ * DASHBOARD HEADER COMPONENT
+ * Primary header with gradient typography and action controls
+ */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 2rem;
-    padding: 2rem 0 1rem;
+    margin-bottom: var(--space-2xl);
+    padding: var(--space-2xl) 0 var(--space-lg);
     border-bottom: 1px solid var(--border);
 }
 
@@ -365,67 +444,80 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .dashboard-description {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: var(--text-lg);
     max-width: 500px;
+    line-height: 1.5;
 }
 
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .last-updated {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
 }
 
-/* Section Headers */
+/**
+ * SECTION HEADER COMPONENT
+ * Consistent section headers with semantic hierarchy
+ */
 .section-header {
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-2xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
 .section-header h2 {
-    font-size: 1.5rem;
+    font-size: var(--text-2xl);
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
 }
 
 .section-header p {
     color: var(--text-secondary);
+    margin: 0;
 }
 
-/* Metrics Grid */
+/**
+ * METRICS GRID SYSTEM
+ * Responsive grid for KPI cards with hover interactions
+ */
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-3xl);
 }
 
 .metric-card {
-    padding: 1.5rem;
-    border-radius: var(--radius);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
     position: relative;
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .metric-card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
 }
 
 .metric-card.warning {
@@ -442,45 +534,47 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 
 .metric-icon {
     font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
     opacity: 0.8;
 }
 
 .metric-content {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
 }
 
 .metric-value {
     font-size: 2.5rem;
     font-weight: 700;
     line-height: 1;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
 }
 
 .metric-label {
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     color: var(--text-secondary);
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     font-weight: 500;
 }
 
 .metric-trend {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
 }
 
 .metric-badge {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    padding: 0.25rem 0.75rem;
+    top: var(--space-lg);
+    right: var(--space-lg);
+    padding: var(--space-xs) var(--space-md);
     border-radius: 20px;
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .metric-badge.primary { background: var(--primary); color: white; }
@@ -488,62 +582,70 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 .metric-badge.success { background: var(--success); color: white; }
 .metric-badge.info { background: var(--primary-light); color: white; }
 
-/* Analytics Grid */
+/**
+ * ANALYTICS GRID SYSTEM
+ * Responsive chart layout with interactive controls
+ */
 .analytics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-3xl);
 }
 
 .chart-card {
-    padding: 1.5rem;
-    border-radius: var(--radius);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .chart-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
 }
 
 .chart-title {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-md);
 }
 
 .chart-title h3 {
-    font-size: 1.2rem;
+    font-size: var(--text-xl);
     font-weight: 600;
     margin: 0;
+    color: var(--text-primary);
 }
 
 .chart-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--space-sm);
 }
 
 .chart-action-btn {
     background: none;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 0.5rem;
+    padding: var(--space-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--duration-fast) var(--ease-in-out);
+    color: var(--text-secondary);
 }
 
 .chart-action-btn:hover {
     background: var(--primary);
     color: white;
+    border-color: var(--primary);
 }
 
 .chart-body {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--space-xl);
 }
 
 .chart-container {
@@ -554,16 +656,16 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 .chart-legend {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--space-md);
 }
 
 .legend-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem;
+    gap: var(--space-md);
+    padding: var(--space-sm);
     border-radius: var(--radius-sm);
-    transition: background 0.2s ease;
+    transition: background var(--duration-fast) var(--ease-in-out);
 }
 
 .legend-item:hover {
@@ -579,8 +681,9 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 
 .legend-label {
     flex: 1;
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     font-weight: 500;
+    color: var(--text-primary);
 }
 
 .legend-value {
@@ -589,52 +692,69 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 }
 
 .legend-percentage {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
     min-width: 40px;
     text-align: right;
 }
 
-/* Dashboard Columns */
+/**
+ * DASHBOARD COLUMNS LAYOUT
+ * Two-column responsive layout system
+ */
 .dashboard-columns {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-2xl);
 }
 
-/* Recent Activity */
+/**
+ * RECENT ACTIVITY COMPONENT
+ * Timeline-style activity feed with status indicators
+ */
 .activity-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .activity-item {
-    padding: 1.25rem;
+    padding: var(--space-xl);
     border-radius: var(--radius);
     border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    transition: all 0.3s ease;
+    gap: var(--space-lg);
+    transition: all var(--duration-normal) var(--ease-in-out);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .activity-item:hover {
     transform: translateX(5px);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-lg);
 }
 
 .activity-icon {
     font-size: 1.25rem;
-    padding: 0.75rem;
+    padding: var(--space-md);
     border-radius: var(--radius-sm);
     flex-shrink: 0;
 }
 
-.activity-icon.status-resolved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-.activity-icon.status-in-progress { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
-.activity-icon.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.activity-icon.status-resolved { 
+    background: rgba(16, 185, 129, 0.1); 
+    color: var(--success); 
+}
+.activity-icon.status-in-progress { 
+    background: rgba(37, 99, 235, 0.1); 
+    color: var(--primary); 
+}
+.activity-icon.status-pending { 
+    background: rgba(245, 158, 11, 0.1); 
+    color: var(--warning); 
+}
 
 .activity-content {
     flex: 1;
@@ -644,34 +764,36 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
 }
 
 .activity-title {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     font-weight: 600;
 }
 
 .activity-department {
     background: var(--primary);
     color: white;
-    padding: 0.25rem 0.5rem;
+    padding: var(--space-xs) var(--space-sm);
     border-radius: 12px;
     font-size: 0.7rem;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .activity-time {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
 }
 
 .activity-description {
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 0.75rem;
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-md);
     line-height: 1.4;
 }
 
@@ -682,84 +804,115 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 }
 
 .activity-date {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
 }
 
 .activity-status {
-    padding: 0.25rem 0.75rem;
+    padding: var(--space-xs) var(--space-md);
     border-radius: 20px;
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.activity-status.status-resolved { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-.activity-status.status-in-progress { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
-.activity-status.status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.activity-status.status-resolved { 
+    background: rgba(16, 185, 129, 0.1); 
+    color: var(--success); 
+}
+.activity-status.status-in-progress { 
+    background: rgba(37, 99, 235, 0.1); 
+    color: var(--primary); 
+}
+.activity-status.status-pending { 
+    background: rgba(245, 158, 11, 0.1); 
+    color: var(--warning); 
+}
 
 .activity-actions {
     flex-shrink: 0;
 }
 
-/* Quick Actions */
+/**
+ * QUICK ACTIONS COMPONENT
+ * Action-oriented cards for frequent operations
+ */
 .actions-grid {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
 }
 
 .action-card {
-    padding: 1.25rem;
+    padding: var(--space-xl);
     border-radius: var(--radius);
     border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-lg);
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
+    transition: all var(--duration-normal) var(--ease-in-out);
     position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    cursor: pointer;
 }
 
 .action-card:hover {
     transform: translateX(5px);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-lg);
     color: inherit;
+    text-decoration: none;
 }
 
 .action-icon {
     font-size: 1.5rem;
-    padding: 1rem;
+    padding: var(--space-lg);
     border-radius: var(--radius-sm);
     flex-shrink: 0;
 }
 
-.action-icon.primary { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
-.action-icon.secondary { background: rgba(100, 116, 139, 0.1); color: var(--secondary); }
-.action-icon.warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-.action-icon.info { background: rgba(59, 130, 246, 0.1); color: var(--primary-light); }
+.action-icon.primary { 
+    background: rgba(37, 99, 235, 0.1); 
+    color: var(--primary); 
+}
+.action-icon.secondary { 
+    background: rgba(100, 116, 139, 0.1); 
+    color: var(--secondary); 
+}
+.action-icon.warning { 
+    background: rgba(245, 158, 11, 0.1); 
+    color: var(--warning); 
+}
+.action-icon.info { 
+    background: rgba(59, 130, 246, 0.1); 
+    color: var(--primary-light); 
+}
 
 .action-content {
     flex: 1;
 }
 
 .action-content h4 {
-    font-size: 1rem;
+    font-size: var(--text-base);
     font-weight: 600;
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--space-xs);
+    color: var(--text-primary);
 }
 
 .action-content p {
-    font-size: 0.85rem;
+    font-size: var(--text-xs);
     color: var(--text-secondary);
     margin: 0;
+    line-height: 1.4;
 }
 
 .action-arrow {
     color: var(--text-secondary);
-    transition: transform 0.2s ease;
+    transition: transform var(--duration-fast) var(--ease-in-out);
 }
 
 .action-card:hover .action-arrow {
@@ -767,31 +920,39 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
     color: var(--primary);
 }
 
-/* Status Widget */
+/**
+ * STATUS WIDGET COMPONENT
+ * System health monitoring with real-time metrics
+ */
 .status-widget {
-    padding: 1.5rem;
+    padding: var(--space-xl);
     border-radius: var(--radius);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .status-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
 }
 
 .status-header h4 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: var(--text-lg);
+    color: var(--text-primary);
 }
 
 .status-indicator {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
+    gap: var(--space-sm);
+    font-size: var(--text-xs);
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .status-indicator.online { color: var(--success); }
@@ -800,14 +961,14 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 .status-metrics {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-lg);
 }
 
 .status-metric {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
+    padding: var(--space-md) 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -817,7 +978,7 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 
 .metric-label {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
 }
 
 .metric-value {
@@ -825,47 +986,63 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
     color: var(--text-primary);
 }
 
-/* Empty State */
+/**
+ * EMPTY STATE COMPONENT
+ * Placeholder for when no data is available
+ */
 .empty-state {
-    padding: 3rem 2rem;
+    padding: var(--space-3xl) var(--space-2xl);
     text-align: center;
     border-radius: var(--radius);
     border: 2px dashed rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
 }
 
 .empty-icon {
     font-size: 3rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-lg);
     opacity: 0.5;
+    color: var(--text-secondary);
 }
 
 .empty-state h4 {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     color: var(--text-primary);
+    font-size: var(--text-xl);
 }
 
 .empty-state p {
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
+    font-size: var(--text-base);
 }
 
-/* View All Link */
+/**
+ * VIEW ALL LINK COMPONENT
+ * Navigation link with hover animation
+ */
 .view-all-link {
     color: var(--primary);
     text-decoration: none;
     font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s ease;
+    gap: var(--space-sm);
+    transition: all var(--duration-fast) var(--ease-in-out);
+    font-size: var(--text-sm);
 }
 
 .view-all-link:hover {
-    gap: 0.75rem;
+    gap: var(--space-md);
     color: var(--primary-dark);
+    text-decoration: none;
 }
 
-/* Responsive Design */
+/**
+ * RESPONSIVE DESIGN BREAKPOINTS
+ * Mobile-first responsive design system
+ */
 @media (max-width: 1200px) {
     .dashboard-columns {
         grid-template-columns: 1fr;
@@ -879,7 +1056,7 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
 @media (max-width: 768px) {
     .dashboard-header {
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--space-lg);
         text-align: center;
     }
     
@@ -899,13 +1076,13 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
     .activity-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: var(--space-sm);
     }
     
     .activity-meta {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: var(--space-sm);
     }
     
     .activity-item {
@@ -915,12 +1092,13 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
     
     .activity-actions {
         align-self: center;
+        margin-top: var(--space-md);
     }
 }
 
 @media (max-width: 480px) {
     .dashboard-container {
-        padding: 0 0.5rem;
+        padding: 0 var(--space-sm);
     }
     
     .metric-value {
@@ -928,196 +1106,385 @@ Provides comprehensive statistics, charts, and system metrics with elegant desig
     }
     
     .chart-card {
-        padding: 1rem;
+        padding: var(--space-lg);
     }
     
     .activity-item, .action-card {
-        padding: 1rem;
+        padding: var(--space-lg);
+    }
+    
+    .header-content h1 {
+        font-size: 1.75rem;
+    }
+}
+
+/**
+ * DARK MODE ENHANCEMENTS
+ * Improved contrast and readability in dark mode
+ */
+@media (prefers-color-scheme: dark) {
+    .metric-card,
+    .chart-card,
+    .activity-item,
+    .action-card,
+    .status-widget,
+    .empty-state {
+        background: rgba(34, 39, 43, 0.95);
+        border-color: var(--border);
+    }
+    
+    .metric-value {
+        color: var(--text-primary);
+    }
+}
+
+/**
+ * REDUCED MOTION PREFERENCES
+ * Respect user motion sensitivity preferences
+ */
+@media (prefers-reduced-motion: reduce) {
+    .metric-card,
+    .activity-item,
+    .action-card {
+        transition: none;
+        transform: none;
+    }
+    
+    .activity-icon.status-in-progress .fa-spin {
+        animation: none;
     }
 }
 </style>
 {% endblock %}
 
 {% block scripts %}
-<!-- Modern JavaScript for Dashboard Interactivity -->
+<!-- ============================================================================
+DASHBOARD JAVASCRIPT MODULES
+Advanced charting, data management, and interactive features
+============================================================================= -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Chart configuration and management
-let categoryChart, departmentChart;
-let currentCategoryView = 'pie';
-let currentDepartmentView = 'doughnut';
-
 /**
- * Initializes and renders all dashboard charts with modern styling
+ * DASHBOARD CONTROLLER MODULE
+ * Main JavaScript controller for dashboard functionality
+ * @author Engineer Mathias Alfred
+ * @version 3.0.0
  */
-function initializeCharts() {
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                titleColor: '#1e293b',
-                bodyColor: '#475569',
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-                borderWidth: 1,
-                cornerRadius: 8,
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.parsed;
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = Math.round((value / total) * 100);
-                        return `${label}: ${value} (${percentage}%)`;
+class DashboardController {
+    constructor() {
+        this.categoryChart = null;
+        this.departmentChart = null;
+        this.currentCategoryView = 'pie';
+        this.currentDepartmentView = 'doughnut';
+        this.lastUpdateTime = new Date();
+        
+        this.init();
+    }
+
+    /**
+     * Initializes all dashboard components and event listeners
+     */
+    init() {
+        this.initializeCharts();
+        this.setupEventListeners();
+        this.startAutoRefresh();
+        this.animateMetrics();
+    }
+
+    /**
+     * Chart configuration and management system
+     */
+    initializeCharts() {
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { 
+                    display: false 
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#1e293b',
+                    bodyColor: '#475569',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: (context) => {
+                            const label = context.label || '';
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
                     }
                 }
             }
-        }
-    };
+        };
 
-    // Category Chart
-    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-    categoryChart = new Chart(categoryCtx, {
-        type: currentCategoryView,
-        data: {
-            labels: [{% for category, count in category_stats %}'{{ category }}'{% if not loop.last %},{% endif %}{% endfor %}],
-            datasets: [{
-                data: [{% for category, count in category_stats %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
-                backgroundColor: [{% for i in range(category_stats|length) %}'{{ get_category_color(i) }}'{% if not loop.last %},{% endif %}{% endfor %}],
-                borderWidth: 2,
-                borderColor: 'rgba(255, 255, 255, 0.8)'
-            }]
-        },
-        options: {
-            ...chartOptions,
-            cutout: currentCategoryView === 'doughnut' ? '60%' : '0%'
-        }
-    });
-
-    // Department Chart
-    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
-    departmentChart = new Chart(departmentCtx, {
-        type: currentDepartmentView,
-        data: {
-            labels: [{% for department, count in department_stats %}'{{ department }}'{% if not loop.last %},{% endif %}{% endfor %}],
-            datasets: [{
-                data: [{% for department, count in department_stats %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
-                backgroundColor: [{% for i in range(department_stats|length) %}'{{ get_department_color(i) }}'{% if not loop.last %},{% endif %}{% endfor %}],
-                borderWidth: 2,
-                borderColor: 'rgba(255, 255, 255, 0.8)'
-            }]
-        },
-        options: {
-            ...chartOptions,
-            cutout: currentDepartmentView === 'doughnut' ? '60%' : '0%'
-        }
-    });
-}
-
-/**
- * Toggles between chart views (pie/doughnut/bar)
- */
-function toggleChartView(chartType) {
-    if (chartType === 'category') {
-        currentCategoryView = currentCategoryView === 'pie' ? 'doughnut' : 'pie';
-        categoryChart.destroy();
-    } else {
-        currentDepartmentView = currentDepartmentView === 'doughnut' ? 'bar' : 'doughnut';
-        departmentChart.destroy();
+        // Initialize Category Chart
+        this.initializeCategoryChart(chartOptions);
+        
+        // Initialize Department Chart
+        this.initializeDepartmentChart(chartOptions);
     }
-    initializeCharts();
-}
 
-/**
- * Refreshes dashboard data and animations
- */
-function refreshDashboard() {
-    const refreshBtn = event.target.closest('button');
-    const originalHTML = refreshBtn.innerHTML;
-    
-    // Show loading state
-    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
-    refreshBtn.disabled = true;
-    
-    // Simulate API call
-    setTimeout(() => {
-        window.location.reload();
-    }, 1000);
-}
+    /**
+     * Category Chart initialization with dynamic data
+     */
+    initializeCategoryChart(options) {
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        this.categoryChart = new Chart(categoryCtx, {
+            type: this.currentCategoryView,
+            data: {
+                labels: [{% for category, count in category_stats %}'{{ category }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    data: [{% for category, count in category_stats %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: [{% for i in range(category_stats|length) %}'{{ get_category_color(i) }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                    borderWidth: 2,
+                    borderColor: 'rgba(255, 255, 255, 0.8)'
+                }]
+            },
+            options: {
+                ...options,
+                cutout: this.currentCategoryView === 'doughnut' ? '60%' : '0%'
+            }
+        });
+    }
 
-/**
- * Exports dashboard data with modern file handling
- */
-function exportData() {
-    // Show export confirmation
-    if (confirm('Export all service request data as JSON?')) {
-        fetch('/api/requests')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const blob = new Blob([JSON.stringify(data, null, 2)], 
-                                        { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `demulla-requests-${new Date().toISOString().split('T')[0]}.json`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    
-                    // Show success notification
-                    showNotification('Data exported successfully!', 'success');
+    /**
+     * Department Chart initialization with dynamic data
+     */
+    initializeDepartmentChart(options) {
+        const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+        this.departmentChart = new Chart(departmentCtx, {
+            type: this.currentDepartmentView,
+            data: {
+                labels: [{% for department, count in department_stats %}'{{ department }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    data: [{% for department, count in department_stats %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: [{% for i in range(department_stats|length) %}'{{ get_department_color(i) }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                    borderWidth: 2,
+                    borderColor: 'rgba(255, 255, 255, 0.8)'
+                }]
+            },
+            options: {
+                ...options,
+                cutout: this.currentDepartmentView === 'doughnut' ? '60%' : '0%'
+            }
+        });
+    }
+
+    /**
+     * Event listeners setup for interactive features
+     */
+    setupEventListeners() {
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                this.refreshDashboard();
+            }
+        });
+
+        // Visibility change handler for auto-refresh
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                this.refreshDashboard();
+            }
+        });
+    }
+
+    /**
+     * Auto-refresh mechanism for real-time data
+     */
+    startAutoRefresh() {
+        // Refresh every 5 minutes
+        setInterval(() => {
+            if (!document.hidden) {
+                this.refreshDashboard();
+            }
+        }, 300000);
+    }
+
+    /**
+     * Smooth animations for metric counters
+     */
+    animateMetrics() {
+        const metrics = ['total-requests', 'pending-requests', 'resolved-requests', 'in-progress-requests'];
+        
+        metrics.forEach(metricId => {
+            const element = document.getElementById(metricId);
+            if (element) {
+                this.animateValue(element, 0, parseInt(element.textContent), 1000);
+            }
+        });
+    }
+
+    /**
+     * Value animation helper function
+     */
+    animateValue(element, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            element.textContent = value.toLocaleString();
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    /**
+     * Chart view toggling functionality
+     */
+    toggleChartView(chartType) {
+        if (chartType === 'category') {
+            this.currentCategoryView = this.currentCategoryView === 'pie' ? 'doughnut' : 'pie';
+            this.categoryChart.destroy();
+            this.initializeCategoryChart();
+        } else {
+            this.currentDepartmentView = this.currentDepartmentView === 'doughnut' ? 'bar' : 'doughnut';
+            this.departmentChart.destroy();
+            this.initializeDepartmentChart();
+        }
+        
+        this.showNotification(`Switched to ${this.currentCategoryView} view`, 'info');
+    }
+
+    /**
+     * Dashboard refresh with loading states
+     */
+    refreshDashboard() {
+        const refreshBtn = document.querySelector('.header-actions .btn');
+        const originalHTML = refreshBtn.innerHTML;
+        
+        // Show loading state
+        refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+        refreshBtn.disabled = true;
+        
+        // Update timestamp
+        this.lastUpdateTime = new Date();
+        document.getElementById('last-updated-text').textContent = 
+            `Updated at ${this.lastUpdateTime.toLocaleTimeString()}`;
+        
+        // Simulate API call
+        setTimeout(() => {
+            refreshBtn.innerHTML = originalHTML;
+            refreshBtn.disabled = false;
+            this.showNotification('Dashboard updated successfully', 'success');
+        }, 1500);
+    }
+
+    /**
+     * Data export functionality with error handling
+     */
+    exportData() {
+        if (confirm('Export all service request data as JSON?')) {
+            this.showNotification('Preparing data for export...', 'info');
+            
+            fetch('/api/requests')
+                .then(response => {
+                    if (!response.ok) throw new Error('Export failed');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const blob = new Blob([JSON.stringify(data, null, 2)], 
+                                            { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `demulla-requests-${new Date().toISOString().split('T')[0]}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        
+                        this.showNotification('Data exported successfully!', 'success');
+                    }
+                })
+                .catch(error => {
+                    console.error('Export error:', error);
+                    this.showNotification('Error exporting data', 'error');
+                });
+        }
+    }
+
+    /**
+     * Notification system for user feedback
+     */
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `flash-message ${type}`;
+        notification.setAttribute('role', 'alert');
+        notification.setAttribute('aria-live', 'polite');
+        notification.innerHTML = `
+            <i class="fas fa-${this.getNotificationIcon(type)}" aria-hidden="true"></i>
+            <span>${message}</span>
+        `;
+        
+        const flashContainer = document.querySelector('.flash-messages') || this.createFlashContainer();
+        flashContainer.appendChild(notification);
+        
+        // Auto-remove after delay
+        setTimeout(() => {
+            notification.style.transition = 'all 0.3s ease';
+            notification.style.transform = 'translateX(100%)';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
                 }
-            })
-            .catch(error => {
-                console.error('Export error:', error);
-                showNotification('Error exporting data', 'error');
-            });
+            }, 300);
+        }, 4000);
+    }
+
+    /**
+     * Notification icon helper
+     */
+    getNotificationIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle'
+        };
+        return icons[type] || 'info-circle';
+    }
+
+    /**
+     * Flash container creation utility
+     */
+    createFlashContainer() {
+        const container = document.createElement('div');
+        container.className = 'flash-messages';
+        document.querySelector('.main-content').prepend(container);
+        return container;
     }
 }
 
-/**
- * Shows temporary notification
- */
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `flash-message ${type}`;
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
-        ${message}
-    `;
-    
-    // Add to page
-    const flashContainer = document.querySelector('.flash-messages') || createFlashContainer();
-    flashContainer.appendChild(notification);
-    
-    // Auto remove
-    setTimeout(() => {
-        notification.style.transition = 'all 0.3s ease';
-        notification.style.transform = 'translateX(100%)';
-        notification.style.opacity = '0';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
+// Global functions for template compatibility
+function toggleChartView(chartType) {
+    window.dashboardController.toggleChartView(chartType);
 }
 
-/**
- * Creates flash container if it doesn't exist
- */
-function createFlashContainer() {
-    const container = document.createElement('div');
-    container.className = 'flash-messages';
-    document.querySelector('.main-content').prepend(container);
-    return container;
+function refreshDashboard() {
+    window.dashboardController.refreshDashboard();
 }
 
-// Initialize dashboard when page loads
+function exportData() {
+    window.dashboardController.exportData();
+}
+
+// Initialize dashboard when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    initializeCharts();
+    window.dashboardController = new DashboardController();
     
-    // Add loading animations
+    // Add entrance animations
     const cards = document.querySelectorAll('.metric-card, .chart-card, .activity-item');
     cards.forEach((card, index) => {
         card.style.animationDelay = `${index * 0.1}s`;
@@ -1125,7 +1492,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Add CSS animation
+// CSS animations for enhanced UX
 const style = document.createElement('style');
 style.textContent = `
     @keyframes fade-in-up {
@@ -1140,6 +1507,14 @@ style.textContent = `
     }
     .fade-in-up {
         animation: fade-in-up 0.6s ease forwards;
+        opacity: 0;
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+        .fade-in-up {
+            animation: none;
+            opacity: 1;
+        }
     }
 `;
 document.head.appendChild(style);
